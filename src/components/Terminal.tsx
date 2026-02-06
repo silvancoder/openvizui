@@ -1,20 +1,21 @@
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Terminal } from '@xterm/xterm';
 import { FitAddon } from '@xterm/addon-fit';
 import { WebLinksAddon } from '@xterm/addon-web-links';
 import { listen } from '@tauri-apps/api/event';
-import { Button, Tooltip, Space, theme as antdTheme } from 'antd';
+import { Button, Tooltip, Space, theme as antdTheme, Select, Input, Dropdown, Modal } from 'antd';
 import { 
   ClearOutlined, 
   ReloadOutlined, 
-  FolderOpenOutlined
+  SendOutlined, 
+  BranchesOutlined
 } from '@ant-design/icons';
 import '@xterm/xterm/css/xterm.css';
 import { ptyOpen, ptyWrite, ptyResize, ptyClose } from '../lib/tauri';
+import { invoke } from '@tauri-apps/api/core';
 import { useAppStore } from '../store/appStore';
 import { useTranslation } from 'react-i18next';
-import { open as openDialog } from '@tauri-apps/plugin-dialog';
 
 const TerminalUI = () => {
   const terminalRef = useRef<HTMLDivElement>(null);
@@ -25,14 +26,26 @@ const TerminalUI = () => {
   const { 
     terminalFontFamily, 
     terminalFontSize, 
-    terminalBackground, 
     terminalForeground,
     terminalCursorStyle,
     pendingCommand,
     setPendingCommand,
-    currentDirectory,
-    setCurrentDirectory
+    setTerminalSettings,
+    terminalBackground,
+    chatInput,
+    setChatInput
   } = useAppStore();
+
+  const terminalPresets = [
+    { name: 'Default Dark', bg: '#1e1e1e', fg: '#d4d4d4' },
+    { name: 'One Dark', bg: '#282c34', fg: '#abb2bf' },
+    { name: 'Dracula', bg: '#282a36', fg: '#f8f8f2' },
+    { name: 'Monokai', bg: '#272822', fg: '#f8f8f2' },
+    { name: 'Nord', bg: '#2e3440', fg: '#d8dee9' },
+    { name: 'Solarized Dark', bg: '#002b36', fg: '#839496' }
+  ];
+
+  const [, setIsReady] = useState(false);
 
   useEffect(() => {
     if (!terminalRef.current) return;
@@ -64,8 +77,10 @@ const TerminalUI = () => {
 
     const initPty = async () => {
       // 1. Register data listener first so we don't miss the initial prompt
-      const unlistenFn = await listen<string>('pty-data', (event) => {
-        term.write(event.payload);
+      // Backend now sends raw bytes (number[]) to avoid UTF-8 issues
+      const unlistenFn = await listen<number[]>('pty-data', (event) => {
+        // xterm.write supports Uint8Array
+        term.write(new Uint8Array(event.payload));
       });
       unlisten = unlistenFn;
 
@@ -93,6 +108,7 @@ const TerminalUI = () => {
         setTimeout(() => {
              ptyWrite('\x0c'); 
              term.focus(); // Force focus on init
+             setIsReady(true); // <--- Set readiness here
         }, 500);
         
       } catch (e) {
@@ -123,8 +139,35 @@ const TerminalUI = () => {
       if (unlisten) unlisten();
       term.dispose();
       xtermRef.current = null;
+      setIsReady(false);
     };
   }, [terminalFontFamily, terminalFontSize, terminalBackground, terminalForeground, terminalCursorStyle, token]);
+
+  const [availableFonts, setAvailableFonts] = useState<string[]>([
+       'Cascadia Code', 
+       'Fira Code', 
+       'JetBrains Mono', 
+       'Source Code Pro', 
+       'MesloLGS NF', 
+       'Maple Mono', 
+       'Consolas', 
+       'Courier New'
+  ]);
+
+  useEffect(() => {
+     invoke<string[]>('get_system_fonts').then(fonts => {
+         if (fonts && fonts.length > 0) { 
+             const codingFonts = fonts.filter(f => {
+                 const low = f.toLowerCase();
+                 return low.includes('code') || low.includes('mono') || low.includes('console') || low.includes('terminal') || low.includes('meslo') || low.includes('hack');
+             });
+             
+             // Merge with defaults
+             const combined = Array.from(new Set([...availableFonts, ...codingFonts])).sort();
+             setAvailableFonts(combined);
+         }
+     }).catch(console.error);
+  }, []);
 
   // Handle pending commands (e.g. from "Launch in Terminal")
   useEffect(() => {
@@ -153,24 +196,20 @@ const TerminalUI = () => {
       xtermRef.current?.focus();
   };
 
-  const handleSelectDirectory = async () => {
-    try {
-      const selected = await openDialog({
-        directory: true,
-        multiple: false,
-        defaultPath: currentDirectory || undefined,
-      });
-      if (selected && typeof selected === 'string') {
-        setCurrentDirectory(selected);
-        // Change PTY directory
-        ptyWrite(`cd "${selected}"\r`);
-        xtermRef.current?.focus();
-      }
-    } catch (e) {
-      console.error("Failed to select directory", e);
-    }
+  const handleInputSend = () => {
+      if (!chatInput) return;
+      ptyWrite(chatInput + '\r');
+      setChatInput('');
+      xtermRef.current?.focus();
   };
 
+  const [gitInputModal, setGitInputModal] = useState({
+      open: false,
+      title: '',
+      label: '',
+      value: '',
+      commandTemplate: ''
+  });
 
   return (
     <div 
@@ -196,14 +235,124 @@ const TerminalUI = () => {
         height: 40
       }}>
         <Space>
-           <Button 
-             type="text" 
-             size="small" 
-             icon={<FolderOpenOutlined />} 
-             onClick={handleSelectDirectory}
-           >
-             {currentDirectory ? currentDirectory.split(/[\\/]/).pop() : 'No Folder'}
-           </Button>
+           <div onClick={(e) => e.stopPropagation()}>
+             <Select
+               value={
+                  terminalPresets.find(p => p.bg === terminalBackground && p.fg === terminalForeground)?.name || 'Custom'
+               }
+               onChange={(val) => {
+                  const p = terminalPresets.find(preset => preset.name === val);
+                  if (p) {
+                      setTerminalSettings({
+                          terminalBackground: p.bg,
+                          terminalForeground: p.fg
+                      });
+                  }
+               }}
+               variant="borderless"
+               size="small"
+               style={{ width: 140 }}
+               options={terminalPresets.map(p => ({ value: p.name, label: p.name }))}
+             />
+           </div>
+           
+           <div onClick={(e) => e.stopPropagation()}>
+             <Select
+               value={terminalFontFamily}
+               onChange={(val) => setTerminalSettings({ terminalFontFamily: val })}
+               variant="borderless"
+               size="small"
+               style={{ width: 140 }}
+               options={availableFonts.map(f => ({ value: f, label: f }))}
+             />
+           </div>
+
+           <div onClick={(e) => e.stopPropagation()}>
+              <Dropdown 
+                  menu={{ 
+                      items: [
+                          {
+                              key: 'git-config-user',
+                              label: 'Set User Name',
+                              onClick: () => {
+                                  setGitInputModal({
+                                      open: true,
+                                      title: 'Set Git User Name',
+                                      label: 'Name',
+                                      value: '',
+                                      commandTemplate: 'git config --global user.name "{value}"'
+                                  });
+                              }
+                          },
+                          {
+                              key: 'git-config-email',
+                              label: 'Set User Email',
+                              onClick: () => {
+                                  setGitInputModal({
+                                      open: true,
+                                      title: 'Set Git User Email',
+                                      label: 'Email',
+                                      value: '',
+                                      commandTemplate: 'git config --global user.email "{value}"'
+                                  });
+                              }
+                          },
+                          { type: 'divider' },
+                          {
+                              key: 'git-init',
+                              label: 'Initialize Repository',
+                              onClick: () => {
+                                  ptyWrite('git init\r');
+                              }
+                          },
+                          {
+                              key: 'git-remote',
+                              label: 'Add Remote Origin',
+                              onClick: () => {
+                                  setGitInputModal({
+                                      open: true,
+                                      title: 'Add Remote Origin',
+                                      label: 'Repository URL',
+                                      value: '',
+                                      commandTemplate: 'git remote add origin {value}'
+                                  });
+                              }
+                          },
+                          { type: 'divider' },
+                          {
+                              key: 'git-add',
+                              label: 'Add All (git add .)',
+                              onClick: () => {
+                                  ptyWrite('git add .\r');
+                              }
+                          },
+                          {
+                              key: 'git-commit',
+                              label: 'Commit',
+                              onClick: () => {
+                                   setGitInputModal({
+                                      open: true,
+                                      title: 'Git Commit',
+                                      label: 'Commit Message',
+                                      value: '',
+                                      commandTemplate: 'git commit -m "{value}"'
+                                  });
+                              }
+                          },
+                          {
+                              key: 'git-push',
+                              label: 'Push (origin master)',
+                              onClick: () => {
+                                  ptyWrite('git push -u origin master\r');
+                              }
+                          }
+                      ]
+                  }} 
+                  trigger={['click']}
+              >
+                  <Button type="text" size="small" icon={<BranchesOutlined />}>Git Operations</Button>
+              </Dropdown>
+           </div>
         </Space>
         
         <Space>
@@ -233,6 +382,63 @@ const TerminalUI = () => {
           overflow: 'hidden' 
         }} 
       />
+      <div onClick={(e) => e.stopPropagation()} style={{ padding: '12px', borderTop: `1px solid ${token.colorBorderSecondary}20`, display: 'flex', gap: 8, alignItems: 'flex-end' }}>
+          <Input.TextArea
+              value={chatInput}
+              onChange={e => setChatInput(e.target.value)}
+              onKeyDown={(e) => {
+                  if (e.key === 'Enter' && !e.shiftKey) {
+                      e.preventDefault();
+                      handleInputSend();
+                  }
+              }}
+              placeholder="Type a message... (Shift+Enter for new line)"
+              variant="filled"
+              autoSize={{ minRows: 2, maxRows: 6 }} 
+              style={{ 
+                  background: `${terminalForeground}15`, 
+                  color: terminalForeground,
+                  border: 'none',
+                  flex: 1,
+                  resize: 'none'
+              }}
+          />
+          <Button 
+              type="primary" 
+              icon={<SendOutlined />} 
+              onClick={handleInputSend}
+              style={{ flexShrink: 0 }}
+          />
+      </div>
+
+      <Modal
+          title={gitInputModal.title}
+          open={gitInputModal.open}
+          onOk={() => {
+              if (gitInputModal.value) {
+                  const cmd = gitInputModal.commandTemplate.replace('{value}', gitInputModal.value);
+                  ptyWrite(cmd + '\r');
+                  setGitInputModal({ ...gitInputModal, open: false, value: '' });
+                  xtermRef.current?.focus();
+              }
+          }}
+          onCancel={() => setGitInputModal({ ...gitInputModal, open: false })}
+      >
+          <div style={{ marginBottom: 8 }}>{gitInputModal.label}:</div>
+          <Input 
+              value={gitInputModal.value}
+              onChange={(e) => setGitInputModal({ ...gitInputModal, value: e.target.value })}
+              onPressEnter={() => {
+                   if (gitInputModal.value) {
+                      const cmd = gitInputModal.commandTemplate.replace('{value}', gitInputModal.value);
+                      ptyWrite(cmd + '\r');
+                      setGitInputModal({ ...gitInputModal, open: false, value: '' });
+                      xtermRef.current?.focus();
+                  }
+              }}
+              autoFocus
+          />
+      </Modal>
     </div>
   );
 };

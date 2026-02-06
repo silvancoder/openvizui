@@ -1,5 +1,4 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Chat from './pages/Chat';
 import TerminalPage from './pages/TerminalPage';
 import MainLayout from './layouts/MainLayout';
 import Dashboard from './pages/Dashboard';
@@ -32,7 +31,6 @@ function App() {
         <Routes>
           <Route path="/" element={<MainLayout />}>
             <Route index element={<Dashboard />} />
-            <Route path="chat" element={<Chat />} />
             <Route path="apps" element={<Apps />} />
             <Route path="settings" element={<Settings />} />
             <Route path="terminal" element={<TerminalPage />} />

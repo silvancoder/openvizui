@@ -23,7 +23,8 @@ import {
   CloudServerOutlined,
   ThunderboltOutlined,
   ToolOutlined,
-  CodeOutlined // Added this
+  CodeOutlined,
+  FontSizeOutlined // Added for Fonts category
 } from '@ant-design/icons';
 
 const { Title, Text } = Typography;
@@ -342,6 +343,48 @@ const Apps = () => {
         checkArgs: ['--version'],
         icon: '/icons/minio.svg' 
     },
+    { 
+        name: 'Cascadia Code',
+        category: 'fonts', 
+        description: t('apps.items.fonts.desc', { defaultValue: 'Microsoft Cascadia Code Font (Nerd Font)' }),
+        downloadUrl: 'https://github.com/ryanoasis/nerd-fonts/releases/download/v3.3.0/CascadiaCode.zip',
+        filename: 'CascadiaCode.zip'
+    },
+    { 
+        name: 'JetBrains Mono',
+        category: 'fonts', 
+        description: t('apps.items.fonts.desc', { defaultValue: 'JetBrains Mono Font (Nerd Font)' }),
+        downloadUrl: 'https://github.com/ryanoasis/nerd-fonts/releases/download/v3.3.0/JetBrainsMono.zip',
+        filename: 'JetBrainsMono.zip'
+    },
+    { 
+        name: 'Fira Code',
+        category: 'fonts', 
+        description: t('apps.items.fonts.desc', { defaultValue: 'Fira Code Font (Nerd Font)' }),
+        downloadUrl: 'https://github.com/ryanoasis/nerd-fonts/releases/download/v3.3.0/FiraCode.zip',
+        filename: 'FiraCode.zip'
+    },
+    { 
+        name: 'Source Code Pro',
+        category: 'fonts', 
+        description: t('apps.items.fonts.desc', { defaultValue: 'Source Code Pro Font (Nerd Font)' }),
+        downloadUrl: 'https://github.com/ryanoasis/nerd-fonts/releases/download/v3.3.0/SourceCodePro.zip',
+        filename: 'SourceCodePro.zip'
+    },
+    { 
+        name: 'MesloLGS NF',
+        category: 'fonts', 
+        description: t('apps.items.fonts.desc', { defaultValue: 'MesloLGS NF Font (Nerd Font)' }),
+        downloadUrl: 'https://github.com/ryanoasis/nerd-fonts/releases/download/v3.3.0/Meslo.zip',
+        filename: 'Meslo.zip'
+    },
+    { 
+        name: 'Maple Mono',
+        category: 'fonts', 
+        description: t('apps.items.fonts.desc', { defaultValue: 'Maple Mono Font (Nerd Font)' }),
+        downloadUrl: 'https://github.com/subframe7536/Maple-font/releases/download/v7.0/MapleMono-NF.zip',
+        filename: 'MapleMono-NF.zip'
+    }
   ];
 
   const categories = [
@@ -350,6 +393,7 @@ const Apps = () => {
     { key: 'database', label: t('apps.categories.database'), icon: <DatabaseOutlined /> },
     { key: 'cache_queue', label: t('apps.categories.cache_queue'), icon: <ThunderboltOutlined /> },
     { key: 'tools', label: t('apps.categories.tools'), icon: <ToolOutlined /> },
+    { key: 'fonts', label: t('apps.categories.fonts', { defaultValue: 'Fonts' }), icon: <FontSizeOutlined /> },
   ];
   
   // Check statuses on mount
@@ -371,6 +415,22 @@ const Apps = () => {
                   }
               }
           }
+          
+          // Check for system fonts
+          try {
+             const sysFonts: string[] = await invoke('get_system_fonts');
+             for (const app of allApps) {
+                 if (app.category === 'fonts') {
+                     // Simple name matching. "Cascadia Code" -> matches?
+                     // Font names in system are "Cascadia Code", "Cascadia Mono" etc.
+                     // We check if any system font starts with the app name
+                     if (sysFonts.some(f => f.toLowerCase().includes(app.name.toLowerCase()))) {
+                         installed.push(app.name);
+                     }
+                 }
+             }
+          } catch(e) { }
+
           setInstalledApps(installed);
       };
       checkStatuses();

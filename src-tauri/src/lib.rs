@@ -500,8 +500,7 @@ fn pty_open(app: AppHandle, state: State<'_, AppPty>, cols: u16, rows: u16) -> R
             match reader.read(&mut buf) {
                 Ok(n) if n > 0 => {
                     let data = &buf[..n];
-                    let text = String::from_utf8_lossy(data).to_string();
-                    let _ = app.emit("pty-data", text);
+                    let _ = app.emit("pty-data", data.to_vec());
                 }
                 _ => break,
             }
@@ -674,6 +673,30 @@ async fn fetch_remote_models(base_url: String, api_key: String) -> Result<Vec<St
     Ok(model_ids)
 }
 
+#[tauri::command]
+fn get_system_fonts() -> Vec<String> {
+    #[cfg(target_os = "windows")]
+    {
+        let output = create_background_command("powershell")
+            .args(&["/C", "Add-Type -AssemblyName System.Drawing; [System.Drawing.FontFamily]::Families.Name"])
+            .output();
+
+        if let Ok(out) = output {
+             // Decode and split by newlines
+             let stdout = String::from_utf8_lossy(&out.stdout);
+             stdout.lines().map(|s| s.trim().to_string()).filter(|s| !s.is_empty()).collect()
+        } else {
+            Vec::new()
+        }
+    }
+    
+    #[cfg(not(target_os = "windows"))]
+    {
+        // TODO: Implement for macOS/Linux using fc-list
+        Vec::new()
+    }
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
   tauri::Builder::default()
@@ -694,7 +717,10 @@ pub fn run() {
         pty_close,
         download_file,
         extract_file,
-        fetch_remote_models
+        download_file,
+        extract_file,
+        fetch_remote_models,
+        get_system_fonts
     ])
     .manage(AppPty::default())
     .setup(|app| {

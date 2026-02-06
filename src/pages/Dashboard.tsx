@@ -1,7 +1,7 @@
 import { Card, Button, Row, Col, Tag, Typography, message, Modal, Select, Space, Tooltip, theme } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { ReloadOutlined, PlusOutlined, MessageOutlined } from '@ant-design/icons';
+import { ReloadOutlined, PlusOutlined, CodeOutlined } from '@ant-design/icons';
 import { installTool, uninstallTool, checkToolStatus, updateTool } from '../lib/tauri';
 import { useEffect, useState } from 'react';
 
@@ -200,11 +200,16 @@ const Dashboard = () => {
   }
 
   const handleRunInChat = (toolId: string) => {
-    // setActiveToolId is handled in store, ensuring Chat picks it up
-    // We can also set it explicitly here if needed, but store should handle it via UI interaction if we sync it
-    // Actually, we need to set the active tool in the store so Chat knows what to launch
+    // Navigate to terminal and launch the tool
+    const commands: Record<string, string> = {
+        'google': 'gemini',
+        // others match their ID usually, but explicit is safe
+    };
+    const cmd = commands[toolId] || toolId;
+    
+    useAppStore.getState().setPendingCommand(cmd);
     useAppStore.getState().setActiveToolId(toolId);
-    navigate('/chat');
+    navigate('/terminal');
   };
 
   // Filter tools to display
@@ -267,12 +272,12 @@ const Dashboard = () => {
                   {/* Row 1: Execute | Config | Guide */}
                   <Row gutter={8} style={{ marginBottom: 8 }}>
                       <Col span={8}>
-                          <Tooltip title="Run in Chat">
+                          <Tooltip title={t('app.runInTerminal', { defaultValue: 'Run in Terminal' })}>
                             <Button 
                                 type="primary" 
                                 ghost
                                 block
-                                icon={<MessageOutlined />} 
+                                icon={<CodeOutlined />} 
                                 disabled={processing[tool.id] || tool.status !== 'installed'} 
                                 onClick={() => handleRunInChat(tool.id)}
                             />

@@ -39,9 +39,12 @@ interface AppState {
   pendingCommand: string | null;
   currentDirectory: string | null;
   activeToolId: string | null;
+  chatInput: string;
   
   // Actions
   setTheme: (theme: 'light' | 'dark') => void;
+  // ...
+  setChatInput: (input: string) => void;
   setLanguage: (lang: string) => void;
   setProxyType: (type: string) => void;
   setProxyAddress: (address: string) => void;
@@ -130,6 +133,8 @@ export const useAppStore = create<AppState>((set, get) => ({
   pendingCommand: null,
   currentDirectory: null,
   activeToolId: null,
+  chatInput: '',
+  setChatInput: (chatInput) => set({ chatInput }),
 
   setTheme: (theme) => {
       set({ theme });
@@ -238,7 +243,8 @@ export const useAppStore = create<AppState>((set, get) => ({
               envStatus: config.env_status || null,
               toolStatuses: config.tool_statuses || {},
               toolConfigs: (config.tool_configs as any) || {},
-              isLoaded: true
+              isLoaded: true,
+              chatInput: ''
           });
       } catch (e) {
           console.error("Load config failed", e);

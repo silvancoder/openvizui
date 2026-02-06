@@ -4,7 +4,6 @@ import {
   ToolOutlined, 
   SettingOutlined, 
   CodeOutlined,
-  CommentOutlined,
   AppstoreOutlined
 } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
@@ -34,11 +33,7 @@ const MainLayout = () => {
       icon: <AppstoreOutlined />,
       label: t('app.apps'),
     },
-    {
-      key: '/chat',
-      icon: <CommentOutlined />,
-      label: t('app.chat'),
-    },
+
     {
       key: '/terminal',
       icon: <CodeOutlined />,
