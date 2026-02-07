@@ -1,3 +1,10 @@
+/*
+ * @Author: Anthony Rivera && opcnlin@gmail.com
+ * @FilePath: \src-tauri\src\lib.rs
+ * Copyright (c) 2026 OpenVizUI Contributors
+ * Licensed under the MIT License
+ */
+
 use serde::{Deserialize, Serialize};
 use std::process::Command;
 use std::fs;
@@ -215,8 +222,6 @@ fn launch_tool(tool_id: String) -> Result<String, String> {
         "grok" => "grok",
         _ => return Err("Unknown tool".to_string()),
     };
-    
-    // Windows-specific handling for cmd/powershell (variables currently unused, keeping logic simple for now)
     
     // Launch in a new terminal window
     #[cfg(target_os = "windows")]
@@ -478,6 +483,30 @@ fn pty_open(app: AppHandle, state: State<'_, AppPty>, cols: u16, rows: u16) -> R
             }
         }
     }
+
+    // Proxy Injection for Terminal
+    if let (Some(proxy_type), Some(address)) = (config.proxy_type.as_deref(), config.proxy_address.as_deref()) {
+        if !address.is_empty() && proxy_type != "none" {
+            let proxy_scheme = if proxy_type == "socks5" { "socks5://" } else { "http://" };
+            let proxy_url = if address.contains("://") {
+                address.to_string()
+            } else {
+                format!("{}{}", proxy_scheme, address)
+            };
+
+            println!("Injecting Proxy to Terminal: {}", proxy_url);
+            
+            // Set standard proxy environment variables
+            cmd.env("HTTP_PROXY", &proxy_url);
+            cmd.env("HTTPS_PROXY", &proxy_url);
+            cmd.env("ALL_PROXY", &proxy_url);
+            
+            // For good measure, lowercase too
+            cmd.env("http_proxy", &proxy_url);
+            cmd.env("https_proxy", &proxy_url);
+            cmd.env("all_proxy", &proxy_url);
+        }
+    }
     
     let child = pair.slave.spawn_command(cmd).map_err(|e| format!("Failed to spawn shell: {}", e))?;
     println!("Shell spawned successfully: {:?}", child);
@@ -545,6 +574,11 @@ fn pty_resize(state: State<'_, AppPty>, cols: u16, rows: u16) -> Result<(), Stri
 }
 
 #[tauri::command]
+fn pty_exists(state: State<'_, AppPty>) -> bool {
+    state.child.lock().unwrap().is_some()
+}
+
+#[tauri::command]
 fn open_url(url: String) -> Result<(), String> {
     opener::open(url).map_err(|e| e.to_string())
 }
@@ -567,7 +601,7 @@ async fn download_file(app: AppHandle, url: String, filename: String) -> Result<
     println!("Starting download: {} -> {}", url, target_path_str);
 
     // 2. Start Request
-    let client = reqwest::Client::new();
+    let client = get_proxy_client(&app)?;
     let res = client
         .get(&url)
         .send()
@@ -639,7 +673,7 @@ fn extract_file(path: String) -> Result<String, String> {
 }
 
 #[tauri::command]
-async fn fetch_remote_models(base_url: String, api_key: String) -> Result<Vec<String>, String> {
+async fn fetch_remote_models(app: AppHandle, base_url: String, api_key: String) -> Result<Vec<String>, String> {
     // Ensure base_url ends with /v1 or /v1/, adjust if necessary
     // Actually, usually users provide "https://api.openai.com/v1"
     // We want to fetch "{base_url}/models".
@@ -649,7 +683,7 @@ async fn fetch_remote_models(base_url: String, api_key: String) -> Result<Vec<St
     
     println!("Fetching models from: {}", url);
 
-    let client = reqwest::Client::new();
+    let client = get_proxy_client(&app)?;
     let res = client
         .get(&url)
         .header("Authorization", format!("Bearer {}", api_key))
@@ -671,6 +705,39 @@ async fn fetch_remote_models(base_url: String, api_key: String) -> Result<Vec<St
     // Sort logic? OpenAI returns chaotic list. Maybe user wants to sort in UI.
     
     Ok(model_ids)
+}
+
+
+fn get_proxy_client(app: &AppHandle) -> Result<reqwest::Client, String> {
+    let config = get_app_config(app.clone());
+    let mut builder = reqwest::Client::builder();
+
+    if let (Some(proxy_type), Some(address)) = (config.proxy_type.as_deref(), config.proxy_address.as_deref()) {
+        if !address.is_empty() && proxy_type != "none" {
+            let proxy_scheme = if proxy_type == "socks5" { "socks5://" } else { "http://" };
+            // Check if address already contains scheme
+            let proxy_url = if address.contains("://") {
+                address.to_string()
+            } else {
+                format!("{}{}", proxy_scheme, address)
+            };
+
+            println!("Configuring Proxy: {}", proxy_url);
+            match reqwest::Proxy::all(&proxy_url) {
+                Ok(proxy) => {
+                    builder = builder.proxy(proxy);
+                },
+                Err(e) => {
+                    println!("Failed to create proxy: {}", e);
+                    // Decide if we should return error or fallback. 
+                    // To be safe and let user know configuration is wrong, returning error is better.
+                    return Err(format!("Invalid proxy configuration: {}", e));
+                }
+            }
+        }
+    }
+
+    builder.build().map_err(|e| format!("Failed to build HTTP client: {}", e))
 }
 
 #[tauri::command]
@@ -697,6 +764,103 @@ fn get_system_fonts() -> Vec<String> {
     }
 }
 
+#[derive(Debug, Serialize, Deserialize, Clone)]
+pub struct McpInfo {
+    path: String,
+    name: String,
+}
+
+#[tauri::command]
+fn list_installed_skills(target: String) -> Vec<McpInfo> {
+    let mut mcps = Vec::new();
+    let home = std::env::var("HOME").or_else(|_| std::env::var("USERPROFILE")).unwrap_or_default();
+    
+    let base_path = if target == "claude" {
+        PathBuf::from(&home).join(".claude").join("skills")
+    } else {
+        PathBuf::from(&home).join(".agents").join("skills")
+    };
+    
+    if base_path.exists() {
+        if let Ok(entries) = fs::read_dir(&base_path) {
+            for entry in entries.flatten() {
+                let path = entry.path();
+                if path.is_dir() {
+                    if let Some(name) = path.file_name().and_then(|n| n.to_str()) {
+                        mcps.push(McpInfo {
+                            path: path.to_string_lossy().to_string(),
+                            name: name.to_string(),
+                        });
+                    }
+                }
+            }
+        }
+    }
+    
+    mcps
+}
+
+#[tauri::command]
+fn install_skills(_app: AppHandle, url: String, name: Option<String>, target: String) -> Result<String, String> {
+    let home = std::env::var("HOME").or_else(|_| std::env::var("USERPROFILE")).map_err(|_| "Could not determine home directory".to_string())?;
+    
+    let target_base = if target == "claude" {
+        PathBuf::from(&home).join(".claude").join("skills")
+    } else {
+        PathBuf::from(&home).join(".agents").join("skills")
+    };
+
+    if !target_base.exists() {
+        fs::create_dir_all(&target_base).map_err(|e| e.to_string())?;
+    }
+    
+    let folder_name = if let Some(n) = name {
+        n
+    } else {
+        // Extract owner and repo from URL to create a unique folder name: owner-repo
+        let parts: Vec<&str> = url.trim_end_matches(".git").split('/').collect();
+        if parts.len() >= 2 {
+            let repo = parts[parts.len() - 1];
+            let owner = parts[parts.len() - 2];
+            format!("{}-{}", owner, repo)
+        } else {
+            url.split('/').last().unwrap_or("mcp_skill").trim_end_matches(".git").to_string()
+        }
+    };
+        
+    let target_path = target_base.join(&folder_name);
+    
+    if target_path.exists() {
+        return Err(format!("skills '{}' is already installed at {:?}", folder_name, target_path));
+    }
+
+    println!("Cloning Skill to: {:?}", target_path);
+    
+    // Use git clone
+    let output = Command::new("git")
+        .args(&["clone", &url, target_path.to_str().unwrap()])
+        .output()
+        .map_err(|e| e.to_string())?;
+        
+    if output.status.success() {
+        Ok(format!("Installed {} successfully", folder_name))
+    } else {
+        Err(String::from_utf8_lossy(&output.stderr).to_string())
+    }
+}
+
+#[tauri::command]
+fn uninstall_skills(path: String) -> Result<(), String> {
+    let path_buf = PathBuf::from(&path);
+    if path_buf.exists() {
+        fs::remove_dir_all(path_buf).map_err(|e| e.to_string())?;
+        Ok(())
+    } else {
+        Err("Path does not exist".to_string())
+    }
+}
+
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
   tauri::Builder::default()
@@ -715,12 +879,14 @@ pub fn run() {
         pty_write,
         pty_resize,
         pty_close,
-        download_file,
-        extract_file,
+        pty_exists,
         download_file,
         extract_file,
         fetch_remote_models,
-        get_system_fonts
+        get_system_fonts,
+        list_installed_skills,
+        install_skills,
+        uninstall_skills
     ])
     .manage(AppPty::default())
     .setup(|app| {

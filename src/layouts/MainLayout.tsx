@@ -1,16 +1,27 @@
+/*
+ * @Author: Anthony Rivera && opcnlin@gmail.com
+ * @FilePath: \src\layouts\MainLayout.tsx
+ * Copyright (c) 2026 OpenVizUI Contributors
+ * Licensed under the MIT License
+ */
+
 import { Layout, Menu, Switch, theme, Select } from 'antd';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { 
   ToolOutlined, 
   SettingOutlined, 
   CodeOutlined,
-  AppstoreOutlined
+  AppstoreOutlined,
+  RobotOutlined
 } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 import { useAppStore } from '../store/appStore';
 import { useEffect, useState } from 'react';
 import EnvironmentStatusInfo from '../components/EnvironmentStatusInfo';
 import Logo from '../components/Logo';
+import TitleBar from '../components/TitleBar';
+
+
 
 const { Header, Content, Sider, Footer } = Layout;
 
@@ -32,6 +43,11 @@ const MainLayout = () => {
       key: '/apps',
       icon: <AppstoreOutlined />,
       label: t('app.apps'),
+    },
+    {
+      key: '/ai-settings',
+      icon: <RobotOutlined />,
+      label: t('app.aiSettings'),
     },
 
     {
@@ -57,7 +73,7 @@ const MainLayout = () => {
   }, []);
 
   useEffect(() => {
-    // Apply theme to body (for simple class-based switching if needed)
+    // Apply theme to body
     if (appTheme === 'dark') {
       document.body.classList.add('dark');
     } else {
@@ -79,7 +95,9 @@ const MainLayout = () => {
   const isDark = appTheme === 'dark';
 
   return (
-    <Layout style={{ height: '100vh', overflow: 'hidden', opacity: opacity }}>
+    <div style={{ height: '100vh', overflow: 'hidden', opacity: opacity, display: 'flex', flexDirection: 'column' }}>
+      <TitleBar />
+      <Layout style={{ flex: 1, overflow: 'hidden', marginTop: '32px' }}>
       <Sider 
         collapsible 
         collapsed={collapsed} 
@@ -149,11 +167,23 @@ const MainLayout = () => {
         <Content style={{ margin: '16px', flex: 1, overflow: 'auto', display: 'flex', flexDirection: 'column' }}>
           <Outlet />
         </Content>
-        <Footer style={{ textAlign: 'center', background: 'transparent', padding: '12px 16px' }}>
-          <EnvironmentStatusInfo />
+        <Footer style={{ 
+          background: 'transparent', 
+          padding: '10px 16px',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center'
+        }}>
+          <div style={{ flex: 1 }}>
+            <EnvironmentStatusInfo />
+          </div>
+          <div style={{ color: token.colorTextSecondary, fontSize: '10px', whiteSpace: 'nowrap' }}>
+            OpenVizUI v1.0.0
+          </div>
         </Footer>
       </Layout>
-    </Layout>
+      </Layout>
+    </div>
   );
 };
 

@@ -1,3 +1,10 @@
+/*
+ * @Author: Anthony Rivera && opcnlin@gmail.com
+ * @FilePath: \src\components\Logo.tsx
+ * Copyright (c) 2026 OpenVizUI Contributors
+ * Licensed under the MIT License
+ */
+
 import React from 'react';
 
 interface LogoProps {

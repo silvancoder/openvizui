@@ -1,3 +1,10 @@
+/*
+ * @Author: Anthony Rivera && opcnlin@gmail.com
+ * @FilePath: \src\lib\tauri.ts
+ * Copyright (c) 2026 OpenVizUI Contributors
+ * Licensed under the MIT License
+ */
+
 import { invoke } from '@tauri-apps/api/core';
 
 export interface EnvironmentStatus {

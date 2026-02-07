@@ -1,3 +1,10 @@
+/*
+ * @Author: Anthony Rivera && opcnlin@gmail.com
+ * @FilePath: \src\pages\Dashboard.tsx
+ * Copyright (c) 2026 OpenVizUI Contributors
+ * Licensed under the MIT License
+ */
+
 import { Card, Button, Row, Col, Tag, Typography, message, Modal, Select, Space, Tooltip, theme } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
@@ -179,9 +186,8 @@ const Dashboard = () => {
       }
   }
 
-   const handleConfig = (toolId: string) => {
-      message.info(`Configuration for ${toolId} coming soon.`);
-  }
+
+
 
   const handleUpdate = async (toolId: string) => {
     setUpdating(prev => ({ ...prev, [toolId]: true }));
@@ -203,7 +209,15 @@ const Dashboard = () => {
     // Navigate to terminal and launch the tool
     const commands: Record<string, string> = {
         'google': 'gemini',
-        // others match their ID usually, but explicit is safe
+        'claude': 'claude',
+        'opencode': 'opencode',
+        'openclaw': 'openclaw',
+        'iflow': 'iflow',
+        'codebuddy': 'codebuddy',
+        'copilot': 'copilot',
+        'codex': 'codex',
+        'kilocode': 'kilocode',
+        'grok': 'grok',
     };
     const cmd = commands[toolId] || toolId;
     
@@ -269,9 +283,9 @@ const Dashboard = () => {
 
               {/* Custom Action Footer */}
               <div style={{ borderTop: `1px solid ${token.colorBorderSecondary}`, paddingTop: 12, margin: '0 -24px -24px -24px', padding: '12px 24px 24px 24px', background: token.colorFillAlter }}>
-                  {/* Row 1: Execute | Config | Guide */}
+                  {/* Row 1: Execute | Guide */}
                   <Row gutter={8} style={{ marginBottom: 8 }}>
-                      <Col span={8}>
+                      <Col span={16}>
                           <Tooltip title={t('app.runInTerminal', { defaultValue: 'Run in Terminal' })}>
                             <Button 
                                 type="primary" 
@@ -280,13 +294,10 @@ const Dashboard = () => {
                                 icon={<CodeOutlined />} 
                                 disabled={processing[tool.id] || tool.status !== 'installed'} 
                                 onClick={() => handleRunInChat(tool.id)}
-                            />
+                            >
+                                {t('app.runInTerminal', { defaultValue: 'Run' })}
+                            </Button>
                           </Tooltip>
-                      </Col>
-                      <Col span={8}>
-                          <Button block onClick={() => handleConfig(tool.id)} disabled={processing[tool.id]} style={{ padding: '4px 0' }}>
-                              {t('app.config')}
-                          </Button>
                       </Col>
                       <Col span={8}>
                            <Button block disabled style={{ padding: '4px 0' }}>Guide</Button>

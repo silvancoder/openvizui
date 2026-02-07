@@ -1,3 +1,10 @@
+/*
+ * @Author: Anthony Rivera && opcnlin@gmail.com
+ * @FilePath: \src\pages\Apps.tsx
+ * Copyright (c) 2026 OpenVizUI Contributors
+ * Licensed under the MIT License
+ */
+
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
@@ -24,7 +31,7 @@ import {
   ThunderboltOutlined,
   ToolOutlined,
   CodeOutlined,
-  FontSizeOutlined // Added for Fonts category
+  FontSizeOutlined
 } from '@ant-design/icons';
 
 const { Title, Text } = Typography;
@@ -41,12 +48,15 @@ interface AppItem {
   checkCmd?: string;
   checkArgs?: string[];
   icon?: string;
+  launchCmd?: string;
+  launchType?: 'terminal' | 'web';
 }
 
 const Apps = () => {
   const { t } = useTranslation();
   const { token } = theme.useToken();
   const location = useLocation();
+
   const [searchTerm, setSearchTerm] = useState('');
   
   // Download State
@@ -64,6 +74,7 @@ const Apps = () => {
   // 数据库：MariaDB,MongoDB,MySQL,PostgreSQL
   // 缓存&队列：Redis,Memcached,Etcd,RabbitMQ
   // 工具&容器：NodeJS,Git,Podman,docker,Minio
+  // 字体
   
   const allApps: AppItem[] = [
     // Languages
@@ -342,7 +353,9 @@ const Apps = () => {
         checkCmd: 'minio',
         checkArgs: ['--version'],
         icon: '/icons/minio.svg' 
-    },
+      },
+    
+    // Fonts
     { 
         name: 'Cascadia Code',
         category: 'fonts', 
@@ -384,7 +397,7 @@ const Apps = () => {
         description: t('apps.items.fonts.desc', { defaultValue: 'Maple Mono Font (Nerd Font)' }),
         downloadUrl: 'https://github.com/subframe7536/Maple-font/releases/download/v7.0/MapleMono-NF.zip',
         filename: 'MapleMono-NF.zip'
-    }
+    },
   ];
 
   const categories = [
@@ -421,8 +434,6 @@ const Apps = () => {
              const sysFonts: string[] = await invoke('get_system_fonts');
              for (const app of allApps) {
                  if (app.category === 'fonts') {
-                     // Simple name matching. "Cascadia Code" -> matches?
-                     // Font names in system are "Cascadia Code", "Cascadia Mono" etc.
                      // We check if any system font starts with the app name
                      if (sysFonts.some(f => f.toLowerCase().includes(app.name.toLowerCase()))) {
                          installed.push(app.name);
@@ -527,13 +538,7 @@ const Apps = () => {
   };
   
   const isInstalled = (appName: string) => installedApps.includes(appName);
-  
-  // Icon helper import fix
-  // We need CodeOutlined for languages which is not imported above, let's add it roughly or reuse
-  // Actually I imported specific icons above. Let's use what I have.
-  // I used CodeOutlined for languages in the categories array but forgot to import it.
-  // Adding CodeOutlined to imports.
-  
+
   return (
       <div style={{ padding: '0px 24px 24px 24px', maxWidth: 1200, margin: '0 auto', width: '100%' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24, marginTop: 8 }}>
@@ -571,8 +576,7 @@ const Apps = () => {
                                         <List.Item>
                                             <Card 
                                                 hoverable 
-                                                style={{ height: '100%' }}
-                                                actions={[
+                                                style={{ height: '100%' }}                                                actions={[
                                                     <Button 
                                                         type={isInstalled(item.name) ? 'default' : 'primary'} 
                                                         icon={isInstalled(item.name) ? <CheckCircleOutlined /> : <DownloadOutlined />} 

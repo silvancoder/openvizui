@@ -1,6 +1,13 @@
+/*
+ * @Author: Anthony Rivera && opcnlin@gmail.com
+ * @FilePath: \src\pages\TerminalPage.tsx
+ * Copyright (c) 2026 OpenVizUI Contributors
+ * Licensed under the MIT License
+ */
+
 import { useState, useEffect } from 'react';
 import Terminal from '../components/Terminal';
-import { Layout, Select, Space, Button, Tree, Typography, theme, message, Dropdown, Modal, Input } from 'antd';
+import { Layout, Select, Space, Button, Tree, Typography, theme, message, Dropdown, Modal } from 'antd';
 import { 
   FolderOutlined, 
   CodeOutlined, 
@@ -12,10 +19,12 @@ import { useTranslation } from 'react-i18next';
 import { readDir, remove, readTextFile, writeTextFile } from '@tauri-apps/plugin-fs';
 import { open as openDialog } from '@tauri-apps/plugin-dialog';
 import type { DataNode } from 'antd/es/tree';
-import { fetchRemoteModels } from '../lib/tauri';
+import { fetchRemoteModels, ptyWrite } from '../lib/tauri';
 
 const { Sider } = Layout;
 const { Text } = Typography;
+
+import Editor from '@monaco-editor/react';
 
 const TOOL_COMMANDS: Record<string, string> = {
   iflow: 'iflow',
@@ -30,9 +39,35 @@ const TOOL_COMMANDS: Record<string, string> = {
   grok: 'grok',
 };
 
+// Helper to determine language for Monaco Editor
+const getLanguageFromFilename = (filename: string) => {
+    if (!filename) return 'plaintext';
+    const ext = filename.split('.').pop()?.toLowerCase();
+    switch (ext) {
+        case 'js': return 'javascript';
+        case 'jsx': return 'javascript';
+        case 'ts': return 'typescript';
+        case 'tsx': return 'typescript';
+        case 'json': return 'json';
+        case 'html': return 'html';
+        case 'css': return 'css';
+        case 'rs': return 'rust';
+        case 'py': return 'python';
+        case 'md': return 'markdown';
+        case 'yml':
+        case 'yaml': return 'yaml';
+        case 'xml': return 'xml';
+        case 'sql': return 'sql';
+        case 'sh': return 'shell';
+        case 'gitignore': return 'shell';
+        case 'env': return 'shell';
+        default: return 'plaintext';
+    }
+};
+
 const TerminalPage = () => {
   const { token } = theme.useToken();
-  useTranslation();
+  const { t } = useTranslation();
   const { 
     activeToolId, 
     setActiveToolId,
@@ -116,17 +151,14 @@ const TerminalPage = () => {
     }
   };
 
-  const handleNodeSelect = (selectedKeys: React.Key[], info: any) => {
-      if (selectedKeys.length > 0) {
-          const path = selectedKeys[0] as string;
-          if (!info.node.isLeaf) {
-              // It's a directory, cd into it
-              setPendingCommand(`cd "${path}"`);
-          } else {
-              // It's a file, maybe open/cat it? Or just insert path? 
-              // For now, let's insert path into terminal
-               setPendingCommand(path);
-          }
+  const handleNodeSelect = (_selectedKeys: React.Key[], _info: any) => {
+      // Just select, do not insert into terminal
+      // if (selectedKeys.length > 0) { ... }
+  };
+
+  const handleNodeDoubleClick = (_e: any, node: any) => {
+      if (node.isLeaf) {
+          handleOpenEditor(node.key as string);
       }
   };
 
@@ -161,17 +193,14 @@ const TerminalPage = () => {
   /* File Operation Handlers */
   const [editingFile, setEditingFile] = useState<string | null>(null);
   const [fileContent, setFileContent] = useState('');
-  const { chatInput, setChatInput } = useAppStore();
-  
   const handleAddChat = (path: string) => {
       // Normalize path separators to backslashes for Windows consistency
-      // Ideally we check OS, but we can infer or simpler: just fix mixed Use regex to replace forward slashes with backslashes
       const normalizedPath = path.replace(/\//g, '\\');
       
       const pathToInsert = normalizedPath.includes(' ') ? `"${normalizedPath}"` : normalizedPath;
-      const newValue = chatInput ? `${chatInput} ${pathToInsert}` : pathToInsert;
-      setChatInput(newValue);
-      message.success("Added to chat");
+      // Write directly to PTY instead of state
+      ptyWrite(pathToInsert);
+      message.success("Inserted path to terminal");
   };
 
   const handleDeleteFile = (path: string) => {
@@ -222,11 +251,40 @@ const TerminalPage = () => {
     if (config) updateApiConfig({ ...config, model: val });
   };
 
+  /* Resizable Sidebar Logic */
+  const [sidebarWidth, setSidebarWidth] = useState(280);
+  const [isResizing, setIsResizing] = useState(false);
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!isResizing) return;
+      // Limit width between 200px and 600px
+      const newWidth = Math.max(200, Math.min(600, e.clientX));
+      setSidebarWidth(newWidth);
+    };
+
+    const handleMouseUp = () => {
+      setIsResizing(false);
+      document.body.style.cursor = 'default';
+    };
+
+    if (isResizing) {
+      document.addEventListener('mousemove', handleMouseMove);
+      document.addEventListener('mouseup', handleMouseUp);
+      document.body.style.cursor = 'col-resize';
+    }
+
+    return () => {
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+    };
+  }, [isResizing]);
+
   return (
     <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
       <Layout style={{ height: '100%', background: 'transparent' }}>
         <Sider 
-            width={280} 
+            width={sidebarWidth} 
             style={{ 
                 background: token.colorBgContainer, 
                 borderRadius: '8px', 
@@ -234,9 +292,28 @@ const TerminalPage = () => {
                 marginRight: 16,
                 padding: 12,
                 display: 'flex',
-                flexDirection: 'column'
+                flexDirection: 'column',
+                position: 'relative' // For absolute positioning of handle
             }}
         >
+             {/* Resize Handle */}
+             <div
+                style={{
+                  position: 'absolute',
+                  right: -8, // Move logic outside (marginRight is 16, so -8 is in the gap)
+                  top: 0,
+                  bottom: 0,
+                  width: 10,
+                  cursor: 'col-resize',
+                  zIndex: 20,
+                  // Debug: background: 'red',
+                }}
+                onMouseDown={(e) => {
+                    e.preventDefault();
+                    setIsResizing(true);
+                }}
+             />
+
             <div style={{ display: 'flex', flexDirection: 'column', height: '100%', gap: 16 }}>
                 {/* CLI Tool Selection */}
                 <div>
@@ -294,21 +371,23 @@ const TerminalPage = () => {
                 {/* File Tree */}
                 <div style={{ flex: 1, overflow: 'auto', borderTop: `1px solid ${token.colorBorderSecondary}`, paddingTop: 12, minHeight: 0 }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
-                         <Text strong><FolderOutlined /> Project Files</Text>
-                         <Button size="small" type="text" onClick={handleSelectDirectory}>Change</Button>
+                         <Text strong><FolderOutlined /> {t('terminal.fileTree.title')}</Text>
+                         <Button size="small" type="text" onClick={handleSelectDirectory}>{t('terminal.fileTree.change')}</Button>
                     </div>
                     <Tree
                         showIcon
                         loadData={onLoadData}
                         treeData={treeData}
+                        blockNode
                         onSelect={handleNodeSelect}
+                        onDoubleClick={handleNodeDoubleClick}
                         titleRender={(node: any) => (
                             <Dropdown 
                                 menu={{ 
                                     items: [
                                         {
                                             key: 'chat',
-                                            label: 'Add to Chat',
+                                            label: t('terminal.fileTree.context.addToChat'),
                                             onClick: (e) => {
                                                 e.domEvent.stopPropagation();
                                                 handleAddChat(node.key as string);
@@ -316,7 +395,7 @@ const TerminalPage = () => {
                                         },
                                         {
                                             key: 'open',
-                                            label: 'Open',
+                                            label: t('terminal.fileTree.context.open'),
                                             disabled: !node.isLeaf,
                                             onClick: (e) => {
                                                 e.domEvent.stopPropagation();
@@ -324,17 +403,9 @@ const TerminalPage = () => {
                                             }
                                         },
                                         { type: 'divider' },
-                                        // {
-                                        //     key: 'rename',
-                                        //     label: 'Rename',
-                                        //     onClick: (e) => {
-                                        //          e.domEvent.stopPropagation();
-                                        //          setRenamingNode({ key: node.key as string, name: node.title as string });
-                                        //     }
-                                        // },
                                         {
                                             key: 'delete',
-                                            label: 'Delete',
+                                            label: t('terminal.fileTree.context.delete'),
                                             danger: true,
                                             onClick: (e) => {
                                                 e.domEvent.stopPropagation();
@@ -345,7 +416,15 @@ const TerminalPage = () => {
                                 }} 
                                 trigger={['contextMenu']}
                             >
-                                <span style={{ userSelect: 'none' }}>{node.title}</span>
+                                <span style={{ 
+                                    userSelect: 'none', 
+                                    whiteSpace: 'nowrap', 
+                                    overflow: 'hidden', 
+                                    textOverflow: 'ellipsis', 
+                                    display: 'inline-block', 
+                                    maxWidth: '100%',
+                                    verticalAlign: 'middle'
+                                }}>{node.title}</span>
                             </Dropdown>
                         )}
                         style={{ background: 'transparent' }}
@@ -359,22 +438,51 @@ const TerminalPage = () => {
         </div>
       </Layout>
       
+
+
       {/* File Editor Modal */}
       <Modal
-        title={`Editing: ${editingFile?.split('/').pop()}`}
+        title={`${t('terminal.fileTree.modal.editing')}: ${editingFile?.split('/').pop()}`}
         open={!!editingFile}
         onCancel={() => setEditingFile(null)}
-        width={800}
+        width={1000} 
         onOk={handleSaveFile}
+        okText={t('terminal.fileTree.modal.save')}
+        cancelText={t('common.cancel')}
         maskClosable={false}
+        styles={{ body: { padding: 0 } }} 
       >
-          <Input.TextArea 
-             value={fileContent} 
-             onChange={e => setFileContent(e.target.value)} 
-             autoSize={{ minRows: 15, maxRows: 25 }}
-             style={{ fontFamily: 'monospace' }}
-          />
+          <div style={{ border: `1px solid ${token.colorBorderSecondary}`, borderRadius: 8, overflow: 'hidden' }}>
+            <Editor
+                height="60vh"
+                language={getLanguageFromFilename(editingFile || '')}
+                value={fileContent}
+                theme="vs-dark"
+                onChange={(value) => setFileContent(value || '')}
+                options={{
+                    minimap: { enabled: false },
+                    fontSize: 14,
+                    scrollBeyondLastLine: false,
+                    automaticLayout: true,
+                }}
+            />
+          </div>
       </Modal>
+      {/* Resize Overlay - prevents terminal from swallowing events */ }
+      {isResizing && (
+        <div
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            zIndex: 9999,
+            cursor: 'col-resize',
+            userSelect: 'none'
+          }}
+        />
+      )}
     </div>
   );
 };

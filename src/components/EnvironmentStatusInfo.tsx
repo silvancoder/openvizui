@@ -1,10 +1,10 @@
 /*
- * @Date: 2026-02-03 19:31:39
  * @Author: Anthony Rivera && opcnlin@gmail.com
  * @FilePath: \src\components\EnvironmentStatusInfo.tsx
  * Copyright (c) 2026 OpenVizUI Contributors
  * Licensed under the MIT License
  */
+
 import { useEffect } from 'react';
 import { useAppStore } from '../store/appStore';
 import { Tag, Space, Typography } from 'antd';

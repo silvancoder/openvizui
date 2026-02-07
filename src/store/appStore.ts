@@ -1,10 +1,10 @@
 /*
- * @Date: 2026-02-03 19:29:15
  * @Author: Anthony Rivera && opcnlin@gmail.com
  * @FilePath: \src\store\appStore.ts
  * Copyright (c) 2026 OpenVizUI Contributors
  * Licensed under the MIT License
  */
+
 import { create } from 'zustand';
 import { checkEnvironment, checkToolStatus, getAppConfig, saveAppConfig, type EnvironmentStatus, type ToolStatus, type ApiConfig } from '../lib/tauri';
 
@@ -39,12 +39,9 @@ interface AppState {
   pendingCommand: string | null;
   currentDirectory: string | null;
   activeToolId: string | null;
-  chatInput: string;
   
   // Actions
   setTheme: (theme: 'light' | 'dark') => void;
-  // ...
-  setChatInput: (input: string) => void;
   setLanguage: (lang: string) => void;
   setProxyType: (type: string) => void;
   setProxyAddress: (address: string) => void;
@@ -133,8 +130,7 @@ export const useAppStore = create<AppState>((set, get) => ({
   pendingCommand: null,
   currentDirectory: null,
   activeToolId: null,
-  chatInput: '',
-  setChatInput: (chatInput) => set({ chatInput }),
+
 
   setTheme: (theme) => {
       set({ theme });
@@ -243,8 +239,7 @@ export const useAppStore = create<AppState>((set, get) => ({
               envStatus: config.env_status || null,
               toolStatuses: config.tool_statuses || {},
               toolConfigs: (config.tool_configs as any) || {},
-              isLoaded: true,
-              chatInput: ''
+              isLoaded: true
           });
       } catch (e) {
           console.error("Load config failed", e);

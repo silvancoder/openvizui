@@ -1,3 +1,9 @@
+/*
+ * @Author: Anthony Rivera && opcnlin@gmail.com
+ * @FilePath: \src\components\Terminal.tsx
+ * Copyright (c) 2026 OpenVizUI Contributors
+ * Licensed under the MIT License
+ */
 
 import { useEffect, useRef, useState } from 'react';
 import { Terminal } from '@xterm/xterm';
@@ -8,7 +14,6 @@ import { Button, Tooltip, Space, theme as antdTheme, Select, Input, Dropdown, Mo
 import { 
   ClearOutlined, 
   ReloadOutlined, 
-  SendOutlined, 
   BranchesOutlined
 } from '@ant-design/icons';
 import '@xterm/xterm/css/xterm.css';
@@ -17,11 +22,14 @@ import { invoke } from '@tauri-apps/api/core';
 import { useAppStore } from '../store/appStore';
 import { useTranslation } from 'react-i18next';
 
+// Module-level lock to prevent double initialization in Strict Mode
+let isPtyInitializing = false;
+
 const TerminalUI = () => {
   const terminalRef = useRef<HTMLDivElement>(null);
   const xtermRef = useRef<Terminal | null>(null);
   const { token } = antdTheme.useToken();
-  useTranslation();
+  const { t } = useTranslation();
   
   const { 
     terminalFontFamily, 
@@ -31,9 +39,7 @@ const TerminalUI = () => {
     pendingCommand,
     setPendingCommand,
     setTerminalSettings,
-    terminalBackground,
-    chatInput,
-    setChatInput
+    terminalBackground
   } = useAppStore();
 
   const terminalPresets = [
@@ -45,7 +51,7 @@ const TerminalUI = () => {
     { name: 'Solarized Dark', bg: '#002b36', fg: '#839496' }
   ];
 
-  const [, setIsReady] = useState(false);
+  const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
     if (!terminalRef.current) return;
@@ -77,9 +83,7 @@ const TerminalUI = () => {
 
     const initPty = async () => {
       // 1. Register data listener first so we don't miss the initial prompt
-      // Backend now sends raw bytes (number[]) to avoid UTF-8 issues
       const unlistenFn = await listen<number[]>('pty-data', (event) => {
-        // xterm.write supports Uint8Array
         term.write(new Uint8Array(event.payload));
       });
       unlisten = unlistenFn;
@@ -94,42 +98,75 @@ const TerminalUI = () => {
       const initialCols = term.cols;
       const initialRows = term.rows;
 
-      // 4. Print UI banner
-      term.write('\x1b[2J\x1b[H'); 
-      term.write(`\x1b[1;34mOpenVizUI Terminal\x1b[0m \r\n`);
-      term.write(`\x1b[2mType 'help' to see available commands or 'exit' to close.\x1b[0m\r\n\r\n`);
-
       // 5. Initialize PTY session
       try {
-        await ptyClose(); // Clean up any existing session
-        await ptyOpen(initialCols, initialRows);
-        
-        // Force a clear screen (Ctrl+L) to remove potential double prompts from shell startup
-        setTimeout(() => {
-             ptyWrite('\x0c'); 
-             term.focus(); // Force focus on init
-             setIsReady(true); // <--- Set readiness here
-        }, 500);
-        
+        // Wait loop: if locked, poll until free
+        while (isPtyInitializing) {
+            await new Promise(resolve => setTimeout(resolve, 50));
+        }
+
+        // Acquire lock immediately to block other effects
+        isPtyInitializing = true;
+
+        let exists = false;
+        try {
+             exists = await invoke<boolean>('pty_exists');
+             
+             if (exists) {
+                 // If PTY exists, just resize and attach.
+                 await ptyResize(initialCols, initialRows);
+                 setIsReady(true);
+             } else {
+                 // Print UI banner only for new sessions
+                 term.write(`\x1b[1;34mOpenVizUI Terminal\x1b[0m \r\n`);
+                 term.write(`\x1b[2mType 'help' to see available commands or 'exit' to close.\x1b[0m\r\n\r\n`);
+    
+                 // await ptyClose();
+                 await ptyOpen(initialCols, initialRows);
+                 
+                 setTimeout(() => {
+                      term.focus();
+                      setIsReady(true); 
+                 }, 100);
+             }
+        } finally {
+             isPtyInitializing = false;
+        }
+
       } catch (e) {
+        isPtyInitializing = false;
         console.error('PTY Open failed', e);
         term.write(`\r\n\x1b[1;31mError: Failed to open terminal session.\x1b[0m\r\n`);
         return () => unlisten();
       }
 
       const handleResize = () => {
-        fitAddon.fit();
-        if (term.cols > 0 && term.rows > 0) {
-            ptyResize(term.cols, term.rows);
+        try {
+            fitAddon.fit();
+            if (term.cols > 0 && term.rows > 0) {
+                ptyResize(term.cols, term.rows);
+            }
+        } catch (e) {
+            console.error("Failed to fit terminal:", e);
         }
       };
 
-      window.addEventListener('resize', handleResize);
+      // Use ResizeObserver instead of window.resize
+      const resizeObserver = new ResizeObserver(() => {
+          // Debounce slightly or just call
+          // For terminal resize, immediate is usually fine, but requestAnimationFrame helps perf
+          requestAnimationFrame(handleResize);
+      });
+      
+      if (terminalRef.current) {
+          resizeObserver.observe(terminalRef.current);
+      }
+
+      // window.addEventListener('resize', handleResize); // Removed in favor of ResizeObserver
       
       return () => {
-          window.removeEventListener('resize', handleResize);
-          // Don't close PTY here to allow persistence, or close if you want ephemeral
-          // ptyClose(); 
+        resizeObserver.disconnect();
+        unlisten();
       };
     };
 
@@ -169,17 +206,39 @@ const TerminalUI = () => {
      }).catch(console.error);
   }, []);
 
-  // Handle pending commands (e.g. from "Launch in Terminal")
+  // Handle pending commands (e.g. from "Launch in Terminal" or Tool Switch)
   useEffect(() => {
-    if (pendingCommand && xtermRef.current) {
-        // Wait a bit for shell to be ready if it's a fresh mount
-        setTimeout(() => {
-            ptyWrite(`${pendingCommand}\r`);
-            setPendingCommand(null);
-            xtermRef.current?.focus();
-        }, 800);
+    const handleCommand = async () => {
+        if (pendingCommand && xtermRef.current && isReady) {
+            try {
+                // 1. Close existing session to kill any running process
+                await ptyClose();
+                
+                // 2. Clear terminal visually
+                xtermRef.current.clear();
+                xtermRef.current.write('\x1b[2J\x1b[H');
+                
+                // 3. Start fresh session
+                const cols = xtermRef.current.cols;
+                const rows = xtermRef.current.rows;
+                await ptyOpen(cols, rows);
+                
+                // 4. Execute new command after brief pause for shell init
+                setTimeout(() => {
+                    ptyWrite(`${pendingCommand}\r`);
+                    setPendingCommand(null);
+                    xtermRef.current?.focus();
+                }, 200);
+            } catch (e) {
+                console.error("Failed to restart terminal session", e);
+            }
+        }
+    };
+
+    if (pendingCommand) {
+        handleCommand();
     }
-  }, [pendingCommand, setPendingCommand]);
+  }, [pendingCommand, isReady, setPendingCommand]);
 
 
   const handleClear = () => {
@@ -196,12 +255,6 @@ const TerminalUI = () => {
       xtermRef.current?.focus();
   };
 
-  const handleInputSend = () => {
-      if (!chatInput) return;
-      ptyWrite(chatInput + '\r');
-      setChatInput('');
-      xtermRef.current?.focus();
-  };
 
   const [gitInputModal, setGitInputModal] = useState({
       open: false,
@@ -273,12 +326,12 @@ const TerminalUI = () => {
                       items: [
                           {
                               key: 'git-config-user',
-                              label: 'Set User Name',
+                              label: t('terminal.git.setUser'),
                               onClick: () => {
                                   setGitInputModal({
                                       open: true,
-                                      title: 'Set Git User Name',
-                                      label: 'Name',
+                                      title: t('terminal.git.modal.userName'),
+                                      label: t('terminal.git.modal.labelName'),
                                       value: '',
                                       commandTemplate: 'git config --global user.name "{value}"'
                                   });
@@ -286,12 +339,12 @@ const TerminalUI = () => {
                           },
                           {
                               key: 'git-config-email',
-                              label: 'Set User Email',
+                              label: t('terminal.git.setEmail'),
                               onClick: () => {
                                   setGitInputModal({
                                       open: true,
-                                      title: 'Set Git User Email',
-                                      label: 'Email',
+                                      title: t('terminal.git.modal.userEmail'),
+                                      label: t('terminal.git.modal.labelEmail'),
                                       value: '',
                                       commandTemplate: 'git config --global user.email "{value}"'
                                   });
@@ -300,19 +353,19 @@ const TerminalUI = () => {
                           { type: 'divider' },
                           {
                               key: 'git-init',
-                              label: 'Initialize Repository',
+                              label: t('terminal.git.init'),
                               onClick: () => {
                                   ptyWrite('git init\r');
                               }
                           },
                           {
                               key: 'git-remote',
-                              label: 'Add Remote Origin',
+                              label: t('terminal.git.addRemote'),
                               onClick: () => {
                                   setGitInputModal({
                                       open: true,
-                                      title: 'Add Remote Origin',
-                                      label: 'Repository URL',
+                                      title: t('terminal.git.modal.remote'),
+                                      label: t('terminal.git.modal.labelUrl'),
                                       value: '',
                                       commandTemplate: 'git remote add origin {value}'
                                   });
@@ -321,19 +374,19 @@ const TerminalUI = () => {
                           { type: 'divider' },
                           {
                               key: 'git-add',
-                              label: 'Add All (git add .)',
+                              label: t('terminal.git.add'),
                               onClick: () => {
                                   ptyWrite('git add .\r');
                               }
                           },
                           {
                               key: 'git-commit',
-                              label: 'Commit',
+                              label: t('terminal.git.commit'),
                               onClick: () => {
                                    setGitInputModal({
                                       open: true,
-                                      title: 'Git Commit',
-                                      label: 'Commit Message',
+                                      title: t('terminal.git.modal.commit'),
+                                      label: t('terminal.git.modal.labelMessage'),
                                       value: '',
                                       commandTemplate: 'git commit -m "{value}"'
                                   });
@@ -341,7 +394,7 @@ const TerminalUI = () => {
                           },
                           {
                               key: 'git-push',
-                              label: 'Push (origin master)',
+                              label: t('terminal.git.push'),
                               onClick: () => {
                                   ptyWrite('git push -u origin master\r');
                               }
@@ -350,13 +403,13 @@ const TerminalUI = () => {
                   }} 
                   trigger={['click']}
               >
-                  <Button type="text" size="small" icon={<BranchesOutlined />}>Git Operations</Button>
+                  <Button type="text" size="small" icon={<BranchesOutlined />}>{t('terminal.git.menu')}</Button>
               </Dropdown>
            </div>
         </Space>
         
         <Space>
-          <Tooltip title="Clear">
+          <Tooltip title={t('app.terminal.clear') || "Clear"}>
             <Button 
                 type="text" 
                 size="small" 
@@ -364,7 +417,7 @@ const TerminalUI = () => {
                 onClick={handleClear} 
             />
           </Tooltip>
-          <Tooltip title="Restart Session">
+          <Tooltip title={t('app.terminal.restart') || "Restart Session"}>
             <Button 
                 type="text" 
                 size="small" 
@@ -374,7 +427,7 @@ const TerminalUI = () => {
           </Tooltip>
         </Space>
       </div>
-      <div 
+       <div 
         ref={terminalRef} 
         style={{ 
           flex: 1, 
@@ -382,34 +435,6 @@ const TerminalUI = () => {
           overflow: 'hidden' 
         }} 
       />
-      <div onClick={(e) => e.stopPropagation()} style={{ padding: '12px', borderTop: `1px solid ${token.colorBorderSecondary}20`, display: 'flex', gap: 8, alignItems: 'flex-end' }}>
-          <Input.TextArea
-              value={chatInput}
-              onChange={e => setChatInput(e.target.value)}
-              onKeyDown={(e) => {
-                  if (e.key === 'Enter' && !e.shiftKey) {
-                      e.preventDefault();
-                      handleInputSend();
-                  }
-              }}
-              placeholder="Type a message... (Shift+Enter for new line)"
-              variant="filled"
-              autoSize={{ minRows: 2, maxRows: 6 }} 
-              style={{ 
-                  background: `${terminalForeground}15`, 
-                  color: terminalForeground,
-                  border: 'none',
-                  flex: 1,
-                  resize: 'none'
-              }}
-          />
-          <Button 
-              type="primary" 
-              icon={<SendOutlined />} 
-              onClick={handleInputSend}
-              style={{ flexShrink: 0 }}
-          />
-      </div>
 
       <Modal
           title={gitInputModal.title}

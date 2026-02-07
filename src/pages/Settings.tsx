@@ -1,4 +1,11 @@
-import { Typography, Form, Input, Select, Button, Slider, Row, Col, Card, ColorPicker, Tabs, Popconfirm, message, Divider, Radio, InputNumber } from 'antd';
+/*
+ * @Author: Anthony Rivera && opcnlin@gmail.com
+ * @FilePath: \src\pages\Settings.tsx
+ * Copyright (c) 2026 OpenVizUI Contributors
+ * Licensed under the MIT License
+ */
+
+import { Typography, Form, Input, Select, Button, Slider, Row, Col, Card, ColorPicker, Tabs, Popconfirm, message, Divider, Radio, InputNumber, Alert } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { SaveOutlined, BgColorsOutlined, GlobalOutlined, CheckCircleFilled, DeleteOutlined, EditOutlined, PlusOutlined, DesktopOutlined } from '@ant-design/icons';
 import { useAppStore } from '../store/appStore';
@@ -599,6 +606,13 @@ const Settings = () => {
                     </Form.Item>
                 )}
               </Form>
+              <div style={{ marginTop: 16 }}>
+                  <Alert 
+                      type="warning" 
+                      showIcon 
+                      message={<span style={{ fontSize: 12 }}>{t('settings.proxyWarning')}</span>} 
+                  />
+              </div>
             </Card>
           </Col>
         </Row>
