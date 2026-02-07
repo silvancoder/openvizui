@@ -69,12 +69,12 @@ const Apps = () => {
   const defaultTab = location.state?.activeTab || 'languages';
 
   // Define categories and their apps
-  // 编程语言：Python,Go,Java,Bun,Rust,PHP,Erlang,Perl,Ruby
-  // WEB服务：Apache,Caddy,Tomcat,Nginx,Consul
-  // 数据库：MariaDB,MongoDB,MySQL,PostgreSQL
-  // 缓存&队列：Redis,Memcached,Etcd,RabbitMQ
-  // 工具&容器：NodeJS,Git,Podman,docker,Minio
-  // 字体
+  // language：Python,Go,Java,Bun,Rust,PHP,Erlang,Perl,Ruby
+  // Web Services：Apache,Caddy,Tomcat,Nginx,Consul
+  // database：MariaDB,MongoDB,MySQL,PostgreSQL
+  // Cache&Queue：Redis,Memcached,Etcd,RabbitMQ
+  // Tools&Containers：NodeJS,Git,Podman,docker,Minio
+  // Fonts
   
   const allApps: AppItem[] = [
     // Languages
@@ -361,42 +361,48 @@ const Apps = () => {
         category: 'fonts', 
         description: t('apps.items.fonts.desc', { defaultValue: 'Microsoft Cascadia Code Font (Nerd Font)' }),
         downloadUrl: 'https://github.com/ryanoasis/nerd-fonts/releases/download/v3.3.0/CascadiaCode.zip',
-        filename: 'CascadiaCode.zip'
+        filename: 'CascadiaCode.zip',
+        icon: '/icons/fonts.svg'
     },
     { 
         name: 'JetBrains Mono',
         category: 'fonts', 
         description: t('apps.items.fonts.desc', { defaultValue: 'JetBrains Mono Font (Nerd Font)' }),
         downloadUrl: 'https://github.com/ryanoasis/nerd-fonts/releases/download/v3.3.0/JetBrainsMono.zip',
-        filename: 'JetBrainsMono.zip'
+        filename: 'JetBrainsMono.zip',
+        icon: '/icons/fonts.svg'
     },
     { 
         name: 'Fira Code',
         category: 'fonts', 
         description: t('apps.items.fonts.desc', { defaultValue: 'Fira Code Font (Nerd Font)' }),
         downloadUrl: 'https://github.com/ryanoasis/nerd-fonts/releases/download/v3.3.0/FiraCode.zip',
-        filename: 'FiraCode.zip'
+        filename: 'FiraCode.zip',
+        icon: '/icons/fonts.svg'
     },
     { 
         name: 'Source Code Pro',
         category: 'fonts', 
         description: t('apps.items.fonts.desc', { defaultValue: 'Source Code Pro Font (Nerd Font)' }),
         downloadUrl: 'https://github.com/ryanoasis/nerd-fonts/releases/download/v3.3.0/SourceCodePro.zip',
-        filename: 'SourceCodePro.zip'
+        filename: 'SourceCodePro.zip',
+        icon: '/icons/fonts.svg'
     },
     { 
         name: 'MesloLGS NF',
         category: 'fonts', 
         description: t('apps.items.fonts.desc', { defaultValue: 'MesloLGS NF Font (Nerd Font)' }),
         downloadUrl: 'https://github.com/ryanoasis/nerd-fonts/releases/download/v3.3.0/Meslo.zip',
-        filename: 'Meslo.zip'
+        filename: 'Meslo.zip',
+        icon: '/icons/fonts.svg'
     },
     { 
         name: 'Maple Mono',
         category: 'fonts', 
         description: t('apps.items.fonts.desc', { defaultValue: 'Maple Mono Font (Nerd Font)' }),
         downloadUrl: 'https://github.com/subframe7536/Maple-font/releases/download/v7.0/MapleMono-NF.zip',
-        filename: 'MapleMono-NF.zip'
+        filename: 'MapleMono-NF.zip',
+        icon: '/icons/fonts.svg'
     },
   ];
 

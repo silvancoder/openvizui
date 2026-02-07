@@ -1,5 +1,5 @@
 
-import { Typography, Tabs, Card, List, Button, Input, message, Popconfirm, Tag, Empty, Space, Row, Col, Segmented } from 'antd';
+import { Typography, Tabs, Card, List, Button, Input, message, Popconfirm, Tag, Empty, Space, Row, Col, Segmented, Select } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { 
     RobotOutlined, 
@@ -8,7 +8,8 @@ import {
     DeleteOutlined, 
     ReloadOutlined,
     CloudDownloadOutlined, 
-    FolderOpenOutlined 
+    FolderOpenOutlined,
+    GlobalOutlined 
 } from '@ant-design/icons';
 import { useState, useEffect } from 'react';
 import { invoke } from '@tauri-apps/api/core';
@@ -254,6 +255,235 @@ const AISettings = () => {
         </div>
     );
 
+
+    // MCP Configuration Management
+    const [activeTool, setActiveTool] = useState<string>('Claude');
+    const [configContent, setConfigContent] = useState<string>('');
+    const [configLoading, setConfigLoading] = useState(false);
+
+    interface McpTool {
+        name: string;
+        configPath: string;
+        type: 'json' | 'yaml' | 'toml';
+    }
+
+    const TOOLS: McpTool[] = [
+        { name: 'Claude', configPath: '~/.claude.json', type: 'json' },
+        { name: 'Gemini', configPath: '~/.gemini/settings.json', type: 'json' },
+        { name: 'OpenCode', configPath: '~/.opencode/opencode.json', type: 'json' },
+        { name: 'openclaw', configPath: '~/.openclaw/config.yaml', type: 'yaml' },
+        { name: 'iFlow', configPath: '~/.iflow/settings.json', type: 'json' },
+        { name: 'codebuddy', configPath: '~/.codebuddy/.mcp.json', type: 'json' },
+        { name: 'copilot', configPath: '~/.copilot/mcp-config.json', type: 'json' },
+        { name: 'codex', configPath: '~/.codex/config.toml', type: 'toml' },
+        { name: 'kilocode', configPath: '~/.kilocode/mcp.json', type: 'json' },
+        { name: 'grok', configPath: '~/.grok/settings.json', type: 'json' },
+    ];
+
+    const QUICK_ADDS: Record<string, any> = {
+        "filesystem": {
+            "command": "npx",
+            "args": ["-y", "@modelcontextprotocol/server-filesystem", "./"]
+        },
+        "context7": {
+            "command": "npx",
+            "args": ["-y", "@upstash/context7-mcp", "--api-key", "ctx7sk-..."]
+        },
+        "playwright": {
+            "command": "npx",
+            "args": ["-y", "@executeautomation/playwright-mcp-server"]
+        },
+        "browserTools": {
+            "command": "npx",
+            "args": ["-y", "@agentdeskai/browser-tools-mcp"]
+        },
+        "gitmcp": {
+            "command": "npx",
+            "args": ["mcp-remote", "https://gitmcp.io/{owner}/{repo}"]
+        },
+        "everything": {
+            "command": "npx",
+            "args": ["-y", "@modelcontextprotocol/server-everything"]
+        },
+        "firecrawl-mcp": {
+            "command": "npx",
+            "args": ["-y", "firecrawl-mcp"],
+            "env": { "FIRECRAWL_API_KEY": "YOUR-API-KEY" }
+        },
+        "mysql": {
+            "command": "npx",
+            "args": ["-y", "@f4ww4z/mcp-mysql-server"],
+            "env": {
+                "MYSQL_HOST": "your_host",
+                "MYSQL_USER": "your_user",
+                "MYSQL_PASSWORD": "your_password",
+                "MYSQL_DATABASE": "your_database"
+            }
+        }
+    };
+
+
+    const loadConfig = async () => {
+        const tool = TOOLS.find(t => t.name === activeTool);
+        if (!tool) return;
+
+        setConfigLoading(true);
+        try {
+            const content = await invoke<string>('get_config_file', { path: tool.configPath });
+            setConfigContent(content);
+        } catch (error) {
+            message.error(t('aiSettings.mcpConfig.loadFailed', 'Failed to load config for ') + `${tool.name}: ${error}`);
+            setConfigContent('');
+        } finally {
+            setConfigLoading(false);
+        }
+    };
+
+    const saveConfig = async () => {
+        const tool = TOOLS.find(t => t.name === activeTool);
+        if (!tool) return;
+
+        try {
+            await invoke('save_config_file', { path: tool.configPath, content: configContent });
+            message.success(t('aiSettings.mcpConfig.saved', 'Saved config for ') + tool.name);
+        } catch (error) {
+            message.error(t('aiSettings.mcpConfig.saveFailed', 'Failed to save config: ') + error);
+        }
+    };
+
+    const handleQuickAdd = (key: string) => {
+        const tool = TOOLS.find(t => t.name === activeTool);
+        if (!tool) return;
+
+        if (tool.type !== 'json') {
+            message.warning(t('aiSettings.mcpConfig.quickAddWarning', "Quick add only supports JSON config files for now."));
+            // Append as text?
+            const yamlSnippet = `\n# Quick Add: ${key}\n# Please configure manually\n`;
+            setConfigContent(prev => prev + yamlSnippet);
+            return;
+        }
+
+        try {
+            let currentConfig: any = {};
+            if (configContent.trim()) {
+                currentConfig = JSON.parse(configContent);
+            }
+
+            if (!currentConfig.mcpServers) {
+                currentConfig.mcpServers = {};
+            }
+
+            // Check if already exists
+            if (currentConfig.mcpServers[key]) {
+                message.warning(`${key}` + t('aiSettings.mcpConfig.exists', ' already exists in config.'));
+                return;
+            }
+
+            currentConfig.mcpServers[key] = QUICK_ADDS[key];
+            setConfigContent(JSON.stringify(currentConfig, null, 2));
+            message.success(t('aiSettings.mcpConfig.added', { key, defaultValue: `Added ${key} to config. Please review and save.` }));
+        } catch (error) {
+            message.error(t('aiSettings.mcpConfig.parseError', "Failed to parse current JSON config. Please fix syntax errors first."));
+        }
+    };
+
+    useEffect(() => {
+        loadConfig();
+    }, [activeTool]);
+
+
+    const isInstalled = (key: string) => {
+        try {
+            if (!configContent.trim()) return false;
+            const json = JSON.parse(configContent);
+            return json.mcpServers && json.mcpServers[key];
+        } catch {
+            return false;
+        }
+    };
+
+    const McpConfigManagement = () => (
+        <div style={{ padding: '0 24px', height: '100%' }}>
+            <Row gutter={[24, 24]} style={{ height: '100%' }}>
+                <Col xs={24} md={16} style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+                    <Card 
+                        title={
+                            <Space>
+                                <span>{t('aiSettings.mcpConfig.tool', 'CLI Tool')}:</span>
+                                <Select
+                                    value={activeTool}
+                                    onChange={(val: string) => setActiveTool(val)}
+                                    options={TOOLS.map(t => ({ label: t.name, value: t.name }))}
+                                    style={{ width: 120 }}
+                                    variant="filled"
+                                />
+                            </Space>
+                        }
+                        extra={
+                            <Space>
+                                <Button type="primary" onClick={saveConfig} icon={<CloudDownloadOutlined />} loading={configLoading}>{t('aiSettings.mcpConfig.save', 'Save Config')}</Button>
+                                <Button icon={<ReloadOutlined />} onClick={loadConfig}>{t('aiSettings.mcpConfig.reload', 'Reload')}</Button>
+                            </Space>
+                        }
+                        style={{ flex: 1, display: 'flex', flexDirection: 'column' }}
+                        styles={{ body: { flex: 1, display: 'flex', flexDirection: 'column' } }}
+                    >
+                        <div style={{ marginBottom: 8 }}>
+                            <Text type="secondary">{t('aiSettings.mcpConfig.configPath', 'Config Path')}: {TOOLS.find(t => t.name === activeTool)?.configPath}</Text>
+                        </div>
+                        <Input.TextArea 
+                            value={configContent} 
+                            onChange={e => setConfigContent(e.target.value)} 
+                            style={{ flex: 1, fontFamily: 'monospace', minHeight: 500, resize: 'none' }} 
+                            spellCheck={false}
+                            disabled={configLoading}
+                        />
+                        <div style={{ marginTop: 16 }}>
+                            <Space wrap>
+                                <Button href="https://github.com/punkpeye/awesome-mcp-servers" target="_blank" icon={<GithubOutlined />}>{t('aiSettings.mcpConfig.links.awesome', 'Awesome MCP')}</Button>
+                                <Button href="https://github.com/modelcontextprotocol/" target="_blank" icon={<GithubOutlined />}>{t('aiSettings.mcpConfig.links.official', 'Official MCP')}</Button>
+                                <Button href="https://cursor.directory/" target="_blank" icon={<GlobalOutlined />}>{t('aiSettings.mcpConfig.links.cursor', 'Cursor Directory')}</Button>
+                                <Button href="https://mcp.so/zh" target="_blank" icon={<GlobalOutlined />}>{t('aiSettings.mcpConfig.links.chinese', 'MCP Chinese')}</Button>
+                            </Space>
+                        </div>
+                    </Card>
+                </Col>
+                <Col xs={24} md={8}>
+                    <Card title={t('aiSettings.mcpConfig.quickAdd', 'Quick Add MCP')}>
+                        <List
+                            dataSource={Object.keys(QUICK_ADDS)}
+                            renderItem={key => {
+                                const installed = isInstalled(key);
+                                return (
+                                    <List.Item>
+                                        <List.Item.Meta 
+                                            title={
+                                                <Space>
+                                                    {key}
+                                                    {installed && <Tag color="green">{t('app.installed', 'Installed')}</Tag>}
+                                                </Space>
+                                            }
+                                            description={<Text type="secondary" ellipsis>{JSON.stringify(QUICK_ADDS[key].args)}</Text>}
+                                        />
+                                        <Button 
+                                            size="small" 
+                                            type={installed ? 'default' : 'primary'} 
+                                            ghost={!installed}
+                                            disabled={installed} 
+                                            onClick={() => handleQuickAdd(key)}
+                                        >
+                                            {installed ? t('app.installed', 'Installed') : t('common.add', 'Add')}
+                                        </Button>
+                                    </List.Item>
+                                );
+                            }}
+                        />
+                    </Card>
+                </Col>
+            </Row>
+        </div>
+    );
+
     return (
         <div style={{ margin: '0 auto', width: '100%', height: '100%', overflowY: 'auto' }}>
             <div style={{ maxWidth: 1200, margin: '0 auto', padding: '24px' }}>
@@ -263,8 +493,13 @@ const AISettings = () => {
                     items={[
                         {
                             key: 'Skills',
-                            label: t('aiSettings.tabs.Skills', 'Skills Management'),
+                            label: t('aiSettings.tabs.skills', 'Skills Management'), // Fixed case "Skills" -> "skills" matching json
                             children: <McpManagement />
+                        },
+                        {
+                            key: 'Config',
+                            label: t('aiSettings.mcpConfig.tab', 'MCP Configuration'),
+                            children: <McpConfigManagement />
                         },
                         {
                             key: 'coming_soon',

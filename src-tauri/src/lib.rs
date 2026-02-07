@@ -850,6 +850,48 @@ fn install_skills(_app: AppHandle, url: String, name: Option<String>, target: St
 }
 
 #[tauri::command]
+fn get_config_file(path: String) -> Result<String, String> {
+    let home = std::env::var("HOME").or_else(|_| std::env::var("USERPROFILE")).map_err(|_| "Could not determine home directory".to_string())?;
+    
+    // Expand ~ manually if present at the start of the path
+    let expanded_path = if path.starts_with("~") {
+         path.replacen("~", &home, 1)
+    } else {
+         path
+    };
+
+    let p = PathBuf::from(expanded_path);
+    if !p.exists() {
+        return Ok("".to_string()); // Return empty string if file doesn't exist yet
+    }
+    
+    fs::read_to_string(p).map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+fn save_config_file(path: String, content: String) -> Result<(), String> {
+    let home = std::env::var("HOME").or_else(|_| std::env::var("USERPROFILE")).map_err(|_| "Could not determine home directory".to_string())?;
+    
+    // Expand ~ manually
+    let expanded_path = if path.starts_with("~") {
+         path.replacen("~", &home, 1)
+    } else {
+         path
+    };
+    
+    let p = PathBuf::from(expanded_path);
+    
+    // Ensure parent directory exists
+    if let Some(parent) = p.parent() {
+        if !parent.exists() {
+             fs::create_dir_all(parent).map_err(|e| e.to_string())?;
+        }
+    }
+    
+    fs::write(p, content).map_err(|e| e.to_string())
+}
+
+#[tauri::command]
 fn uninstall_skills(path: String) -> Result<(), String> {
     let path_buf = PathBuf::from(&path);
     if path_buf.exists() {
@@ -886,7 +928,9 @@ pub fn run() {
         get_system_fonts,
         list_installed_skills,
         install_skills,
-        uninstall_skills
+        uninstall_skills,
+        get_config_file,
+        save_config_file
     ])
     .manage(AppPty::default())
     .setup(|app| {

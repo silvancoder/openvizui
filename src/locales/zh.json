@@ -13,7 +13,8 @@
     "refresh": "刷新",
     "addTool": "添加工具",
     "apps": "应用商店",
-    "aiSettings": "AI 设置"
+    "aiSettings": "AI 设置",
+    "installed": "已安装"
   },
   "aiSettings": {
     "title": "AI 设置",
@@ -45,6 +46,27 @@
     },
     "warnings": {
       "enterUrl": "请输入 GitHub URL"
+    },
+    "mcpConfig": {
+      "tab": "MCP 配置管理",
+      "tool": "CLI 工具",
+      "save": "保存配置",
+      "reload": "刷新",
+      "configPath": "配置文件路径",
+      "quickAdd": "一键添加 MCP",
+      "quickAddWarning": "一键添加目前仅支持 JSON 配置文件。",
+      "loadFailed": "加载配置失败：",
+      "saved": "已保存配置：",
+      "saveFailed": "保存配置失败：",
+      "exists": " 已存在于配置中。",
+      "added": "已添加 {{key}} 到配置中。请检查并保存。",
+      "parseError": "解析当前 JSON 配置失败。请先修复语法错误。",
+      "links": {
+        "awesome": "热门仓库",
+        "official": "官方仓库",
+        "cursor": "聚合导航",
+        "chinese": "中文网"
+      }
     },
     "popularPacks": {
       "findSkills": {
@@ -257,6 +279,7 @@
     "cancel": "取消",
     "confirm": "确认",
     "save": "保存",
-    "delete": "删除"
+    "delete": "删除",
+    "add": "添加"
   }
 }

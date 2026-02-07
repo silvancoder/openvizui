@@ -46,6 +46,27 @@
     "warnings": {
       "enterUrl": "Please enter a GitHub URL"
     },
+    "mcpConfig": {
+      "tab": "MCP Configuration",
+      "tool": "CLI Tool",
+      "save": "Save Config",
+      "reload": "Reload",
+      "configPath": "Config Path",
+      "quickAdd": "Quick Add MCP",
+      "quickAddWarning": "Quick add only supports JSON config files for now.",
+      "loadFailed": "Failed to load config for ",
+      "saved": "Saved config for ",
+      "saveFailed": "Failed to save config: ",
+      "exists": " already exists in config.",
+      "added": "Added {{key}} to config. Please review and save.",
+      "parseError": "Failed to parse current JSON config. Please fix syntax errors first.",
+      "links": {
+        "awesome": "Awesome MCP",
+        "official": "Official MCP",
+        "cursor": "Cursor Directory",
+        "chinese": "MCP Chinese"
+      }
+    },
     "popularPacks": {
       "findSkills": {
         "name": "Find Skills",

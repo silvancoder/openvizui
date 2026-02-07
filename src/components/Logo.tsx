@@ -12,8 +12,7 @@ interface LogoProps {
   theme?: 'light' | 'dark';
 }
 
-const Logo: React.FC<LogoProps> = ({ collapsed, theme = 'dark' }) => {
-  const textColor = theme === 'light' ? '#000000' : '#ffffff';
+const Logo: React.FC<LogoProps> = ({ collapsed }) => {
   
   return (
     <div style={{ 
@@ -21,7 +20,7 @@ const Logo: React.FC<LogoProps> = ({ collapsed, theme = 'dark' }) => {
       margin: 16,
       display: 'flex', 
       alignItems: 'center', 
-      justifyContent: 'center', // Center when collapsed
+      justifyContent: 'center',
       overflow: 'hidden'
     }}>
       {collapsed ? (
@@ -31,10 +30,8 @@ const Logo: React.FC<LogoProps> = ({ collapsed, theme = 'dark' }) => {
             <text x="16" y="22" textAnchor="middle" fill="white" fontFamily="sans-serif" fontWeight="bold" fontSize="20">V</text>
          </svg>
       ) : (
-         // Full Logo (Text Only as requested)
-         <svg width="100%" height="32" viewBox="0 0 140 32" xmlns="http://www.w3.org/2000/svg">
-            <text x="0" y="23" fill={textColor} fontFamily="sans-serif" fontWeight="bold" fontSize="20" letterSpacing="0.5">OpenVizUI</text>
-         </svg>
+         // Full Logo (Image)
+         <img src="/openvizui.png" alt="OpenVizUI" style={{ maxHeight: '100%', maxWidth: '100%', objectFit: 'contain' }} />
       )}
     </div>
   );
