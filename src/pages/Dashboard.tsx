@@ -9,7 +9,7 @@ import { Card, Button, Row, Col, Tag, Typography, message, Modal, Select, Space,
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { ReloadOutlined, PlusOutlined, CodeOutlined } from '@ant-design/icons';
-import { installTool, uninstallTool, checkToolStatus, updateTool } from '../lib/tauri';
+import { installTool, uninstallTool, checkToolStatus, updateTool, openUrl } from '../lib/tauri';
 import { useEffect, useState } from 'react';
 
 import { useAppStore } from '../store/appStore';
@@ -76,14 +76,9 @@ const Dashboard = () => {
       icon: <ToolIcon id="opencode" name="OpenCode" color="#0EA5E9" />
     },
     {
-      id: 'openclaw',
-      name: t('tools.openclaw'),
-      icon: <ToolIcon id="openclaw" name="OpenClaw" color="#22C55E" />
-    },
-    {
-      id: 'iflow',
-      name: t('tools.iflow'),
-      icon: <ToolIcon id="iflow" name="iFlow" color="#8B5CF6" />
+      id: 'qoder',
+      name: t('tools.qoder'),
+      icon: <ToolIcon id="qoder" name="Qoder" color="#8B5CF6" />
     },
     {
       id: 'codebuddy',
@@ -100,17 +95,18 @@ const Dashboard = () => {
       name: t('tools.codex'),
       icon: <ToolIcon id="codex" name="Codex" color="#14B8A6" />
     },
-    {
-      id: 'kilocode',
-      name: t('tools.kilocode'),
-      icon: <ToolIcon id="kilocode" name="KiloCode" color="#EC4899" />
-    },
-    {
-      id: 'grok',
-      name: t('tools.grok'),
-      icon: <ToolIcon id="grok" name="Grok" color="#84CC16" />
-    }
+
   ];
+
+  const docLinks: Record<string, string> = {
+      'copilot': 'https://docs.github.com/en/copilot/how-tos/copilot-cli',
+      'claude': 'https://code.claude.com/docs',
+      'google': 'https://geminicli.com/docs',
+      'opencode': 'https://opencode.ai/docs',
+      'qoder': 'https://docs.qoder.com/cli/using-cli',
+      'codebuddy': 'https://www.codebuddy.ai/docs/cli/overview',
+      'codex': 'https://developers.openai.com/codex/cli'
+  };
 
   // When activeTools changes, refresh their status
   // Only auto-refresh if we don't have statuses for them yet (e.g. initial load)
@@ -211,13 +207,10 @@ const Dashboard = () => {
         'google': 'gemini',
         'claude': 'claude',
         'opencode': 'opencode',
-        'openclaw': 'openclaw',
-        'iflow': 'iflow',
+        'qoder': 'qodercli',
         'codebuddy': 'codebuddy',
         'copilot': 'copilot',
-        'codex': 'codex',
-        'kilocode': 'kilocode',
-        'grok': 'grok',
+        'codex': 'codex'
     };
     const cmd = commands[toolId] || toolId;
     
@@ -278,7 +271,7 @@ const Dashboard = () => {
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 16 }}>
                  <span>Version:</span>
-                 <span>{tool.version}</span>
+                 <span>{tool.id === 'copilot' ? 'Special' : tool.version}</span>
               </div>
 
               {/* Custom Action Footer */}
@@ -299,8 +292,15 @@ const Dashboard = () => {
                             </Button>
                           </Tooltip>
                       </Col>
-                      <Col span={8}>
-                           <Button block disabled style={{ padding: '4px 0' }}>Guide</Button>
+                       <Col span={8}>
+                           <Button 
+                                block 
+                                style={{ padding: '4px 0' }}
+                                onClick={() => docLinks[tool.id] && openUrl(docLinks[tool.id])}
+                                disabled={!docLinks[tool.id]}
+                           >
+                               {t('app.docs', 'Docs')}
+                           </Button>
                       </Col>
                   </Row>
                   

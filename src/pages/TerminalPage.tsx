@@ -27,16 +27,13 @@ const { Text } = Typography;
 import Editor from '@monaco-editor/react';
 
 const TOOL_COMMANDS: Record<string, string> = {
-  iflow: 'iflow',
+  qoder: 'qodercli',
   google: 'gemini',
   claude: 'claude',
-  openclaw: 'openclaw',
   opencode: 'opencode',
   codebuddy: 'codebuddy',
   copilot: 'copilot',
   codex: 'codex',
-  kilocode: 'kilocode',
-  grok: 'grok',
 };
 
 // Helper to determine language for Monaco Editor

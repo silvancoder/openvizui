@@ -1,5 +1,5 @@
 
-import { Typography, Tabs, Card, List, Button, Input, message, Popconfirm, Tag, Empty, Space, Row, Col, Segmented, Select } from 'antd';
+import { Typography, Tabs, Card, List, Button, Input, message, Popconfirm, Tag, Empty, Space, Row, Col, Select } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { 
     RobotOutlined, 
@@ -27,7 +27,7 @@ const AISettings = () => {
     const [installedMcps, setInstalledMcps] = useState<McpInfo[]>([]);
     const [loading, setLoading] = useState(false);
     const [installUrl, setInstallUrl] = useState('');
-    const [activeDir, setActiveDir] = useState<'agents' | 'claude'>('agents');
+    const [activeDir, setActiveDir] = useState<string>('agents');
 
     // Popular skills list for quick install
     const POPULAR_SKILLS = [
@@ -152,13 +152,14 @@ const AISettings = () => {
                         } 
                         extra={
                             <Space>
-                                <Segmented
-                                    options={[
-                                        { label: '.agents', value: 'agents' },
-                                        { label: '.claude', value: 'claude' },
-                                    ]}
+                                <Select
                                     value={activeDir}
-                                    onChange={(val) => setActiveDir(val as 'agents' | 'claude')}
+                                    onChange={(val) => setActiveDir(val)}
+                                    options={[
+                                        { label: '.agents (Default)', value: 'agents' },
+                                        ...TOOLS.map(t => ({ label: `.${t.name.toLowerCase()}`, value: t.name.toLowerCase() }))
+                                    ]}
+                                    style={{ width: 160 }}
                                 />
                                 <Button icon={<ReloadOutlined />} onClick={loadSkills}>{t('aiSettings.refresh', 'Refresh')}</Button>
                             </Space>
@@ -270,14 +271,12 @@ const AISettings = () => {
     const TOOLS: McpTool[] = [
         { name: 'Claude', configPath: '~/.claude.json', type: 'json' },
         { name: 'Gemini', configPath: '~/.gemini/settings.json', type: 'json' },
-        { name: 'OpenCode', configPath: '~/.opencode/opencode.json', type: 'json' },
-        { name: 'openclaw', configPath: '~/.openclaw/config.yaml', type: 'yaml' },
-        { name: 'iFlow', configPath: '~/.iflow/settings.json', type: 'json' },
-        { name: 'codebuddy', configPath: '~/.codebuddy/.mcp.json', type: 'json' },
-        { name: 'copilot', configPath: '~/.copilot/mcp-config.json', type: 'json' },
-        { name: 'codex', configPath: '~/.codex/config.toml', type: 'toml' },
-        { name: 'kilocode', configPath: '~/.kilocode/mcp.json', type: 'json' },
-        { name: 'grok', configPath: '~/.grok/settings.json', type: 'json' },
+        { name: 'OpenCode', configPath: '~/.config/opencode/opencode.json', type: 'json' },
+        { name: 'Qoder', configPath: '~/.qoder/settings.json', type: 'json' },
+        { name: 'CodeBuddy', configPath: '~/.codebuddy/.mcp.json', type: 'json' },
+        { name: 'Copilot', configPath: '~/.copilot/mcp-config.json', type: 'json' },
+        { name: 'Codex', configPath: '~/.codex/config.toml', type: 'toml' },
+
     ];
 
     const QUICK_ADDS: Record<string, any> = {
@@ -369,17 +368,45 @@ const AISettings = () => {
                 currentConfig = JSON.parse(configContent);
             }
 
-            if (!currentConfig.mcpServers) {
-                currentConfig.mcpServers = {};
+            // Special handling for OpenCode
+            if (activeTool === 'OpenCode') {
+                if (!currentConfig.mcp) {
+                    currentConfig.mcp = {};
+                }
+                
+                // Add schema if missing
+                if (!currentConfig['$schema']) {
+                    currentConfig['$schema'] = "https://opencode.ai/config.json";
+                }
+
+                if (currentConfig.mcp[key]) {
+                    message.warning(`${key}` + t('aiSettings.mcpConfig.exists', ' already exists in config.'));
+                    return;
+                }
+
+                const quickAdd = QUICK_ADDS[key];
+                // Convert to OpenCode format
+                currentConfig.mcp[key] = {
+                    type: "local",
+                    command: [quickAdd.command, ...(quickAdd.args || [])],
+                    enabled: true,
+                    environment: quickAdd.env || {}
+                };
+            } else {
+                // Default MCP format (Claude, etc.)
+                if (!currentConfig.mcpServers) {
+                    currentConfig.mcpServers = {};
+                }
+
+                // Check if already exists
+                if (currentConfig.mcpServers[key]) {
+                    message.warning(`${key}` + t('aiSettings.mcpConfig.exists', ' already exists in config.'));
+                    return;
+                }
+
+                currentConfig.mcpServers[key] = QUICK_ADDS[key];
             }
 
-            // Check if already exists
-            if (currentConfig.mcpServers[key]) {
-                message.warning(`${key}` + t('aiSettings.mcpConfig.exists', ' already exists in config.'));
-                return;
-            }
-
-            currentConfig.mcpServers[key] = QUICK_ADDS[key];
             setConfigContent(JSON.stringify(currentConfig, null, 2));
             message.success(t('aiSettings.mcpConfig.added', { key, defaultValue: `Added ${key} to config. Please review and save.` }));
         } catch (error) {
@@ -396,6 +423,11 @@ const AISettings = () => {
         try {
             if (!configContent.trim()) return false;
             const json = JSON.parse(configContent);
+            
+            if (activeTool === 'OpenCode') {
+                 return json.mcp && json.mcp[key];
+            }
+            
             return json.mcpServers && json.mcpServers[key];
         } catch {
             return false;

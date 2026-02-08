@@ -95,6 +95,7 @@ dependencies = [
  "log",
  "opener",
  "portable-pty",
+ "regex",
  "reqwest",
  "serde",
  "serde_json",

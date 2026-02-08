@@ -5,6 +5,7 @@
     "settings": "Settings",
     "terminal": "Terminal",
     "install": "Install",
+    "docs": "Docs",
     "installed": "Installed",
     "uninstall": "Uninstall",
     "launch": "Launch",
@@ -47,7 +48,7 @@
       "enterUrl": "Please enter a GitHub URL"
     },
     "mcpConfig": {
-      "tab": "MCP Configuration",
+      "tab": "MCP Config",
       "tool": "CLI Tool",
       "save": "Save Config",
       "reload": "Reload",
@@ -164,13 +165,10 @@
     "claude": "Claude Code",
     "google": "Gemini",
     "opencode": "OpenCode",
-    "openclaw": "OpenClaw",
-    "iflow": "iFlow",
+    "qoder": "Qoder",
     "codebuddy": "CodeBuddy",
     "copilot": "GitHub Copilot",
-    "codex": "OpenAI Codex",
-    "kilocode": "KiloCode",
-    "grok": "Grok CLI"
+    "codex": "OpenAI Codex"
   },
   "settings": {
     "theme": "Theme",

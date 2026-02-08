@@ -6,6 +6,7 @@
     "settings": "设置",
     "terminal": "终端",
     "install": "安装",
+    "docs": "文档",
     "uninstall": "卸载",
     "launch": "启动",
     "update": "更新",
@@ -48,7 +49,7 @@
       "enterUrl": "请输入 GitHub URL"
     },
     "mcpConfig": {
-      "tab": "MCP 配置管理",
+      "tab": "MCP 配置",
       "tool": "CLI 工具",
       "save": "保存配置",
       "reload": "刷新",
@@ -165,13 +166,10 @@
     "claude": "Claude Code",
     "google": "Gemini",
     "opencode": "OpenCode",
-    "openclaw": "OpenClaw",
-    "iflow": "iFlow",
+    "qoder": "Qoder",
     "codebuddy": "CodeBuddy",
     "copilot": "GitHub Copilot",
-    "codex": "OpenAI Codex",
-    "kilocode": "KiloCode",
-    "grok": "Grok CLI"
+    "codex": "OpenAI Codex"
   },
   "settings": {
     "theme": "主题",

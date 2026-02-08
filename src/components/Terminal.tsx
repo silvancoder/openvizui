@@ -164,8 +164,16 @@ const TerminalUI = () => {
 
       // window.addEventListener('resize', handleResize); // Removed in favor of ResizeObserver
       
+      window.addEventListener('focus', handleResize);
+      document.addEventListener('visibilitychange', () => {
+          if (document.visibilityState === 'visible') {
+              handleResize();
+          }
+      });
+
       return () => {
         resizeObserver.disconnect();
+        window.removeEventListener('focus', handleResize);
         unlisten();
       };
     };
@@ -274,7 +282,7 @@ const TerminalUI = () => {
       borderRadius: '8px',
       overflow: 'hidden',
       border: `1px solid ${token.colorBorderSecondary}`,
-      cursor: 'text'
+      // cursor: 'text' // Removed to allow default cursor in header
     }}
     onClick={focusTerminal}
     >
@@ -427,14 +435,22 @@ const TerminalUI = () => {
           </Tooltip>
         </Space>
       </div>
-       <div 
-        ref={terminalRef} 
-        style={{ 
-          flex: 1, 
-          padding: '8px 4px 4px 12px', 
-          overflow: 'hidden' 
-        }} 
-      />
+        <style>
+          {`
+            .xterm-viewport, .xterm-screen, .xterm-cursor-layer {
+              cursor: none !important;
+            }
+          `}
+        </style>
+        <div 
+         ref={terminalRef} 
+         style={{ 
+           flex: 1, 
+           padding: '8px 4px 4px 12px', 
+           overflow: 'hidden',
+           // cursor: 'none' // Moved to global style
+         }} 
+       />
 
       <Modal
           title={gitInputModal.title}

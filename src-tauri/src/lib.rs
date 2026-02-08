@@ -213,13 +213,10 @@ fn launch_tool(tool_id: String) -> Result<String, String> {
         "claude" => "claude",
         "google" => "gemini",
         "opencode" => "opencode",
-        "openclaw" => "openclaw",
-        "iflow" => "iflow",
+        "qoder" => "qodercli",
         "codebuddy" => "codebuddy",
         "copilot" => "copilot",
         "codex" => "codex",
-        "kilocode" => "kilocode",
-        "grok" => "grok",
         _ => return Err("Unknown tool".to_string()),
     };
     
@@ -251,13 +248,10 @@ fn install_tool(tool_id: String) -> Result<String, String> {
         "claude" => "@anthropic-ai/claude-code",
         "google" => "@google/gemini-cli",
         "opencode" => "opencode-ai",
-        "openclaw" => "openclaw",
-        "iflow" => "@iflow-ai/iflow-cli@latest",
+        "qoder" => "@qoder-ai/qodercli",
         "codebuddy" => "@tencent-ai/codebuddy-code",
         "copilot" => "@github/copilot",
         "codex" => "@openai/codex",
-        "kilocode" => "@kilocode/cli",
-        "grok" => "@vibe-kit/grok-cli",
         _ => return Err("Installation not supported for this tool yet".to_string()),
     };
 
@@ -306,13 +300,10 @@ async fn update_tool(tool_id: String) -> Result<String, String> {
         "claude" => "@anthropic-ai/claude-code@latest",
         "google" => "@google/gemini-cli@latest",
         "opencode" => "opencode-ai@latest",
-        "openclaw" => "openclaw@latest",
-        "iflow" => "@iflow-ai/iflow-cli@latest",
+        "qoder" => "@qoder-ai/qodercli@latest",
         "codebuddy" => "@tencent-ai/codebuddy-code@latest",
         "copilot" => "@github/copilot@latest",
         "codex" => "@openai/codex@latest",
-        "kilocode" => "@kilocode/cli@latest",
-        "grok" => "@vibe-kit/grok-cli@latest",
         _ => return Err("Update not supported for this tool".to_string()),
     };
 
@@ -341,13 +332,10 @@ fn uninstall_tool(tool_id: String) -> Result<String, String> {
         "claude" => "npm uninstall -g @anthropic-ai/claude-code",
         "google" => "npm uninstall -g @google/gemini-cli",
         "opencode" => "npm uninstall -g opencode-ai",
-        "openclaw" => "npm uninstall -g openclaw",
-        "iflow" => "npm uninstall -g @iflow-ai/iflow-cli",
+        "qoder" => "npm uninstall -g @qoder-ai/qodercli",
         "codebuddy" => "npm uninstall -g @tencent-ai/codebuddy-code",
         "copilot" => "npm uninstall -g @github/copilot",
         "codex" => "npm uninstall -g @openai/codex",
-        "kilocode" => "npm uninstall -g @kilocode/cli",
-        "grok" => "npm uninstall -g @vibe-kit/grok-cli",
         _ => return Err("Uninstall not supported for this tool".to_string()),
     };
 
@@ -369,17 +357,15 @@ fn check_tool_status(tool_id: String) -> ToolStatus {
         "claude" => if cfg!(target_os = "windows") { ("claude.cmd", vec!["--version"]) } else { ("claude", vec!["--version"]) },
         "google" => if cfg!(target_os = "windows") { ("gemini.cmd", vec!["--version"]) } else { ("gemini", vec!["--version"]) },
         "opencode" => if cfg!(target_os = "windows") { ("opencode.cmd", vec!["--version"]) } else { ("opencode", vec!["--version"]) },
-        "openclaw" => if cfg!(target_os = "windows") { ("openclaw.cmd", vec!["--version"]) } else { ("openclaw", vec!["--version"]) },
-        "iflow" => if cfg!(target_os = "windows") { ("iflow.cmd", vec!["--version"]) } else { ("iflow", vec!["--version"]) },
+        "qoder" => if cfg!(target_os = "windows") { ("qodercli.cmd", vec!["--version"]) } else { ("qodercli", vec!["--version"]) },
         "codebuddy" => if cfg!(target_os = "windows") { ("codebuddy.cmd", vec!["--version"]) } else { ("codebuddy", vec!["--version"]) },
         "copilot" => if cfg!(target_os = "windows") { ("copilot.cmd", vec!["--version"]) } else { ("copilot", vec!["--version"]) },
         "codex" => if cfg!(target_os = "windows") { ("codex.cmd", vec!["--version"]) } else { ("codex", vec!["--version"]) },
-        "kilocode" => if cfg!(target_os = "windows") { ("kilocode.cmd", vec!["--version"]) } else { ("kilocode", vec!["--version"]) },
-        "grok" => if cfg!(target_os = "windows") { ("grok.cmd", vec!["--version"]) } else { ("grok", vec!["--version"]) },
         _ => return ToolStatus { id: tool_id, installed: false, version: None },
     };
 
     let version = get_version(program, &args);
+
     ToolStatus {
         id: tool_id,
         installed: version.is_some(),
@@ -775,10 +761,15 @@ fn list_installed_skills(target: String) -> Vec<McpInfo> {
     let mut mcps = Vec::new();
     let home = std::env::var("HOME").or_else(|_| std::env::var("USERPROFILE")).unwrap_or_default();
     
-    let base_path = if target == "claude" {
-        PathBuf::from(&home).join(".claude").join("skills")
-    } else {
-        PathBuf::from(&home).join(".agents").join("skills")
+    let base_path = match target.to_lowercase().as_str() {
+        "claude" => PathBuf::from(&home).join(".claude").join("skills"),
+        "gemini" | "google" => PathBuf::from(&home).join(".gemini").join("skills"),
+        "opencode" => PathBuf::from(&home).join(".config").join("opencode").join("skills"),
+        "qoder" => PathBuf::from(&home).join(".qoder").join("skills"),
+        "codebuddy" => PathBuf::from(&home).join(".codebuddy").join("skills"),
+        "copilot" => PathBuf::from(&home).join(".copilot").join("skills"),
+        "codex" => PathBuf::from(&home).join(".codex").join("skills"),
+        _ => PathBuf::from(&home).join(".agents").join("skills"),
     };
     
     if base_path.exists() {
@@ -787,6 +778,8 @@ fn list_installed_skills(target: String) -> Vec<McpInfo> {
                 let path = entry.path();
                 if path.is_dir() {
                     if let Some(name) = path.file_name().and_then(|n| n.to_str()) {
+
+    
                         mcps.push(McpInfo {
                             path: path.to_string_lossy().to_string(),
                             name: name.to_string(),
@@ -804,10 +797,15 @@ fn list_installed_skills(target: String) -> Vec<McpInfo> {
 fn install_skills(_app: AppHandle, url: String, name: Option<String>, target: String) -> Result<String, String> {
     let home = std::env::var("HOME").or_else(|_| std::env::var("USERPROFILE")).map_err(|_| "Could not determine home directory".to_string())?;
     
-    let target_base = if target == "claude" {
-        PathBuf::from(&home).join(".claude").join("skills")
-    } else {
-        PathBuf::from(&home).join(".agents").join("skills")
+    let target_base = match target.to_lowercase().as_str() {
+        "claude" => PathBuf::from(&home).join(".claude").join("skills"),
+        "gemini" | "google" => PathBuf::from(&home).join(".gemini").join("skills"),
+        "opencode" => PathBuf::from(&home).join(".config").join("opencode").join("skills"),
+        "qoder" => PathBuf::from(&home).join(".qoder").join("skills"),
+        "codebuddy" => PathBuf::from(&home).join(".codebuddy").join("skills"),
+        "copilot" => PathBuf::from(&home).join(".copilot").join("skills"),
+        "codex" => PathBuf::from(&home).join(".codex").join("skills"),
+        _ => PathBuf::from(&home).join(".agents").join("skills"),
     };
 
     if !target_base.exists() {
