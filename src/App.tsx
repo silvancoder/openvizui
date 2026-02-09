@@ -6,7 +6,7 @@
  */
 
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import TerminalPage from './pages/TerminalPage';
+import Terminal from './pages/Terminal';
 import MainLayout from './layouts/MainLayout';
 import Dashboard from './pages/Dashboard';
 import Settings from './pages/Settings';
@@ -17,43 +17,43 @@ import { useAppStore } from './store/appStore';
 
 // Configure global message offset to avoid overlapping with custom title bar (height: 32px)
 message.config({
-  top: 50,
-  maxCount: 3,
+    top: 50,
+    maxCount: 3,
 });
 
 function App() {
-  const { theme, primaryColor, fontFamily, textColor } = useAppStore();
+    const { theme, primaryColor, fontFamily, textColor } = useAppStore();
 
-  // Build theme tokens dynamically to avoid overriding defaults with undefined
-  const themeTokens: any = {
-    colorPrimary: primaryColor,
-    fontFamily: fontFamily,
-  };
+    // Build theme tokens dynamically to avoid overriding defaults with undefined
+    const themeTokens: any = {
+        colorPrimary: primaryColor,
+        fontFamily: fontFamily,
+    };
 
-  if (textColor) {
-    themeTokens.colorText = textColor;
-  }
+    if (textColor) {
+        themeTokens.colorText = textColor;
+    }
 
-  return (
-    <ConfigProvider
-      theme={{
-        algorithm: theme === 'dark' ? antTheme.darkAlgorithm : antTheme.defaultAlgorithm,
-        token: themeTokens,
-      }}
-    >
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<MainLayout />}>
-            <Route index element={<Dashboard />} />
-            <Route path="apps" element={<Apps />} />
-            <Route path="ai-settings" element={<AISettings />} />
-            <Route path="settings" element={<Settings />} />
-            <Route path="terminal" element={<TerminalPage />} />
-          </Route>
-        </Routes>
-      </BrowserRouter>
-    </ConfigProvider>
-  );
+    return (
+        <ConfigProvider
+            theme={{
+                algorithm: theme === 'dark' ? antTheme.darkAlgorithm : antTheme.defaultAlgorithm,
+                token: themeTokens,
+            }}
+        >
+            <BrowserRouter>
+                <Routes>
+                    <Route path="/" element={<MainLayout />}>
+                        <Route index element={<Dashboard />} />
+                        <Route path="apps" element={<Apps />} />
+                        <Route path="ai-settings" element={<AISettings />} />
+                        <Route path="settings" element={<Settings />} />
+                        <Route path="terminal" element={<Terminal />} />
+                    </Route>
+                </Routes>
+            </BrowserRouter>
+        </ConfigProvider>
+    );
 }
 
 export default App;

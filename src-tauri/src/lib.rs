@@ -5,17 +5,17 @@
  * Licensed under the MIT License
  */
 
+use futures_util::StreamExt;
+use portable_pty::{Child, CommandBuilder, MasterPty, NativePtySystem, PtySize, PtySystem};
 use serde::{Deserialize, Serialize};
-use std::process::Command;
-use std::fs;
-use std::path::PathBuf;
-use tauri::{AppHandle, Emitter, State};
-use portable_pty::{CommandBuilder, NativePtySystem, PtySize, PtySystem, MasterPty, Child};
-use std::sync::{Arc, Mutex};
-use std::io::{Read, Write};
-use std::thread;
 use std::cmp::min;
-use futures_util::StreamExt; // For streaming response body
+use std::fs;
+use std::io::{Read, Write};
+use std::path::PathBuf;
+use std::process::Command;
+use std::sync::{Arc, Mutex};
+use std::thread;
+use tauri::{AppHandle, Emitter, State}; // For streaming response body
 
 #[cfg(windows)]
 use std::os::windows::process::CommandExt;
@@ -73,26 +73,12 @@ struct ModelsResponse {
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
-pub struct ApiConfig {
-    pub id: String,
-    pub name: String,
-    pub auth_type: String, // "api_key" | "oauth"
-    pub base_url: Option<String>,
-    pub api_key: Option<String>,
-    pub model: Option<String>,
-    pub models: Option<Vec<String>>,
-}
-
-#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct ToolConfig {
-    pub active_api_id: Option<String>,
     pub working_directory: Option<String>,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct AppConfig {
-    pub api_configs: Option<Vec<ApiConfig>>,
-    pub active_api_id: Option<String>,
     pub proxy_type: Option<String>,
     pub proxy_address: Option<String>,
     pub theme: Option<String>,
@@ -119,8 +105,6 @@ pub struct AppConfig {
 impl Default for AppConfig {
     fn default() -> Self {
         Self {
-            api_configs: Some(Vec::new()),
-            active_api_id: None,
             proxy_type: Some("none".to_string()),
             proxy_address: None,
             theme: Some("light".to_string()),
@@ -154,12 +138,12 @@ fn get_config_path(_app: &AppHandle) -> PathBuf {
     path.pop(); // Remove exe name
     path.push("app");
     path.push("config");
-    
+
     // Ensure directory exists
     if !path.exists() {
         let _ = fs::create_dir_all(&path);
     }
-    
+
     path.join("config.json")
 }
 
@@ -177,9 +161,10 @@ fn get_version(program: &str, args: &[&str]) -> Option<String> {
                 let stdout = String::from_utf8_lossy(&output.stdout);
                 let stderr = String::from_utf8_lossy(&output.stderr);
                 let combined = format!("{}{}", stdout, stderr);
-                
+
                 // Return only the first non-empty line
-                combined.lines()
+                combined
+                    .lines()
                     .map(|l| l.trim())
                     .find(|l| !l.is_empty())
                     .map(|s| s.to_string())
@@ -191,7 +176,10 @@ fn get_version(program: &str, args: &[&str]) -> Option<String> {
 
 #[tauri::command]
 fn check_executable(program: String, args: Vec<String>) -> Option<String> {
-    get_version(&program, &args.iter().map(|s| s.as_str()).collect::<Vec<&str>>())
+    get_version(
+        &program,
+        &args.iter().map(|s| s.as_str()).collect::<Vec<&str>>(),
+    )
 }
 
 #[tauri::command]
@@ -219,7 +207,7 @@ fn launch_tool(tool_id: String) -> Result<String, String> {
         "codex" => "codex",
         _ => return Err("Unknown tool".to_string()),
     };
-    
+
     // Launch in a new terminal window
     #[cfg(target_os = "windows")]
     Command::new("cmd")
@@ -264,28 +252,34 @@ fn install_tool(tool_id: String) -> Result<String, String> {
     } else {
         ("npm", vec!["install", "-g", install_package])
     };
-    
+
     println!("Executing install command: {} {:?}", program, args);
 
     let output = create_background_command(program)
-         .args(&args)
-         .output()
-         .map_err(|e| {
-             let err_msg = e.to_string();
-             println!("Install command failed to launch: {}", err_msg);
-             err_msg
-         })?;
+        .args(&args)
+        .output()
+        .map_err(|e| {
+            let err_msg = e.to_string();
+            println!("Install command failed to launch: {}", err_msg);
+            err_msg
+        })?;
 
     if output.status.success() {
         println!("npm install finished. Verifying {}...", tool_id);
         // Verify installation by checking status
         let status = check_tool_status(tool_id.clone());
         if status.installed {
-             println!("Verification successful: {} is installed (v{:?}).", tool_id, status.version);
-             Ok("Installation successful".to_string())
+            println!(
+                "Verification successful: {} is installed (v{:?}).",
+                tool_id, status.version
+            );
+            Ok("Installation successful".to_string())
         } else {
-             println!("Verification failed: {} not found after install.", tool_id);
-             Err(format!("Installation appeared successful but tool {} was not found. Please check PATH.", tool_id))
+            println!("Verification failed: {} not found after install.", tool_id);
+            Err(format!(
+                "Installation appeared successful but tool {} was not found. Please check PATH.",
+                tool_id
+            ))
         }
     } else {
         let stderr = String::from_utf8_lossy(&output.stderr).to_string();
@@ -325,7 +319,6 @@ async fn update_tool(tool_id: String) -> Result<String, String> {
     }
 }
 
-
 #[tauri::command]
 fn uninstall_tool(tool_id: String) -> Result<String, String> {
     let uninstall_cmd = match tool_id.as_str() {
@@ -340,9 +333,9 @@ fn uninstall_tool(tool_id: String) -> Result<String, String> {
     };
 
     let output = create_background_command("powershell")
-         .args(&["/C", uninstall_cmd]) 
-         .output()
-         .map_err(|e| e.to_string())?;
+        .args(&["/C", uninstall_cmd])
+        .output()
+        .map_err(|e| e.to_string())?;
 
     if output.status.success() {
         Ok("Uninstallation successful".to_string())
@@ -354,14 +347,62 @@ fn uninstall_tool(tool_id: String) -> Result<String, String> {
 #[tauri::command]
 fn check_tool_status(tool_id: String) -> ToolStatus {
     let (program, args) = match tool_id.as_str() {
-        "claude" => if cfg!(target_os = "windows") { ("claude.cmd", vec!["--version"]) } else { ("claude", vec!["--version"]) },
-        "google" => if cfg!(target_os = "windows") { ("gemini.cmd", vec!["--version"]) } else { ("gemini", vec!["--version"]) },
-        "opencode" => if cfg!(target_os = "windows") { ("opencode.cmd", vec!["--version"]) } else { ("opencode", vec!["--version"]) },
-        "qoder" => if cfg!(target_os = "windows") { ("qodercli.cmd", vec!["--version"]) } else { ("qodercli", vec!["--version"]) },
-        "codebuddy" => if cfg!(target_os = "windows") { ("codebuddy.cmd", vec!["--version"]) } else { ("codebuddy", vec!["--version"]) },
-        "copilot" => if cfg!(target_os = "windows") { ("copilot.cmd", vec!["--version"]) } else { ("copilot", vec!["--version"]) },
-        "codex" => if cfg!(target_os = "windows") { ("codex.cmd", vec!["--version"]) } else { ("codex", vec!["--version"]) },
-        _ => return ToolStatus { id: tool_id, installed: false, version: None },
+        "claude" => {
+            if cfg!(target_os = "windows") {
+                ("claude.cmd", vec!["--version"])
+            } else {
+                ("claude", vec!["--version"])
+            }
+        }
+        "google" => {
+            if cfg!(target_os = "windows") {
+                ("gemini.cmd", vec!["--version"])
+            } else {
+                ("gemini", vec!["--version"])
+            }
+        }
+        "opencode" => {
+            if cfg!(target_os = "windows") {
+                ("opencode.cmd", vec!["--version"])
+            } else {
+                ("opencode", vec!["--version"])
+            }
+        }
+        "qoder" => {
+            if cfg!(target_os = "windows") {
+                ("qodercli.cmd", vec!["--version"])
+            } else {
+                ("qodercli", vec!["--version"])
+            }
+        }
+        "codebuddy" => {
+            if cfg!(target_os = "windows") {
+                ("codebuddy.cmd", vec!["--version"])
+            } else {
+                ("codebuddy", vec!["--version"])
+            }
+        }
+        "copilot" => {
+            if cfg!(target_os = "windows") {
+                ("copilot.cmd", vec!["--version"])
+            } else {
+                ("copilot", vec!["--version"])
+            }
+        }
+        "codex" => {
+            if cfg!(target_os = "windows") {
+                ("codex.cmd", vec!["--version"])
+            } else {
+                ("codex", vec!["--version"])
+            }
+        }
+        _ => {
+            return ToolStatus {
+                id: tool_id,
+                installed: false,
+                version: None,
+            }
+        }
     };
 
     let version = get_version(program, &args);
@@ -380,14 +421,14 @@ fn get_app_config(app: AppHandle) -> AppConfig {
         let content = fs::read_to_string(config_path).unwrap_or_default();
         // Use serde_json to parse. If it fails or is partial, we should merge with default
         let loaded_config: Option<AppConfig> = serde_json::from_str(&content).ok();
-        
+
         if let Some(config) = loaded_config {
             // Ensure essential fields are not None if they shouldn't be (merging logic)
             // For now, simpler: if loaded successfully, return it. logic for active_tool_id is Option<String> so None is valid.
             config
         } else {
-             // Failed to parse, return default
-             AppConfig::default()
+            // Failed to parse, return default
+            AppConfig::default()
         }
     } else {
         AppConfig::default()
@@ -401,7 +442,7 @@ fn save_app_config(app: AppHandle, config: AppConfig) -> Result<(), String> {
     if !dir.exists() {
         fs::create_dir_all(dir).map_err(|e| e.to_string())?;
     }
-    
+
     let content = serde_json::to_string_pretty(&config).map_err(|e| e.to_string())?;
     fs::write(config_path, content).map_err(|e| e.to_string())?;
     Ok(())
@@ -410,13 +451,15 @@ fn save_app_config(app: AppHandle, config: AppConfig) -> Result<(), String> {
 #[tauri::command]
 fn pty_open(app: AppHandle, state: State<'_, AppPty>, cols: u16, rows: u16) -> Result<(), String> {
     let pty_system = NativePtySystem::default();
-    
-    let pair = pty_system.openpty(PtySize {
-        rows,
-        cols,
-        pixel_width: 0,
-        pixel_height: 0,
-    }).map_err(|e| e.to_string())?;
+
+    let pair = pty_system
+        .openpty(PtySize {
+            rows,
+            cols,
+            pixel_width: 0,
+            pixel_height: 0,
+        })
+        .map_err(|e| e.to_string())?;
 
     let config = get_app_config(app.clone());
     let cmd_line = config.terminal_shell.unwrap_or_else(|| {
@@ -434,12 +477,12 @@ fn pty_open(app: AppHandle, state: State<'_, AppPty>, cols: u16, rows: u16) -> R
         let resolved_cmd = if cmd_line == "bash.exe" {
             let default_path = std::path::Path::new("C:\\Program Files\\Git\\bin\\bash.exe");
             if default_path.exists() {
-               default_path.to_str().unwrap().to_string()
+                default_path.to_str().unwrap().to_string()
             } else {
-               cmd_line
+                cmd_line
             }
         } else {
-             cmd_line
+            cmd_line
         };
 
         let mut builder = CommandBuilder::new(&resolved_cmd);
@@ -448,7 +491,7 @@ fn pty_open(app: AppHandle, state: State<'_, AppPty>, cols: u16, rows: u16) -> R
         }
         // If it's bash, launch as login shell to load profile
         if resolved_cmd.ends_with("bash.exe") {
-             builder.args(&["--login", "-i"]);
+            builder.args(&["--login", "-i"]);
         }
         builder
     };
@@ -471,9 +514,16 @@ fn pty_open(app: AppHandle, state: State<'_, AppPty>, cols: u16, rows: u16) -> R
     }
 
     // Proxy Injection for Terminal
-    if let (Some(proxy_type), Some(address)) = (config.proxy_type.as_deref(), config.proxy_address.as_deref()) {
+    if let (Some(proxy_type), Some(address)) = (
+        config.proxy_type.as_deref(),
+        config.proxy_address.as_deref(),
+    ) {
         if !address.is_empty() && proxy_type != "none" {
-            let proxy_scheme = if proxy_type == "socks5" { "socks5://" } else { "http://" };
+            let proxy_scheme = if proxy_type == "socks5" {
+                "socks5://"
+            } else {
+                "http://"
+            };
             let proxy_url = if address.contains("://") {
                 address.to_string()
             } else {
@@ -481,28 +531,31 @@ fn pty_open(app: AppHandle, state: State<'_, AppPty>, cols: u16, rows: u16) -> R
             };
 
             println!("Injecting Proxy to Terminal: {}", proxy_url);
-            
+
             // Set standard proxy environment variables
             cmd.env("HTTP_PROXY", &proxy_url);
             cmd.env("HTTPS_PROXY", &proxy_url);
             cmd.env("ALL_PROXY", &proxy_url);
-            
+
             // For good measure, lowercase too
             cmd.env("http_proxy", &proxy_url);
             cmd.env("https_proxy", &proxy_url);
             cmd.env("all_proxy", &proxy_url);
         }
     }
-    
-    let child = pair.slave.spawn_command(cmd).map_err(|e| format!("Failed to spawn shell: {}", e))?;
+
+    let child = pair
+        .slave
+        .spawn_command(cmd)
+        .map_err(|e| format!("Failed to spawn shell: {}", e))?;
     println!("Shell spawned successfully: {:?}", child);
-    
+
     // Release slave immediately to allow shell to close it when it exits
     drop(pair.slave);
 
     let mut reader = pair.master.try_clone_reader().map_err(|e| e.to_string())?;
     let writer = pair.master.take_writer().map_err(|e| e.to_string())?;
-    
+
     // Store writer, master and child
     *state.writer.lock().unwrap() = Some(writer);
     *state.master.lock().unwrap() = Some(pair.master);
@@ -549,12 +602,14 @@ fn pty_write(state: State<'_, AppPty>, data: String) -> Result<(), String> {
 #[tauri::command]
 fn pty_resize(state: State<'_, AppPty>, cols: u16, rows: u16) -> Result<(), String> {
     if let Some(master) = state.master.lock().unwrap().as_mut() {
-        master.resize(PtySize {
-            rows,
-            cols,
-            pixel_width: 0,
-            pixel_height: 0,
-        }).map_err(|e| e.to_string())?;
+        master
+            .resize(PtySize {
+                rows,
+                cols,
+                pixel_width: 0,
+                pixel_height: 0,
+            })
+            .map_err(|e| e.to_string())?;
     }
     Ok(())
 }
@@ -575,12 +630,12 @@ async fn download_file(app: AppHandle, url: String, filename: String) -> Result<
     let mut download_path = std::env::current_exe().map_err(|e| e.to_string())?;
     download_path.pop(); // remove exe
     download_path.push("download");
-    
+
     // Create dir if not exists
     if !download_path.exists() {
         fs::create_dir_all(&download_path).map_err(|e| e.to_string())?;
     }
-    
+
     let target_path = download_path.join(&filename);
     let target_path_str = target_path.to_string_lossy().to_string();
 
@@ -595,29 +650,34 @@ async fn download_file(app: AppHandle, url: String, filename: String) -> Result<
         .map_err(|e| format!("Failed to connect: {}", e))?;
 
     let total_size = res.content_length().unwrap_or(0);
-    
+
     // 3. Stream content
-    let mut file = std::fs::File::create(&target_path).map_err(|e| format!("Failed to create file: {}", e))?;
+    let mut file =
+        std::fs::File::create(&target_path).map_err(|e| format!("Failed to create file: {}", e))?;
     let mut downloaded: u64 = 0;
     let mut stream = res.bytes_stream();
 
     while let Some(item) = stream.next().await {
         let chunk = item.map_err(|e| format!("Error while downloading chunk: {}", e))?;
-        file.write_all(&chunk).map_err(|e| format!("Error while writing to file: {}", e))?;
-        
+        file.write_all(&chunk)
+            .map_err(|e| format!("Error while writing to file: {}", e))?;
+
         let new = min(downloaded + (chunk.len() as u64), total_size);
         downloaded = new;
-        
+
         // Emit progress
         if total_size > 0 {
-             let percent = (downloaded as f64 / total_size as f64) * 100.0;
-             // Emit event: "download-progress" { filename: "foo.zip", percent: 50.5, current: 1024, total: 2048 }
-             let _ = app.emit("download-progress", serde_json::json!({
-                 "filename": filename,
-                 "percent": percent,
-                 "current": downloaded,
-                 "total": total_size
-             }));
+            let percent = (downloaded as f64 / total_size as f64) * 100.0;
+            // Emit event: "download-progress" { filename: "foo.zip", percent: 50.5, current: 1024, total: 2048 }
+            let _ = app.emit(
+                "download-progress",
+                serde_json::json!({
+                    "filename": filename,
+                    "percent": percent,
+                    "current": downloaded,
+                    "total": total_size
+                }),
+            );
         }
     }
 
@@ -634,23 +694,30 @@ fn extract_file(path: String) -> Result<String, String> {
 
     let mut target_dir = archive_path.clone();
     target_dir.pop(); // download dir
-    
+
     // Create a subfolder with same name as file stem
-    let stem = archive_path.file_stem().ok_or("Invalid filename")?.to_string_lossy();
+    let stem = archive_path
+        .file_stem()
+        .ok_or("Invalid filename")?
+        .to_string_lossy();
     target_dir.push(&*stem);
 
     if !target_dir.exists() {
         fs::create_dir_all(&target_dir).map_err(|e| e.to_string())?;
     }
 
-    let file = fs::File::open(&archive_path).map_err(|e| format!("Failed to open archive: {}", e))?;
+    let file =
+        fs::File::open(&archive_path).map_err(|e| format!("Failed to open archive: {}", e))?;
 
     if path.ends_with(".zip") {
-        zip_extract::extract(file, &target_dir, true).map_err(|e| format!("ZIP extraction failed: {}", e))?;
+        zip_extract::extract(file, &target_dir, true)
+            .map_err(|e| format!("ZIP extraction failed: {}", e))?;
     } else if path.ends_with(".tar.gz") || path.ends_with(".tgz") {
         let tar_gz = flate2::read::GzDecoder::new(file);
         let mut archive = tar::Archive::new(tar_gz);
-        archive.unpack(&target_dir).map_err(|e| format!("TAR extraction failed: {}", e))?;
+        archive
+            .unpack(&target_dir)
+            .map_err(|e| format!("TAR extraction failed: {}", e))?;
     } else {
         return Err("Unsupported archive format. Only .zip and .tar.gz supported.".to_string());
     }
@@ -659,20 +726,39 @@ fn extract_file(path: String) -> Result<String, String> {
 }
 
 #[tauri::command]
-async fn fetch_remote_models(app: AppHandle, base_url: String, api_key: String) -> Result<Vec<String>, String> {
+async fn fetch_remote_models(
+    app: AppHandle,
+    base_url: String,
+    api_key: String,
+    api_type: Option<String>,
+) -> Result<Vec<String>, String> {
     // Ensure base_url ends with /v1 or /v1/, adjust if necessary
     // Actually, usually users provide "https://api.openai.com/v1"
     // We want to fetch "{base_url}/models".
     // If base_url ends with slash, remove it first
     let clean_base = base_url.trim_end_matches('/');
     let url = format!("{}/models", clean_base);
-    
+
     println!("Fetching models from: {}", url);
 
     let client = get_proxy_client(&app)?;
-    let res = client
-        .get(&url)
-        .header("Authorization", format!("Bearer {}", api_key))
+
+    // Determine authentication header based on api_type
+    let mut request = client.get(&url);
+
+    match api_type.as_deref() {
+        Some("anthropic") => {
+            // Anthropic uses x-api-key header
+            request = request.header("x-api-key", &api_key);
+            request = request.header("anthropic-version", "2023-06-01");
+        }
+        _ => {
+            // Default to OpenAI-style Bearer token
+            request = request.header("Authorization", format!("Bearer {}", api_key));
+        }
+    }
+
+    let res = request
         .send()
         .await
         .map_err(|e| format!("Request failed: {}", e))?;
@@ -681,26 +767,35 @@ async fn fetch_remote_models(app: AppHandle, base_url: String, api_key: String) 
         return Err(format!("API Error: {}", res.status()));
     }
 
-    let body = res.text().await.map_err(|e| format!("Failed to read body: {}", e))?;
+    let body = res
+        .text()
+        .await
+        .map_err(|e| format!("Failed to read body: {}", e))?;
     // println!("Models response: {}", body); // Debug
 
-    let response: ModelsResponse = serde_json::from_str(&body)
-        .map_err(|e| format!("Failed to parse JSON: {}", e))?;
+    let response: ModelsResponse =
+        serde_json::from_str(&body).map_err(|e| format!("Failed to parse JSON: {}", e))?;
 
     let model_ids: Vec<String> = response.data.into_iter().map(|m| m.id).collect();
     // Sort logic? OpenAI returns chaotic list. Maybe user wants to sort in UI.
-    
+
     Ok(model_ids)
 }
-
 
 fn get_proxy_client(app: &AppHandle) -> Result<reqwest::Client, String> {
     let config = get_app_config(app.clone());
     let mut builder = reqwest::Client::builder();
 
-    if let (Some(proxy_type), Some(address)) = (config.proxy_type.as_deref(), config.proxy_address.as_deref()) {
+    if let (Some(proxy_type), Some(address)) = (
+        config.proxy_type.as_deref(),
+        config.proxy_address.as_deref(),
+    ) {
         if !address.is_empty() && proxy_type != "none" {
-            let proxy_scheme = if proxy_type == "socks5" { "socks5://" } else { "http://" };
+            let proxy_scheme = if proxy_type == "socks5" {
+                "socks5://"
+            } else {
+                "http://"
+            };
             // Check if address already contains scheme
             let proxy_url = if address.contains("://") {
                 address.to_string()
@@ -712,10 +807,10 @@ fn get_proxy_client(app: &AppHandle) -> Result<reqwest::Client, String> {
             match reqwest::Proxy::all(&proxy_url) {
                 Ok(proxy) => {
                     builder = builder.proxy(proxy);
-                },
+                }
                 Err(e) => {
                     println!("Failed to create proxy: {}", e);
-                    // Decide if we should return error or fallback. 
+                    // Decide if we should return error or fallback.
                     // To be safe and let user know configuration is wrong, returning error is better.
                     return Err(format!("Invalid proxy configuration: {}", e));
                 }
@@ -723,7 +818,9 @@ fn get_proxy_client(app: &AppHandle) -> Result<reqwest::Client, String> {
         }
     }
 
-    builder.build().map_err(|e| format!("Failed to build HTTP client: {}", e))
+    builder
+        .build()
+        .map_err(|e| format!("Failed to build HTTP client: {}", e))
 }
 
 #[tauri::command]
@@ -731,18 +828,25 @@ fn get_system_fonts() -> Vec<String> {
     #[cfg(target_os = "windows")]
     {
         let output = create_background_command("powershell")
-            .args(&["/C", "Add-Type -AssemblyName System.Drawing; [System.Drawing.FontFamily]::Families.Name"])
+            .args(&[
+                "/C",
+                "Add-Type -AssemblyName System.Drawing; [System.Drawing.FontFamily]::Families.Name",
+            ])
             .output();
 
         if let Ok(out) = output {
-             // Decode and split by newlines
-             let stdout = String::from_utf8_lossy(&out.stdout);
-             stdout.lines().map(|s| s.trim().to_string()).filter(|s| !s.is_empty()).collect()
+            // Decode and split by newlines
+            let stdout = String::from_utf8_lossy(&out.stdout);
+            stdout
+                .lines()
+                .map(|s| s.trim().to_string())
+                .filter(|s| !s.is_empty())
+                .collect()
         } else {
             Vec::new()
         }
     }
-    
+
     #[cfg(not(target_os = "windows"))]
     {
         // TODO: Implement for macOS/Linux using fc-list
@@ -759,27 +863,30 @@ pub struct McpInfo {
 #[tauri::command]
 fn list_installed_skills(target: String) -> Vec<McpInfo> {
     let mut mcps = Vec::new();
-    let home = std::env::var("HOME").or_else(|_| std::env::var("USERPROFILE")).unwrap_or_default();
-    
+    let home = std::env::var("HOME")
+        .or_else(|_| std::env::var("USERPROFILE"))
+        .unwrap_or_default();
+
     let base_path = match target.to_lowercase().as_str() {
         "claude" => PathBuf::from(&home).join(".claude").join("skills"),
         "gemini" | "google" => PathBuf::from(&home).join(".gemini").join("skills"),
-        "opencode" => PathBuf::from(&home).join(".config").join("opencode").join("skills"),
+        "opencode" => PathBuf::from(&home)
+            .join(".config")
+            .join("opencode")
+            .join("skills"),
         "qoder" => PathBuf::from(&home).join(".qoder").join("skills"),
         "codebuddy" => PathBuf::from(&home).join(".codebuddy").join("skills"),
         "copilot" => PathBuf::from(&home).join(".copilot").join("skills"),
         "codex" => PathBuf::from(&home).join(".codex").join("skills"),
         _ => PathBuf::from(&home).join(".agents").join("skills"),
     };
-    
+
     if base_path.exists() {
         if let Ok(entries) = fs::read_dir(&base_path) {
             for entry in entries.flatten() {
                 let path = entry.path();
                 if path.is_dir() {
                     if let Some(name) = path.file_name().and_then(|n| n.to_str()) {
-
-    
                         mcps.push(McpInfo {
                             path: path.to_string_lossy().to_string(),
                             name: name.to_string(),
@@ -789,18 +896,28 @@ fn list_installed_skills(target: String) -> Vec<McpInfo> {
             }
         }
     }
-    
+
     mcps
 }
 
 #[tauri::command]
-fn install_skills(_app: AppHandle, url: String, name: Option<String>, target: String) -> Result<String, String> {
-    let home = std::env::var("HOME").or_else(|_| std::env::var("USERPROFILE")).map_err(|_| "Could not determine home directory".to_string())?;
-    
+fn install_skills(
+    _app: AppHandle,
+    url: String,
+    name: Option<String>,
+    target: String,
+) -> Result<String, String> {
+    let home = std::env::var("HOME")
+        .or_else(|_| std::env::var("USERPROFILE"))
+        .map_err(|_| "Could not determine home directory".to_string())?;
+
     let target_base = match target.to_lowercase().as_str() {
         "claude" => PathBuf::from(&home).join(".claude").join("skills"),
         "gemini" | "google" => PathBuf::from(&home).join(".gemini").join("skills"),
-        "opencode" => PathBuf::from(&home).join(".config").join("opencode").join("skills"),
+        "opencode" => PathBuf::from(&home)
+            .join(".config")
+            .join("opencode")
+            .join("skills"),
         "qoder" => PathBuf::from(&home).join(".qoder").join("skills"),
         "codebuddy" => PathBuf::from(&home).join(".codebuddy").join("skills"),
         "copilot" => PathBuf::from(&home).join(".copilot").join("skills"),
@@ -811,7 +928,7 @@ fn install_skills(_app: AppHandle, url: String, name: Option<String>, target: St
     if !target_base.exists() {
         fs::create_dir_all(&target_base).map_err(|e| e.to_string())?;
     }
-    
+
     let folder_name = if let Some(n) = name {
         n
     } else {
@@ -822,24 +939,31 @@ fn install_skills(_app: AppHandle, url: String, name: Option<String>, target: St
             let owner = parts[parts.len() - 2];
             format!("{}-{}", owner, repo)
         } else {
-            url.split('/').last().unwrap_or("mcp_skill").trim_end_matches(".git").to_string()
+            url.split('/')
+                .last()
+                .unwrap_or("mcp_skill")
+                .trim_end_matches(".git")
+                .to_string()
         }
     };
-        
+
     let target_path = target_base.join(&folder_name);
-    
+
     if target_path.exists() {
-        return Err(format!("skills '{}' is already installed at {:?}", folder_name, target_path));
+        return Err(format!(
+            "skills '{}' is already installed at {:?}",
+            folder_name, target_path
+        ));
     }
 
     println!("Cloning Skill to: {:?}", target_path);
-    
+
     // Use git clone
     let output = Command::new("git")
         .args(&["clone", &url, target_path.to_str().unwrap()])
         .output()
         .map_err(|e| e.to_string())?;
-        
+
     if output.status.success() {
         Ok(format!("Installed {} successfully", folder_name))
     } else {
@@ -849,43 +973,47 @@ fn install_skills(_app: AppHandle, url: String, name: Option<String>, target: St
 
 #[tauri::command]
 fn get_config_file(path: String) -> Result<String, String> {
-    let home = std::env::var("HOME").or_else(|_| std::env::var("USERPROFILE")).map_err(|_| "Could not determine home directory".to_string())?;
-    
+    let home = std::env::var("HOME")
+        .or_else(|_| std::env::var("USERPROFILE"))
+        .map_err(|_| "Could not determine home directory".to_string())?;
+
     // Expand ~ manually if present at the start of the path
     let expanded_path = if path.starts_with("~") {
-         path.replacen("~", &home, 1)
+        path.replacen("~", &home, 1)
     } else {
-         path
+        path
     };
 
     let p = PathBuf::from(expanded_path);
     if !p.exists() {
         return Ok("".to_string()); // Return empty string if file doesn't exist yet
     }
-    
+
     fs::read_to_string(p).map_err(|e| e.to_string())
 }
 
 #[tauri::command]
 fn save_config_file(path: String, content: String) -> Result<(), String> {
-    let home = std::env::var("HOME").or_else(|_| std::env::var("USERPROFILE")).map_err(|_| "Could not determine home directory".to_string())?;
-    
+    let home = std::env::var("HOME")
+        .or_else(|_| std::env::var("USERPROFILE"))
+        .map_err(|_| "Could not determine home directory".to_string())?;
+
     // Expand ~ manually
     let expanded_path = if path.starts_with("~") {
-         path.replacen("~", &home, 1)
+        path.replacen("~", &home, 1)
     } else {
-         path
+        path
     };
-    
+
     let p = PathBuf::from(expanded_path);
-    
+
     // Ensure parent directory exists
     if let Some(parent) = p.parent() {
         if !parent.exists() {
-             fs::create_dir_all(parent).map_err(|e| e.to_string())?;
+            fs::create_dir_all(parent).map_err(|e| e.to_string())?;
         }
     }
-    
+
     fs::write(p, content).map_err(|e| e.to_string())
 }
 
@@ -900,49 +1028,84 @@ fn uninstall_skills(path: String) -> Result<(), String> {
     }
 }
 
+#[tauri::command]
+fn get_models(provider: String) -> Result<Vec<String>, String> {
+    let output = if cfg!(target_os = "windows") {
+        let mut args = vec!["/C", "opencode", "models"];
+        if !provider.is_empty() {
+            args.push(&provider);
+        }
+        Command::new("cmd").args(args).output()
+    } else {
+        let mut args = vec!["models"];
+        if !provider.is_empty() {
+            args.push(&provider);
+        }
+        Command::new("opencode").args(args).output()
+    };
+
+    match output {
+        Ok(o) => {
+            if o.status.success() {
+                let stdout = String::from_utf8_lossy(&o.stdout);
+                let models: Vec<String> = stdout
+                    .lines()
+                    .map(|s| s.trim().to_string())
+                    .filter(|s| !s.is_empty())
+                    .collect();
+                Ok(models)
+            } else {
+                let stderr = String::from_utf8_lossy(&o.stderr);
+                Err(format!("Command failed: {}", stderr))
+            }
+        }
+        Err(e) => Err(format!("Failed to execute command: {}", e)),
+    }
+}
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
-  tauri::Builder::default()
-    .invoke_handler(tauri::generate_handler![
-        check_environment, 
-        check_tool_status,
-        launch_tool, 
-        install_tool,
-        uninstall_tool,
-        update_tool,
-        check_executable,
-        get_app_config,
-        save_app_config,
-        open_url,
-        pty_open,
-        pty_write,
-        pty_resize,
-        pty_close,
-        pty_exists,
-        download_file,
-        extract_file,
-        fetch_remote_models,
-        get_system_fonts,
-        list_installed_skills,
-        install_skills,
-        uninstall_skills,
-        get_config_file,
-        save_config_file
-    ])
-    .manage(AppPty::default())
-    .setup(|app| {
-      app.handle().plugin(tauri_plugin_dialog::init())?;
-      app.handle().plugin(tauri_plugin_fs::init())?;
-      if cfg!(debug_assertions) {
-        app.handle().plugin(
-          tauri_plugin_log::Builder::default()
-            .level(log::LevelFilter::Info)
-            .build(),
-        )?;
-      }
-      Ok(())
-    })
-    .run(tauri::generate_context!())
-    .expect("error while running tauri application");
+    tauri::Builder::default()
+        .invoke_handler(tauri::generate_handler![
+            check_environment,
+            check_tool_status,
+            launch_tool,
+            install_tool,
+            uninstall_tool,
+            update_tool,
+            check_executable,
+            get_app_config,
+            save_app_config,
+            open_url,
+            pty_open,
+            pty_write,
+            pty_resize,
+            pty_close,
+            pty_exists,
+            download_file,
+            extract_file,
+            fetch_remote_models,
+            get_system_fonts,
+            list_installed_skills,
+            install_skills,
+            uninstall_skills,
+            get_config_file,
+            save_config_file,
+            get_models
+        ])
+        .manage(AppPty::default())
+        .setup(|app| {
+            app.handle().plugin(tauri_plugin_dialog::init())?;
+            app.handle().plugin(tauri_plugin_fs::init())?;
+            if cfg!(debug_assertions) {
+                app.handle().plugin(
+                    tauri_plugin_log::Builder::default()
+                        .level(log::LevelFilter::Info)
+                        .build(),
+                )?;
+            }
+            Ok(())
+        })
+        .run(tauri::generate_context!())
+        .expect("error while running tauri application");
 }

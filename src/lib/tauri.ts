@@ -8,29 +8,29 @@
 import { invoke } from '@tauri-apps/api/core';
 
 export interface EnvironmentStatus {
-  node_version: string | null;
-  npm_version: string | null;
-  git_version: string | null;
-  python_version: string | null;
-  go_version: string | null;
-  java_version: string | null;
+    node_version: string | null;
+    npm_version: string | null;
+    git_version: string | null;
+    python_version: string | null;
+    go_version: string | null;
+    java_version: string | null;
 }
 
 export const checkEnvironment = async (): Promise<EnvironmentStatus> => {
-  try {
-    return await invoke('check_environment');
-  } catch (e) {
-    console.warn("Tauri invoke failed, falling back to mock data (Browser Mode)", e);
-    // Return mock data for browser preview
-    return {
-      node_version: "v20.11.0 (Mock)",
-      npm_version: "10.2.4 (Mock)",
-      git_version: "2.43.0.windows.1 (Mock)",
-      python_version: "3.12.1 (Mock)",
-      go_version: "go1.22.0 windows/amd64 (Mock)",
-      java_version: "openjdk version \"21.0.2\" 2024-01-16 (Mock)",
-    };
-  }
+    try {
+        return await invoke('check_environment');
+    } catch (e) {
+        console.warn("Tauri invoke failed, falling back to mock data (Browser Mode)", e);
+        // Return mock data for browser preview
+        return {
+            node_version: "v20.11.0 (Mock)",
+            npm_version: "10.2.4 (Mock)",
+            git_version: "2.43.0.windows.1 (Mock)",
+            python_version: "3.12.1 (Mock)",
+            go_version: "go1.22.0 windows/amd64 (Mock)",
+            java_version: "openjdk version \"21.0.2\" 2024-01-16 (Mock)",
+        };
+    }
 };
 
 export const launchTool = async (toolId: string): Promise<string> => {
@@ -43,9 +43,9 @@ export const launchTool = async (toolId: string): Promise<string> => {
 };
 
 export interface ToolStatus {
-  id: string;
-  installed: boolean;
-  version: string | null;
+    id: string;
+    installed: boolean;
+    version: string | null;
 }
 
 export const checkToolStatus = async (toolId: string): Promise<ToolStatus> => {
@@ -61,8 +61,8 @@ export const installTool = async (toolId: string): Promise<string> => {
     try {
         return await invoke('install_tool', { toolId });
     } catch (e) {
-         console.warn("Install failed (Browser Mode)", e);
-         return `Mock Installed ${toolId}`;
+        console.warn("Install failed (Browser Mode)", e);
+        return `Mock Installed ${toolId}`;
     }
 };
 
@@ -70,8 +70,8 @@ export const uninstallTool = async (toolId: string): Promise<string> => {
     try {
         return await invoke('uninstall_tool', { toolId });
     } catch (e) {
-         console.warn("Uninstall failed (Browser Mode)", e);
-         return `Mock Uninstalled ${toolId}`;
+        console.warn("Uninstall failed (Browser Mode)", e);
+        return `Mock Uninstalled ${toolId}`;
     }
 };
 
@@ -79,24 +79,12 @@ export const updateTool = async (toolId: string): Promise<string> => {
     try {
         return await invoke('update_tool', { toolId });
     } catch (e) {
-         console.warn("Update failed (Browser Mode)", e);
-         return `Mock Updated ${toolId}`;
+        console.warn("Update failed (Browser Mode)", e);
+        return `Mock Updated ${toolId}`;
     }
 };
 
-export interface ApiConfig {
-    id: string;
-    name: string;
-    auth_type: 'api_key' | 'oauth';
-    base_url: string | null;
-    api_key: string | null;
-    model: string | null;
-    models?: string[];
-}
-
 export interface AppConfig {
-    api_configs: ApiConfig[] | null;
-    active_api_id: string | null;
     proxy_type: string | null;
     proxy_address: string | null;
     theme: string | null;
@@ -117,7 +105,7 @@ export interface AppConfig {
     active_tool_id: string | null;
     env_status: EnvironmentStatus | null;
     tool_statuses: Record<string, ToolStatus> | null;
-    tool_configs: Record<string, { active_api_id: string | null; working_directory: string | null }> | null;
+    tool_configs: Record<string, { working_directory: string | null }> | null;
 }
 
 export const getAppConfig = async (): Promise<AppConfig> => {
@@ -126,8 +114,6 @@ export const getAppConfig = async (): Promise<AppConfig> => {
     } catch (e) {
         console.warn("Get Config failed (Browser Mode)", e);
         return {
-            api_configs: [],
-            active_api_id: null,
             proxy_type: 'none',
             proxy_address: '',
             theme: 'light',

@@ -1,281 +1,483 @@
 {
-  "app": {
-    "title": "OpenVizUI",
-    "dashboard": "Workbench",
-    "settings": "Settings",
-    "terminal": "Terminal",
-    "install": "Install",
-    "docs": "Docs",
-    "installed": "Installed",
-    "uninstall": "Uninstall",
-    "launch": "Launch",
-    "update": "Update",
-    "config": "Config",
-    "refresh": "Refresh",
-    "addTool": "Add Tool",
-    "apps": "App Store",
-    "aiSettings": "AI Settings"
-  },
-  "aiSettings": {
-    "title": "AI Settings",
-    "tabs": {
-      "skills": "Skills Management",
-      "more": "More Settings",
-      "comingSoon": "More AI settings coming soon..."
+    "app": {
+      "title": "OpenVizUI",
+      "dashboard": "Workbench",
+      "settings": "Settings",
+      "terminal": "Terminal",
+      "install": "Install",
+      "docs": "Docs",
+      "installed": "Installed",
+      "uninstall": "Uninstall",
+      "launch": "Launch",
+      "update": "Update",
+      "config": "Config",
+      "refresh": "Refresh",
+      "addTool": "Add Tool",
+      "apps": "App Store",
+      "aiSettings": "AI Settings"
     },
-    "installedTitle": "Installed Skills",
-    "refresh": "Refresh",
-    "noMcps": "No Skills installed yet",
-    "uninstallConfirmTitle": "Confirm Uninstall",
-    "uninstallConfirmDesc": "Are you sure you want to remove this Skill?",
-    "uninstall": "Uninstall",
-    "quickInstallTitle": "Quick Install",
-    "installViaUrl": "Install via Command or URL",
-    "installHint": "Enter 'npx skills add <url> --skill <name>' or a GitHub HTTPS URL.",
-    "install": "Install",
-    "popularTitle": "Popular Skills",
-    "status": {
-      "installing": "Installing Skill...",
-      "installSuccess": "Skill Installed Successfully!",
-      "uninstallSuccess": "Skill Uninstalled"
-    },
-    "errors": {
-      "loadFailed": "Failed to load Skills: ",
-      "installFailed": "Installation failed: ",
-      "uninstallFailed": "Uninstall failed: "
-    },
-    "warnings": {
-      "enterUrl": "Please enter a GitHub URL"
-    },
-    "mcpConfig": {
-      "tab": "MCP Config",
-      "tool": "CLI Tool",
-      "save": "Save Config",
-      "reload": "Reload",
-      "configPath": "Config Path",
-      "quickAdd": "Quick Add MCP",
-      "quickAddWarning": "Quick add only supports JSON config files for now.",
-      "loadFailed": "Failed to load config for ",
-      "saved": "Saved config for ",
-      "saveFailed": "Failed to save config: ",
-      "exists": " already exists in config.",
-      "added": "Added {{key}} to config. Please review and save.",
-      "parseError": "Failed to parse current JSON config. Please fix syntax errors first.",
-      "links": {
-        "awesome": "Awesome MCP",
-        "official": "Official MCP",
-        "cursor": "Cursor Directory",
-        "chinese": "MCP Chinese"
-      }
-    },
-    "popularPacks": {
-      "findSkills": {
-        "name": "Find Skills",
-        "desc": "Tools for searching and discovering available skills."
+    "aiSettings": {
+      "title": "AI Settings",
+      "tabs": {
+        "skills": "Skills Management",
+            "cliConfig": "CLI Config",
+            "mcpConfig": "MCP Config",
+            "more": "More Settings",
+            "comingSoon": "More AI settings coming soon..."
+          },
+          "installedTitle": "Installed Skills",
+          "refresh": "Refresh",
+          "noMcps": "No Skills installed yet",
+          "uninstallConfirmTitle": "Confirm Uninstall",
+          "uninstallConfirmDesc": "Are you sure you want to remove this Skill?",
+          "uninstall": "Uninstall",
+          "quickInstallTitle": "Quick Install",
+          "installViaUrl": "Install via Command or URL",
+          "installHint": "Enter 'npx skills add <url> --skill <name>' or a GitHub HTTPS URL.",
+          "install": "Install",
+          "popularTitle": "Popular Skills",
+          "status": {
+            "installing": "Installing Skill...",
+            "installSuccess": "Skill Installed Successfully!",
+            "uninstallSuccess": "Skill Uninstalled",
+            "modelsFetched": "Successfully fetched {{count}} models"
+          },
+          "errors": {
+            "loadFailed": "Failed to load Skills: ",
+            "installFailed": "Installation failed: ",
+            "uninstallFailed": "Uninstall failed: ",
+            "fetchFailed": "Fetch failed: "
+          },
+          "warnings": {
+            "enterUrl": "Please enter a GitHub URL",
+            "noBaseUrl": "Please enter a Base URL first",
+            "noApiKey": "Please configure Codex API Key first"
+          },
+          "mcpConfig": {
+            "tab": "MCP Config",
+            "tool": "CLI Tool",
+            "save": "Save Config",
+            "reload": "Reload",
+            "configPath": "Config Path",
+            "quickAdd": "Quick Add MCP",
+            "edit": "Edit Configuration",
+            "locateHint": "Located {{key}} in configuration.",
+            "quickAddWarning": "Quick add only supports JSON config files for now.",
+            "quickAddWarningYAML": "Quick add does not support YAML for now.",
+            "uninstallWarning": "Uninstall only supports JSON config files for now.",
+            "uninstallWarningYAML": "Uninstall does not support YAML for now.",
+            "addedAndSaved": "Added and saved {{key}} to config.",
+            "loadFailed": "Failed to load config for ",
+            "saved": "Saved config for ",
+            "saveFailed": "Failed to save config: ",
+            "exists": " already exists in config.",
+            "uninstalled": "Successfully uninstalled {{key}} and saved configuration.",
+            "uninstallFailed": "Failed to uninstall MCP.",
+            "added": "Added {{key}} to config. Please review and save.",
+            "parseError": "Failed to parse current JSON config. Please fix syntax errors first.",
+            "links": {
+              "awesome": "Awesome MCP",
+              "official": "Official MCP",
+              "cursor": "Cursor Directory",
+                "chinese": "MCP Chinese",
+                "selectProvider": "Select or type provider name",
+                "pluginsHint": "Plugins directory: ~/.config/opencode/plugins"
+              },
+              "savePathTip": "Settings are saved to {{path}}",
+              "quickAdds": {
+                "filesystem": {
+                  "desc": "Allows AI to safely read and write files in the local filesystem."
+                },
+                "context7": {
+                  "desc": "Upstash Context7 cache for efficient long-context management and retrieval."
+                },
+                "playwright": {
+                  "desc": "Automate browser actions using Playwright for web scraping and testing."
+                },
+                "browserTools": {
+                  "desc": "Provides browser interaction capabilities like clicking, scrolling, and screenshots."
+                },
+                "gitmcp": {
+                  "desc": "Execute Git operations and code search directly on GitHub repositories."
+                },
+                "everything": {
+                  "desc": "A reference server demonstrating all interaction patterns of the MCP protocol."
+                },
+                "firecrawl": {
+                  "desc": "Convert web content into AI-friendly Markdown or JSON format."
+                },
+                "mysql": {
+                  "desc": "Connect and query MySQL databases with schema detection and read-only queries."
+                }
+              }
+            },
+            "popularPacks": {
+              "findSkills": {
+                "name": "Find Skills",
+                "desc": "Tools for searching and discovering available skills."
+              },
+              "vercelBestPractices": {
+                "name": "Vercel React Best Practices",
+                "desc": "Official Vercel React development best practices."
+              },
+              "webDesign": {
+                "name": "Web Design Guidelines",
+                "desc": "Modern Web design standards and guidelines."
+              },
+              "remotion": {
+                "name": "Remotion Best Practices",
+                "desc": "Best practices for creating videos with React."
+              },
+              "frontendDesign": {
+                "name": "Frontend Design",
+                "desc": "Frontend design patterns and implementation techniques."
+              },
+              "composition": {
+                "name": "Vercel Composition Patterns",
+                "desc": "Vercel component composition patterns."
+              },
+              "agentBrowser": {
+                "name": "Agent Browser",
+                "desc": "Enable browser capabilities for Agents."
+              },
+              "skillCreator": {
+                "name": "Skill Creator",
+                "desc": "Tools to help create new skills."
+              }
+        },
+        "cliConfig": {
+          "fields": {
+            "verbose": "Verbose Logging",
+            "theme": "Theme",
+            "preferredModel": "Preferred Model",
+            "editor": "Editor",
+            "autoUpdate": "Auto Update",
+            "maxContextTokens": "Max Context Tokens",
+            "maxOutputTokens": "Max Output Tokens",
+            "model": "Model",
+            "modelProvider": "Model Provider",
+            "reasoningEffort": "Reasoning Effort",
+            "disableResponseStorage": "Disable Response Storage",
+            "preferredAuthMethod": "Preferred Auth Method",
+            "temperature": "Temperature",
+            "topP": "Top P",
+            "topK": "Top K",
+            "safetySettings": "Safety Settings",
+            "defaultModel": "Default Model",
+            "language": "Language",
+            "enableMcp": "Enable MCP",
+            "telemetry": "Telemetry",
+            "defaultPermission": "Default Permission",
+            "apiKey": "API Key",
+            "editorIntegration": "Editor Integration",
+            "debugMode": "Debug Mode",
+            "confirmExecute": "Confirm Execute",
+            "githubToken": "GitHub Token",
+            "autoUpdater": "Auto Updater",
+            "providerName": "Service Provider",
+            "baseUrl": "Base URL",
+            "authType": "Auth Type",
+            "defaultAgent": "Default Agent",
+            "instructions": "Model Instructions",
+            "disabledProviders": "Disabled Providers",
+            "server": {
+              "port": "Port",
+              "hostname": "Hostname",
+              "mdns": "mDNS Discovery",
+              "cors": "CORS Allowed Origins"
+            },
+            "tui": {
+              "scrollSpeed": "Scroll Speed",
+              "diffStyle": "Diff Style"
+            },
+            "tools": {
+              "write": "Allow File Write",
+              "bash": "Allow Command Execution"
+            },
+            "permission": {
+              "edit": "Edit Permission",
+              "bash": "Execution Permission"
+            },
+            "compaction": {
+              "auto": "Auto Compaction",
+              "prune": "Prune Context"
+            },
+            "provider": {
+              "timeout": "Timeout (ms)",
+              "baseUrl": "Base URL",
+              "name": "Provider Name"
+            },
+            "configuredProviders": "Configured Providers",
+            "allProviders": "All Providers",
+            "fetchModels": "Fetch Models",
+            "cleanupDays": "Cleanup Period (Days)",
+            "thinkingMode": "Always Thinking Mode",
+            "showDuration": "Show Turn Duration",
+            "updateChannel": "Update Channel",
+            "plansDir": "Plans Directory",
+            "spinnerTips": "Spinner Tips",
+            "progressBar": "Terminal Progress Bar",
+            "allowList": "Allow List",
+            "denyList": "Deny List",
+            "allowedDirs": "Additional Allowed Directories",
+            "autoAllowBash": "Auto-Allow Bash in Sandbox",
+            "excludedCmds": "Excluded Commands",
+            "allowLocalBind": "Allow Local Binding",
+            "unixSockets": "Allow Unix Sockets"
+          },
+          "sections": {
+            "basic": "Basic Settings",
+            "permissions": "Permissions",
+            "sandbox": "Sandbox",
+            "env": "Environment",
+            "network": "Network",
+            "controls": "Feature Controls",
+            "limits": "Resource Limits"
+          },
+          "descriptions": {
+            "verbose": "Enable detailed logging output",
+            "editor": "Command to open your preferred editor (e.g., 'code')",
+            "limitContext": "Limit context size",
+            "randomness": "Controls randomness",
+            "safety": "JSON string for safety settings (complex)",
+            "githubToken": "Optional: Overrides auth token",
+            "tencentKey": "Your Tencent Cloud API Key",
+            "confirmExecute": "Ask before executing commands",
+            "modelProvider": "Provider type (e.g., openai, anthropic). Custom endpoints like DeepSeek can use 'openai'."
+          }
+        }
       },
-      "vercelBestPractices": {
-        "name": "Vercel React Best Practices",
-        "desc": "Official Vercel React development best practices."
-      },
-      "webDesign": {
-        "name": "Web Design Guidelines",
-        "desc": "Modern Web design standards and guidelines."
-      },
-      "remotion": {
-        "name": "Remotion Best Practices",
-        "desc": "Best practices for creating videos with React."
-      },
-      "frontendDesign": {
-        "name": "Frontend Design",
-        "desc": "Frontend design patterns and implementation techniques."
-      },
-      "composition": {
-        "name": "Vercel Composition Patterns",
-        "desc": "Vercel component composition patterns."
-      },
-      "agentBrowser": {
-        "name": "Agent Browser",
-        "desc": "Enable browser capabilities for Agents."
-      },
-      "skillCreator": {
-        "name": "Skill Creator",
-        "desc": "Tools to help create new skills."
-      }
-    }
-  },
-  "apps": {
-      "title": "App Store",
-      "subtitle": "Discover and install developer tools, languages, and services.",
-      "searchPlaceholder": "Search apps...",
-      "categories": {
+      "apps": {
+        "title": "App Store",
+        "subtitle": "Discover and install developer tools, languages, and services.",
+        "searchPlaceholder": "Search apps...",
+        "categories": {
           "languages": "Languages",
           "web": "Web Services",
           "database": "Databases",
           "cache_queue": "Cache & Queue",
           "tools": "Tools & Containers",
           "config_tools": "Config Tools"
-      },
-      "downloadModal": {
+        },
+        "downloadModal": {
           "title": "Downloading {{name}}",
           "waiting": "Please wait while the application is being downloaded...",
           "extracting": "Extracting files, please wait...",
           "savePath": "Saved to /download directory",
           "success": "{{name}} downloaded and extracted successfully!",
           "failed": "Operation failed: {{error}}"
-      },
-      "messages": {
+        },
+        "messages": {
           "alreadyInstalled": "{{name}} is already installed.",
           "actuallyAlreadyInstalled": "{{name}} is actually already installed: {{version}}",
           "notConfigured": "Download not configured for {{name}} yet.",
           "gitMissing": "Git is not installed. Redirecting to App Store to install Git..."
-      },
-      "items": {
-          "python": { "name": "Python", "desc": "A high-level, general-purpose programming language." },
-          "go": { "name": "Go", "desc": "An open source programming language supported by Google." },
-          "java": { "name": "Java", "desc": "A high-level, class-based, object-oriented programming language." },
-          "bun": { "name": "Bun", "desc": "Incredibly fast JavaScript runtime, bundler, test runner, and package manager." },
-          "rust": { "name": "Rust", "desc": "A language empowering everyone to build reliable and efficient software." },
-          "php": { "name": "PHP", "desc": "A popular general-purpose scripting language especially suited to web development." },
-          "erlang": { "name": "Erlang", "desc": "A programming language used to build massively scalable soft real-time systems." },
-          "perl": { "name": "Perl", "desc": "A highly capable, feature-rich programming language with over 30 years of development." },
-          "ruby": { "name": "Ruby", "desc": "A dynamic, open source programming language with a focus on simplicity and productivity." },
-          "apache": { "name": "Apache", "desc": "The world's most used web server software." },
-          "caddy": { "name": "Caddy", "desc": "The Ultimate Server with automatic HTTPS." },
-          "tomcat": { "name": "Tomcat", "desc": "An open source implementation of the Jakarta Servlet, Jakarta Server Pages, etc." },
-          "nginx": { "name": "Nginx", "desc": "High Performance Load Balancer, Web Server, & Reverse Proxy." },
-          "consul": { "name": "Consul", "desc": "Automate network configurations, discover services, and enable secure connectivity." },
-          "mariadb": { "name": "MariaDB", "desc": "One of the most popular database servers. Made by original MySQL developers." },
-          "mongodb": { "name": "MongoDB", "desc": "The application data platform for the era of the cloud." },
-          "mysql": { "name": "MySQL", "desc": "The world's most popular open source database." },
-          "postgresql": { "name": "PostgreSQL", "desc": "The World's Most Advanced Open Source Relational Database." },
-          "redis": { "name": "Redis", "desc": "In-memory data store used by millions of developers." },
-          "memcached": { "name": "Memcached", "desc": "Free & open source, high-performance, distributed memory object caching system." },
-          "rabbitmq": { "name": "RabbitMQ", "desc": "One of the most popular open source message brokers." },
-          "etcd": { "name": "Etcd", "desc": "A strongly consistent, distributed key-value store." },
-          "nodejs": { "name": "NodeJS", "desc": "JavaScript runtime built on Chrome's V8 JavaScript engine." },
-          "git": { "name": "Git", "desc": "Free and open source distributed version control system." },
-          "podman": { "name": "Podman", "desc": "A tool for managing OCI containers and pods." },
-          "docker": {
-            "name": "Docker",
-            "desc": "Accelerate how you build, share, and run applications."
+        },
+        "items": {
+            "python": {
+              "name": "Python",
+              "desc": "A high-level, general-purpose programming language."
+            },
+            "go": {
+              "name": "Go",
+              "desc": "An open source programming language supported by Google."
+            },
+            "java": {
+              "name": "Java",
+              "desc": "A high-level, class-based, object-oriented programming language."
+            },
+            "bun": {
+              "name": "Bun",
+              "desc": "Incredibly fast JavaScript runtime, bundler, test runner, and package manager."
+            },
+            "rust": {
+              "name": "Rust",
+              "desc": "A language empowering everyone to build reliable and efficient software."
+            },
+            "php": {
+              "name": "PHP",
+              "desc": "A popular general-purpose scripting language especially suited to web development."
+            },
+            "erlang": {
+              "name": "Erlang",
+              "desc": "A programming language used to build massively scalable soft real-time systems."
+            },
+            "perl": {
+              "name": "Perl",
+              "desc": "A highly capable, feature-rich programming language with over 30 years of development."
+            },
+            "ruby": {
+              "name": "Ruby",
+              "desc": "A dynamic, open source programming language with a focus on simplicity and productivity."
+            },
+            "apache": {
+              "name": "Apache",
+              "desc": "The world's most used web server software."
+            },
+            "caddy": {
+              "name": "Caddy",
+              "desc": "The Ultimate Server with automatic HTTPS."
+            },
+            "tomcat": {
+              "name": "Tomcat",
+              "desc": "An open source implementation of the Jakarta Servlet, Jakarta Server Pages, etc."
+            },
+            "nginx": {
+              "name": "Nginx",
+              "desc": "High Performance Load Balancer, Web Server, & Reverse Proxy."
+            },
+            "consul": {
+              "name": "Consul",
+              "desc": "Automate network configurations, discover services, and enable secure connectivity."
+            },
+            "mariadb": {
+              "name": "MariaDB",
+              "desc": "One of the most popular database servers. Made by original MySQL developers."
+            },
+            "mongodb": {
+              "name": "MongoDB",
+              "desc": "The application data platform for the era of the cloud."
+            },
+            "mysql": {
+              "name": "MySQL",
+              "desc": "The world's most popular open source database."
+            },
+            "postgresql": {
+              "name": "PostgreSQL",
+              "desc": "The World's Most Advanced Open Source Relational Database."
+            },
+            "redis": {
+              "name": "Redis",
+              "desc": "In-memory data store used by millions of developers."
+            },
+            "memcached": {
+              "name": "Memcached",
+              "desc": "Free & open source, high-performance, distributed memory object caching system."
+            },
+            "rabbitmq": {
+              "name": "RabbitMQ",
+              "desc": "One of the most popular open source message brokers."
+            },
+            "etcd": {
+              "name": "Etcd",
+              "desc": "A strongly consistent, distributed key-value store."
+            },
+            "nodejs": {
+              "name": "NodeJS",
+              "desc": "JavaScript runtime built on Chrome's V8 JavaScript engine."
+            },
+            "git": {
+              "name": "Git",
+              "desc": "Free and open source distributed version control system."
+            },
+            "podman": {
+              "name": "Podman",
+              "desc": "A tool for managing OCI containers and pods."
+            },
+            "docker": {
+              "name": "Docker",
+              "desc": "Accelerate how you build, share, and run applications."
+            }
           }
-      }
-  },
-  "tools": {
-    "claude": "Claude Code",
-    "google": "Gemini",
-    "opencode": "OpenCode",
-    "qoder": "Qoder",
-    "codebuddy": "CodeBuddy",
-    "copilot": "GitHub Copilot",
-    "codex": "OpenAI Codex"
-  },
-  "settings": {
-    "theme": "Theme",
-    "language": "Language",
-    "apiKey": "API Key",
-    "apiList": "API Configurations",
-    "addApi": "Add Configuration",
-    "editApi": "Edit Configuration",
-    "configName": "Config Name",
-    "authType": "Auth Type",
-    "baseUrl": "Base URL",
-    "modelName": "Model Name",
-    "setAsActive": "Set as Active",
-    "active": "Active",
-    "deleteConfirm": "Are you sure you want to delete this configuration?",
-    "login": "Login",
-    "loggingIn": "Logging in...",
-    "loginSuccess": "Login Successful",
-    "provider": "Provider",
-    "oauthHelp": "Click to open browser and authenticate",
-    "systemAppearance": "System & Appearance",
-    "proxySettings": "Proxy Settings",
-    "systemFont": "System Font",
-    "primaryColor": "Primary Color",
-    "textColor": "Text Color (Force Override)",
-    "textColorDesc": "If set, this color applies to Light Mode. Dark Mode uses default high-contrast text for visibility.",
-    "windowOpacity": "Window Opacity",
-    "proxyType": "Proxy Type",
-    "proxyAddress": "Proxy Address",
-    "noProxy": "No Proxy",
-    "saveConfig": "Save Configuration",
-    "appearancePresets": "Preset Schemes",
-    "applyPreset": "Apply",
-    "preset1": "Default (Pink)",
-    "preset2": "Ocean Blue",
-    "preset3": "Forest Green",
-    "preset4": "Royal Purple",
-    "preset5": "Sunset Yellow",
-    "preset6": "Volcano Red",
-    "preset7": "Cyber Gold",
-    "preset8": "Geek Gray",
-    "customFontPlaceholder": "Type font name...",
-    "addFont": "Add Font",
-    "terminal": "Terminal",
-    "terminalFont": "Terminal Font",
-    "fontFamily": "Font Family",
-    "fontSize": "Font Size",
-    "cursorStyle": "Cursor Style",
-    "terminalShell": "Terminal Shell",
-    "terminalColors": "Terminal Colors",
-    "terminalBackground": "Background",
-    "terminalForeground": "Foreground",
-    "terminalPresets": "Terminal Presets",
-    "networkApi": "Network & API",
-    "proxyWarning": "Note: Proxy is a global setting independent of API configs. All requests will be routed through it."
-  },
-  "terminal": {
-    "dirError": "Failed to select directory",
-    "selectModel": "Switch AI Model",
-    "selectTool": "Select Tool",
-    "noDirectory": "No directory selected",
-    "workingDir": "Working Directory",
-    "chat": {
-      "placeholder": "Type a message... (Shift+Enter for new line)",
-      "send": "Send"
-    },
-    "git": {
-      "menu": "Git Operations",
-      "setUser": "Set User Name",
-      "setEmail": "Set User Email",
-      "init": "Initialize Repository",
-      "addRemote": "Add Remote Origin",
-      "add": "Add All (git add .)",
-      "commit": "Commit",
-      "push": "Push (origin master)",
-      "modal": {
-        "userName": "Set Git User Name",
-        "userEmail": "Set Git User Email",
-        "remote": "Add Remote Origin",
-        "commit": "Git Commit",
-        "labelName": "Name",
-        "labelEmail": "Email",
-        "labelUrl": "Repository URL",
-        "labelMessage": "Commit Message"
-      }
-    },
-    "resumed": "Resumed session...",
-    "fileTree": {
-      "title": "Project Files",
-      "change": "Change",
-      "context": {
-        "addToChat": "Add to Chat",
-        "open": "Open",
-        "delete": "Delete",
-        "rename": "Rename"
+        },
+        "tools": {
+          "claude": "Claude Code",
+          "google": "Gemini",
+          "opencode": "OpenCode",
+          "qoder": "Qoder",
+          "codebuddy": "CodeBuddy",
+          "copilot": "GitHub Copilot",
+          "codex": "OpenAI Codex"
+        },
+        "settings": {
+          "theme": "Theme",
+          "language": "Language",
+        "systemAppearance": "System & Appearance",
+        "proxySettings": "Proxy Settings",
+        "systemFont": "System Font",
+        "primaryColor": "Primary Color",
+        "textColor": "Text Color (Force Override)",
+        "textColorDesc": "If set, this color applies to Light Mode. Dark Mode uses default high-contrast text for visibility.",
+        "windowOpacity": "Window Opacity",
+        "proxyType": "Proxy Type",
+        "proxyAddress": "Proxy Address",
+        "noProxy": "No Proxy",
+        "saveConfig": "Save Configuration",
+        "appearancePresets": "Preset Schemes",
+        "applyPreset": "Apply",
+        "preset1": "Default (Pink)",
+        "preset2": "Ocean Blue",
+        "preset3": "Forest Green",
+        "preset4": "Royal Purple",
+        "preset5": "Sunset Yellow",
+        "preset6": "Volcano Red",
+        "preset7": "Cyber Gold",
+        "preset8": "Geek Gray",
+        "customFontPlaceholder": "Type font name...",
+        "addFont": "Add Font",
+        "terminal": "Terminal",
+        "terminalFont": "Terminal Font",
+        "fontFamily": "Font Family",
+        "fontSize": "Font Size",
+        "cursorStyle": "Cursor Style",
+        "terminalShell": "Terminal Shell",
+        "terminalColors": "Terminal Colors",
+        "terminalBackground": "Background",
+        "terminalForeground": "Foreground",
+        "terminalPresets": "Terminal Presets",
+        "proxyWarning": "Note: Proxy is a global setting. All requests will be routed through it."
       },
-      "modal": {
-        "editing": "Edit File",
-        "save": "Save"
-      }
-    }
-  },
-  "common": {
-    "ok": "OK",
-    "cancel": "Cancel",
-    "confirm": "Confirm",
-    "save": "Save",
-    "delete": "Delete"
-  }
+      "terminal": {
+        "dirError": "Failed to select directory",
+        "selectTool": "Select Tool",
+        "noDirectory": "No directory selected",
+        "workingDir": "Working Directory",
+        "chat": {
+          "placeholder": "Type a message... (Shift+Enter for new line)",
+          "send": "Send"
+        },
+        "git": {
+          "menu": "Git Operations",
+          "setUser": "Set User Name",
+          "setEmail": "Set User Email",
+          "init": "Initialize Repository",
+          "addRemote": "Add Remote Origin",
+          "add": "Add All (git add .)",
+          "commit": "Commit",
+          "push": "Push (origin master)",
+          "modal": {
+            "userName": "Set Git User Name",
+            "userEmail": "Set Git User Email",
+            "remote": "Add Remote Origin",
+            "commit": "Git Commit",
+            "labelName": "Name",
+            "labelEmail": "Email",
+            "labelUrl": "Repository URL",
+            "labelMessage": "Commit Message"
+          }
+        },
+        "resumed": "Resumed session...",
+        "fileTree": {
+          "title": "Project Files",
+          "change": "Change",
+          "context": {
+            "addToChat": "Add to Chat",
+            "open": "Open",
+                "modify": "Modify",
+                "delete": "Delete",
+                "rename": "Rename"
+              },
+              "modal": {
+                "editing": "Edit File",
+                "save": "Save"
+              }
+            }
+          },
+          "common": {
+            "ok": "OK",
+            "cancel": "Cancel",
+            "confirm": "Confirm",
+            "save": "Save",
+            "delete": "Delete"
+          }
 }
