@@ -1,3 +1,9 @@
+/*
+ * @Author: Anthony Rivera && opcnlin@gmail.com
+ * @FilePath: \src\components\VisualConfigEditor.tsx
+ * Copyright (c) 2026 OpenVizUI Contributors
+ * Licensed under the MIT License
+ */
 
 import React, { useState, useEffect, useRef } from 'react';
 import { Form, Input, Select, Switch, InputNumber, Alert, AutoComplete, Row, Col, Button } from 'antd';

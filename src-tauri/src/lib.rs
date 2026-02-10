@@ -61,7 +61,8 @@ pub struct ToolStatus {
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 struct ModelEntry {
-    id: String,
+    id: Option<String>,
+    name: Option<String>,
     object: Option<String>,
     created: Option<u64>,
     owned_by: Option<String>,
@@ -69,7 +70,8 @@ struct ModelEntry {
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 struct ModelsResponse {
-    data: Vec<ModelEntry>,
+    data: Option<Vec<ModelEntry>>,
+    models: Option<Vec<ModelEntry>>,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
@@ -197,6 +199,11 @@ fn check_environment() -> EnvironmentStatus {
 
 #[tauri::command]
 fn launch_tool(tool_id: String) -> Result<String, String> {
+    launch_tool_with_args(tool_id, None)
+}
+
+#[tauri::command]
+fn launch_tool_with_args(tool_id: String, args: Option<Vec<String>>) -> Result<String, String> {
     let program = match tool_id.as_str() {
         "claude" => "claude",
         "google" => "gemini",
@@ -208,26 +215,56 @@ fn launch_tool(tool_id: String) -> Result<String, String> {
         _ => return Err("Unknown tool".to_string()),
     };
 
+    let mut full_args = Vec::new();
+    if let Some(a) = args {
+        full_args.extend(a);
+    }
+
     // Launch in a new terminal window
     #[cfg(target_os = "windows")]
-    Command::new("cmd")
-        .args(&["/C", "start", "powershell", "-NoExit", "-Command", program])
-        .spawn()
-        .map_err(|e| e.to_string())?;
+    {
+        // Use 'sh' (Git Bash) instead of powershell as requested by user
+        let mut full_cmd = program.to_string();
+        for arg in &full_args {
+            full_cmd.push_str(" ");
+            full_cmd.push_str(arg);
+        }
+        
+        // Use 'cmd /C start sh -c ...' to open a new bash window
+        // We add '|| read -p "Press Enter to close..." ' to keep it open if it fails or finishes fast
+        let bash_cmd = format!("{} || read -n 1 -p 'Press any key to close...'", full_cmd);
+        
+        Command::new("cmd")
+            .args(&["/C", "start", "sh", "-c", &bash_cmd])
+            .spawn()
+            .map_err(|e| format!("Failed to launch Git Bash (sh): {}. Please ensure Git Bash is in your PATH.", e))?;
+    }
 
     #[cfg(target_os = "macos")]
-    Command::new("open")
-        .args(&["-a", "Terminal", program])
-        .spawn()
-        .map_err(|e| e.to_string())?;
+    {
+        let mut final_cmd = program.to_string();
+        for arg in &full_args {
+            final_cmd.push_str(" ");
+            final_cmd.push_str(arg);
+        }
+        Command::new("open")
+            .args(&["-a", "Terminal", &final_cmd])
+            .spawn()
+            .map_err(|e| e.to_string())?;
+    }
 
     #[cfg(target_os = "linux")]
-    Command::new("x-terminal-emulator")
-        .args(&["-e", program])
-        .spawn()
-        .map_err(|e| e.to_string())?;
+    {
+        let mut final_args = vec![program.to_string()];
+        final_args.extend(full_args);
+        Command::new("x-terminal-emulator")
+            .args(&["-e"])
+            .args(&final_args)
+            .spawn()
+            .map_err(|e| e.to_string())?;
+    }
 
-    Ok(format!("Launched {}", tool_id))
+    Ok(format!("Launched {} with args {:?}", tool_id, full_args))
 }
 
 #[tauri::command]
@@ -752,6 +789,10 @@ async fn fetch_remote_models(
             request = request.header("x-api-key", &api_key);
             request = request.header("anthropic-version", "2023-06-01");
         }
+        Some("google") => {
+            // Google AI Studio uses x-goog-api-key
+            request = request.header("x-goog-api-key", &api_key);
+        }
         _ => {
             // Default to OpenAI-style Bearer token
             request = request.header("Authorization", format!("Bearer {}", api_key));
@@ -776,8 +817,27 @@ async fn fetch_remote_models(
     let response: ModelsResponse =
         serde_json::from_str(&body).map_err(|e| format!("Failed to parse JSON: {}", e))?;
 
-    let model_ids: Vec<String> = response.data.into_iter().map(|m| m.id).collect();
-    // Sort logic? OpenAI returns chaotic list. Maybe user wants to sort in UI.
+    let mut model_ids = Vec::new();
+
+    if let Some(data) = response.data {
+        for m in data {
+            if let Some(id) = m.id {
+                model_ids.push(id);
+            }
+        }
+    }
+
+    if let Some(models) = response.models {
+        for m in models {
+            if let Some(name) = m.name {
+                // Google names are usually like "models/gemini-1.5-pro"
+                // We might want to strip the prefix or keep it. 
+                // Gemini CLI usually just wants the name.
+                let clean_name = name.trim_start_matches("models/").to_string();
+                model_ids.push(clean_name);
+            }
+        }
+    }
 
     Ok(model_ids)
 }
@@ -1070,6 +1130,7 @@ pub fn run() {
             check_environment,
             check_tool_status,
             launch_tool,
+            launch_tool_with_args,
             install_tool,
             uninstall_tool,
             update_tool,

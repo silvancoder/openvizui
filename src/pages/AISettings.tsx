@@ -1,3 +1,9 @@
+/*
+ * @Author: Anthony Rivera && opcnlin@gmail.com
+ * @FilePath: \src\pages\AISettings.tsx
+ * Copyright (c) 2026 OpenVizUI Contributors
+ * Licensed under the MIT License
+ */
 
 import { Typography, Tabs, Card, List, Button, Input, message, Popconfirm, Tag, Empty, Space, Row, Col, Select, Segmented, Modal } from 'antd';
 import * as TOML from 'smol-toml';
@@ -13,7 +19,8 @@ import {
     FolderOpenOutlined,
     GlobalOutlined,
     CodeOutlined,
-    SettingOutlined
+    SettingOutlined,
+    SaveOutlined
 } from '@ant-design/icons';
 import { useState, useEffect, useMemo } from 'react';
 import { invoke } from '@tauri-apps/api/core';
@@ -21,9 +28,16 @@ import VisualConfigEditor from '../components/VisualConfigEditor';
 import OpenCodeAuthEditor from '../components/OpenCodeAuthEditor';
 import CodexAuthEditor from '../components/CodexAuthEditor';
 import ClaudeCodeAuthEditor from '../components/ClaudeCodeAuthEditor';
+import GeminiAuthEditor from '../components/GeminiAuthEditor';
+import CopilotAuthEditor from '../components/CopilotAuthEditor';
+import QoderAuthEditor from '../components/QoderAuthEditor';
+import CodebuddyAuthEditor from '../components/CodebuddyAuthEditor';
 
 const { Title, Paragraph, Text } = Typography;
 const { Search } = Input;
+
+// Tools that have their own specialized editors
+const SPECIAL_TOOLS = ['Claude', 'Gemini', 'Copilot', 'Qoder', 'CodeBuddy', 'OpenCode', 'Codex'];
 
 interface McpInfo {
     path: string;
@@ -160,9 +174,9 @@ const AISettings = () => {
         { name: 'Claude', configPath: '~/.claude.json', type: 'json' },
         { name: 'Gemini', configPath: '~/.gemini/settings.json', type: 'json' },
         { name: 'OpenCode', configPath: '~/.config/opencode/opencode.json', type: 'json' },
-        { name: 'Qoder', configPath: '~/.qoder/settings.json', type: 'json' },
-        { name: 'CodeBuddy', configPath: '~/.codebuddy/.mcp.json', type: 'json' },
-        { name: 'Copilot', configPath: '~/.copilot/mcp-config.json', type: 'json' },
+        { name: 'Qoder', configPath: '~/.qoder.json', type: 'json' },
+        { name: 'CodeBuddy', configPath: '~/.codebuddy/settings.json', type: 'json' },
+        { name: 'Copilot', configPath: '~/.copilot/config.json', type: 'json' },
         { name: 'Codex', configPath: '~/.codex/config.toml', type: 'toml' },
     ];
 
@@ -271,6 +285,13 @@ const AISettings = () => {
                     enabled: true,
                     environment: quickAddData.env || {}
                 };
+            } else if (activeTool === 'Qoder') {
+                if (!currentConfig.mcp) currentConfig.mcp = {};
+                if (currentConfig.mcp[key]) {
+                    message.warning(`${key}` + t('aiSettings.mcpConfig.exists', ' already exists in config.'));
+                    return;
+                }
+                currentConfig.mcp[key] = QUICK_ADDS[key];
             } else if (activeTool === 'Claude') {
                 if (!currentConfig.mcpServers) currentConfig.mcpServers = {};
                 if (currentConfig.mcpServers[key]) {
@@ -279,7 +300,6 @@ const AISettings = () => {
                 }
                 currentConfig.mcpServers[key] = QUICK_ADDS[key];
             } else if (tool.type === 'toml') {
-                // Codex style [mcp_servers.name]
                 if (!currentConfig.mcp_servers) currentConfig.mcp_servers = {};
                 if (currentConfig.mcp_servers[key]) {
                     message.warning(`${key}` + t('aiSettings.mcpConfig.exists', ' already exists in config.'));
@@ -331,7 +351,7 @@ const AISettings = () => {
                 }
             }
 
-            if (activeTool === 'OpenCode') {
+            if (activeTool === 'OpenCode' || activeTool === 'Qoder') {
                 if (currentConfig.mcp && currentConfig.mcp[key]) {
                     delete currentConfig.mcp[key];
                 }
@@ -375,7 +395,7 @@ const AISettings = () => {
             }
 
             let servers: Record<string, any> = {};
-            if (activeTool === 'OpenCode') {
+            if (activeTool === 'OpenCode' || activeTool === 'Qoder') {
                 servers = config.mcp || {};
             } else if (tool?.type === 'toml') {
                 servers = config.mcp_servers || {};
@@ -425,7 +445,7 @@ const AISettings = () => {
             }
 
             // Update the specific server
-            if (activeTool === 'OpenCode') {
+            if (activeTool === 'OpenCode' || activeTool === 'Qoder') {
                 if (!currentConfig.mcp) currentConfig.mcp = {};
                 currentConfig.mcp[editingMcp.key] = editedSnippet;
             } else if (tool.type === 'toml') {
@@ -465,7 +485,7 @@ const AISettings = () => {
                 return false;
             }
 
-            if (activeTool === 'OpenCode') {
+            if (activeTool === 'OpenCode' || activeTool === 'Qoder') {
                 return config.mcp && config.mcp[key];
             } else if (tool?.type === 'toml') {
                 return config.mcp_servers && config.mcp_servers[key];
@@ -490,7 +510,7 @@ const AISettings = () => {
             }
 
             let servers = {};
-            if (activeTool === 'OpenCode') {
+            if (activeTool === 'OpenCode' || activeTool === 'Qoder') {
                 servers = config.mcp || {};
             } else if (tool?.type === 'toml') {
                 servers = config.mcp_servers || {};
@@ -756,29 +776,40 @@ const CliConfigTab = ({
         {activeTool === 'OpenCode' && <OpenCodeAuthEditor />}
         {activeTool === 'Codex' && <CodexAuthEditor />}
         {activeTool === 'Claude' && <ClaudeCodeAuthEditor />}
-        <div style={{ marginBottom: 8 }}>
-            <Text type="secondary">{t('aiSettings.mcpConfig.configPath', 'Config Path')}: {TOOLS.find(t => t.name === activeTool)?.configPath}</Text>
-        </div>
-        {viewMode === 'code' ? (
-            <Input.TextArea
-                value={configContent}
-                onChange={e => setConfigContent(e.target.value)}
-                style={{ flex: 1, fontFamily: 'monospace', minHeight: 400, resize: 'none' }}
-                spellCheck={false}
-                disabled={configLoading}
-            />
-        ) : (
-            <VisualConfigEditor
-                toolName={activeTool}
-                configContent={configContent}
-                onChange={setConfigContent}
-            />
+        {activeTool === 'Gemini' && <GeminiAuthEditor />}
+        {activeTool === 'Copilot' && <CopilotAuthEditor />}
+        {activeTool === 'Qoder' && <QoderAuthEditor />}
+        {activeTool === 'CodeBuddy' && <CodebuddyAuthEditor />}
+        
+        {(!SPECIAL_TOOLS.includes(activeTool) || viewMode === 'code') && (
+            <>
+                <div style={{ marginBottom: 8, marginTop: SPECIAL_TOOLS.includes(activeTool) ? 16 : 0 }}>
+                    <Text type="secondary">{t('aiSettings.mcpConfig.configPath', 'Config Path')}: {TOOLS.find(t => t.name === activeTool)?.configPath}</Text>
+                </div>
+                {viewMode === 'code' ? (
+                    <Input.TextArea
+                        value={configContent}
+                        onChange={e => setConfigContent(e.target.value)}
+                        style={{ flex: 1, fontFamily: 'monospace', minHeight: 400, resize: 'none' }}
+                        spellCheck={false}
+                        disabled={configLoading}
+                    />
+                ) : (
+                    <VisualConfigEditor
+                        toolName={activeTool}
+                        configContent={configContent}
+                        onChange={setConfigContent}
+                    />
+                )}
+            </>
         )}
 
-        <div style={{ marginTop: 16, display: 'flex', justifyContent: 'flex-end', gap: 8 }}>
-            <Button icon={<ReloadOutlined />} onClick={loadConfig}>{t('aiSettings.mcpConfig.reload', 'Reload')}</Button>
-            <Button type="primary" onClick={saveConfig} icon={<CloudDownloadOutlined />} loading={configLoading}>{t('aiSettings.mcpConfig.save', 'Save Config')}</Button>
-        </div>
+        {(!SPECIAL_TOOLS.includes(activeTool) || viewMode === 'code') && (
+            <div style={{ marginTop: 16, display: 'flex', justifyContent: 'flex-end', gap: 8 }}>
+                <Button icon={<ReloadOutlined />} onClick={loadConfig}>{t('aiSettings.mcpConfig.reload', 'Reload')}</Button>
+                <Button type="primary" onClick={saveConfig} icon={<SaveOutlined />} loading={configLoading}>{t('aiSettings.mcpConfig.save', 'Save Config')}</Button>
+            </div>
+        )}
     </Card>
 );
 
