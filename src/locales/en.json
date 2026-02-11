@@ -14,7 +14,9 @@
       "refresh": "Refresh",
       "addTool": "Add Tool",
       "apps": "App Store",
-      "aiSettings": "AI Settings"
+      "aiSettings": "AI Settings",
+      "about": "About",
+      "system": "System"
     },
     "aiSettings": {
       "title": "AI Settings",
@@ -22,8 +24,98 @@
         "skills": "Skills Management",
             "cliConfig": "CLI Config",
             "mcpConfig": "MCP Config",
+            "mcpMonitor": "MCP Monitor",
+            "skillMonitor": "Skill Monitor",
             "more": "More Settings",
             "comingSoon": "More AI settings coming soon..."
+          },
+          "moreConfigs": {
+            "export": {
+              "title": "Configuration Management",
+              "desc": "Backup or migrate all your AI CLI tool configurations.",
+              "exportBtn": "Export All (JSON/TOML)",
+              "importBtn": "Import Configurations",
+              "success": "Configurations exported successfully!",
+              "importSuccess": "Configurations imported successfully! Reloading..."
+            },
+            "saved": "Settings updated",
+            "docs": {
+              "title": "Official Resources",
+              "desc": "Access documentation and guides for configured CLI tools.",
+              "visit": "Official Docs"
+            },
+            "diagnostics": {
+              "title": "Environment Diagnostics",
+              "desc": "Check your system environment and tool paths for troubleshooting.",
+              "runBtn": "Run Diagnostic Report",
+              "copyBtn": "Copy Report",
+              "reportTitle": "System Diagnostic Report",
+              "failed": "Diagnostics failed: {{error}}"
+            },
+            "instructions": {
+              "title": "Global System Instructions",
+              "desc": "Set a master prompt/persona to use across all AI tools.",
+              "placeholder": "e.g., You are an expert TypeScript developer. Keep responses concise and use Chinese for non-code explanations.",
+              "saveBtn": "Update Instructions"
+            },
+            "localAI": {
+              "title": "Local AI Bridge",
+              "desc": "Quickly connect to local providers like Ollama or LM Studio.",
+              "provider": "Provider Type",
+              "baseUrl": "Base URL",
+              "checkBtn": "Test Connection",
+              "checkSuccess": "Local AI connection successful!",
+              "checkStatusError": "Connected, but provider returned error status: {{status}}",
+              "checkError": "Connection failed. Ensure provider is running."
+            }
+          },
+          "skillMonitor": {
+            "title": "Skill Monitoring Center",
+            "noSkills": "No skills installed in this directory",
+            "table": {
+              "name": "Skill Name",
+              "description": "Description",
+              "actions": "Actions"
+            },
+            "actions": {
+              "view": "View",
+              "folder": "Folder",
+              "confirmDelete": "Confirm Delete",
+              "deleteDesc": "Are you sure you want to uninstall and delete this skill: "
+            },
+            "status": {
+              "deleted": "Skill deleted successfully",
+              "deleteFailed": "Failed to delete skill"
+            },
+            "errors": {
+              "noMetadata": "No metadata file found to display (SKILL.md, AGENTS.md, README.md, package.json)"
+            }
+          },
+          "mcpMonitor": {
+            "title": "MCP Server Monitor",
+            "refresh": "Refresh List",
+            "toolsCount": "{{count}} tools",
+            "table": {
+              "name": "MCP Server",
+              "command": "Command",
+              "status": "Status",
+              "tools": "Available Tools",
+              "actions": "Actions"
+            },
+            "status": {
+              "testing": "Testing",
+              "online": "Online",
+              "error": "Error",
+              "unknown": "Unknown"
+            },
+            "actions": {
+              "test": "Test Status",
+              "tools": "View Tools"
+            },
+            "about": {
+              "title": "About MCP Monitoring",
+              "desc": "This monitor scans your configuration files for AI tools and allows you to verify if the MCP servers (stdio mode) are working correctly. Testing spawns the service and queries for its provided tools."
+            }
           },
           "installedTitle": "Installed Skills",
           "refresh": "Refresh",
@@ -680,7 +772,10 @@
         "terminalBackground": "Background",
         "terminalForeground": "Foreground",
         "terminalPresets": "Terminal Presets",
-        "proxyWarning": "Note: Proxy is a global setting. All requests will be routed through it."
+        "proxyWarning": "Note: Proxy is a global setting. All requests will be routed through it.",
+        "idePath": "IDE Executable Path",
+        "idePathDesc": "Select your preferred IDE (e.g. VS Code, Cursor) executable path for seamless editing.",
+        "selectIde": "Select IDE"
       },
       "terminal": {
         "dirError": "Failed to select directory",
@@ -716,36 +811,67 @@
           "title": "Project Files",
           "change": "Change",
           "context": {
-            "addToChat": "Add to Chat",
+            "addToChat": "Insert path to terminal",
             "open": "Open",
-                "modify": "Modify",
-                "delete": "Delete",
-                "rename": "Rename"
-              },
-              "modal": {
-                "editing": "Edit File",
-                "save": "Save"
-              }
-            }
-          },
-          "common": {
-            "ok": "OK",
-            "cancel": "Cancel",
-            "confirm": "Confirm",
-            "save": "Save",
+            "modify": "Edit in internal editor",
+            "openInIde": "Open in IDE (external)",
             "delete": "Delete",
-            "text": "Text",
-            "json": "JSON",
-            "enabled": "Enabled",
-            "settings": "Settings",
-            "auto": "Auto",
-            "off": "Off",
-            "on": "On",
-            "light": "Light",
-            "dark": "Dark",
-            "low": "Low",
-            "normal": "Normal",
-            "high": "High",
-            "all": "All"
+            "rename": "Rename"
+          },
+          "modal": {
+            "editing": "Edit File",
+            "save": "Save"
           }
+        },
+        "contextBuilder": {
+          "title": "Context Bucket",
+          "empty": "No files selected",
+          "copyXml": "Copy as XML",
+          "copyMd": "Copy as Markdown",
+          "clear": "Clear Bucket",
+          "copied": "Context copied to clipboard"
+        }
+      },
+      "common": {
+        "ok": "OK",
+        "cancel": "Cancel",
+        "confirm": "Confirm",
+        "save": "Save",
+        "delete": "Delete",
+        "text": "Text",
+        "json": "JSON",
+        "enabled": "Enabled",
+        "settings": "Settings",
+        "auto": "Auto",
+        "off": "Off",
+        "on": "On",
+        "light": "Light",
+        "dark": "Dark",
+        "low": "Low",
+        "normal": "Normal",
+        "high": "High",
+        "all": "All"
+      },
+      "about": {
+        "description": "OpenVizUI is a powerful, modern visualization interface for AI CLI tools. It provides a unified, beautiful, and efficient way to manage your AI workflows, from skills management to complex configurations.",
+        "visitWebsite": "Visit Website",
+        "whyTitle": "Key Features",
+        "resourcesTitle": "Resources",
+        "madeBy": "Made with",
+        "byContributors": "by OpenVizUI Contributors",
+        "features": {
+          "fast": {
+            "title": "Blazing Fast",
+            "desc": "Optimized for performance with Rust and React."
+          },
+          "community": {
+            "title": "Community Driven",
+            "desc": "Open source and collaborative development."
+          },
+          "tools": {
+            "title": "AI Multi-Tool",
+            "desc": "Unified interface for leading AI CLI tools."
+          }
+        }
+      }
 }

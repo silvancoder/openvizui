@@ -15,7 +15,9 @@
       "addTool": "添加工具",
       "apps": "应用商店",
       "aiSettings": "AI 设置",
-      "installed": "已安装"
+      "installed": "已安装",
+      "about": "关于",
+      "system": "系统设置"
     },
     "aiSettings": {
       "title": "AI 设置",
@@ -23,8 +25,98 @@
         "skills": "技能管理",
             "cliConfig": "CLI 配置",
             "mcpConfig": "MCP 配置",
+            "mcpMonitor": "MCP 监控",
+            "skillMonitor": "技能监控",
             "more": "更多设置",
             "comingSoon": "更多 AI 设置即将推出..."
+          },
+          "moreConfigs": {
+            "export": {
+              "title": "配置管理",
+              "desc": "备份或导出/导入您的所有 AI CLI 工具配置，方便迁移。",
+              "exportBtn": "导出所有配置 (JSON/TOML)",
+              "importBtn": "导入配置",
+              "success": "配置已成功导出！",
+              "importSuccess": "配置已成功导入！正在重新加载..."
+            },
+            "saved": "配置已更新",
+            "docs": {
+              "title": "官方资源",
+              "desc": "访问已配置 CLI 工具的官方文档、指南和 GitHub 地址。",
+              "visit": "查看文档"
+            },
+            "diagnostics": {
+              "title": "环境诊断报告",
+              "desc": "检查您的系统环境、PATH 和工具安装状态，方便自查或提问。",
+              "runBtn": "生成诊断报告",
+              "copyBtn": "复制报告",
+              "reportTitle": "系统环境诊断报告",
+              "failed": "诊断失败: {{error}}"
+            },
+            "instructions": {
+              "title": "全局自定义指令 (Setup)",
+              "desc": "设置一套通用的系统提示词或人格，方便快速分发到各个 AI 工具中。",
+              "placeholder": "例如：你是一位资深的 TypeScript 专家。请保持代码简洁，非代码部分用中文回答。",
+              "saveBtn": "更新全局指令"
+            },
+            "localAI": {
+              "title": "本地模型桥接 (Local AI)",
+              "desc": "快捷配置并连接本地运行的 Ollama 或 LM Studio 服务。",
+              "provider": "服务商类型",
+              "baseUrl": "Base URL 地址",
+              "checkBtn": "检测连接状态",
+              "checkSuccess": "本地 AI 连接成功！",
+              "checkStatusError": "已连接，但服务端返回错误状态: {{status}}",
+              "checkError": "连接失败，请确保服务已启动。"
+            }
+          },
+          "skillMonitor": {
+            "title": "技能服务中心 (Skill Monitor)",
+            "noSkills": "该目录下暂未安装任何技能",
+            "table": {
+              "name": "技能名称",
+              "description": "描述",
+              "actions": "操作"
+            },
+            "actions": {
+              "view": "查看",
+              "folder": "文件夹",
+              "confirmDelete": "确认删除技能",
+              "deleteDesc": "您确定要卸载并删除此技能吗："
+            },
+            "status": {
+              "deleted": "技能已成功删除",
+              "deleteFailed": "删除技能失败"
+            },
+            "errors": {
+              "noMetadata": "未找到可显示的元数据文件 (SKILL.md, AGENTS.md, README.md, package.json)"
+            }
+          },
+          "mcpMonitor": {
+            "title": "MCP 服务端监控",
+            "refresh": "刷新列表",
+            "toolsCount": "{{count}} 个工具",
+            "table": {
+              "name": "MCP 服务",
+              "command": "命令",
+              "status": "状态",
+              "tools": "提供工具",
+              "actions": "操作"
+            },
+            "status": {
+              "testing": "测试中",
+              "online": "在线",
+              "error": "错误",
+              "unknown": "未知"
+            },
+            "actions": {
+              "test": "状态测试",
+              "tools": "查看工具"
+            },
+            "about": {
+              "title": "关于 MCP 监控",
+              "desc": "此监控器扫描各种 AI 工具的配置文件，并允许您验证 MCP 服务（stdio 模式）是否正常工作。测试时会启动该服务并查询其提供的工具列表。"
+            }
           },
           "installedTitle": "已安装技能",
           "refresh": "刷新",
@@ -674,7 +766,10 @@
         "terminalColors": "终端配色",
         "terminalBackground": "背景颜色",
         "terminalForeground": "字体颜色",
-        "terminalPresets": "终端预设方案"
+        "terminalPresets": "终端预设方案",
+        "idePath": "IDE 可执行路径",
+        "idePathDesc": "选择您首选的 IDE（如 VS Code, Cursor）可执行文件路径，以实现无缝编辑。",
+        "selectIde": "选择 IDE"
       },
       "terminal": {
         "dirError": "选择目录失败",
@@ -697,10 +792,6 @@
           "modal": {
             "userName": "设置 Git 用户名",
             "userEmail": "设置 Git 用户邮箱",
-            "remote": "添加远程仓库",
-            "commit": "Git 提交",
-            "labelName": "用户名",
-            "labelEmail": "邮箱",
             "labelUrl": "仓库地址",
             "labelMessage": "提交信息"
           }
@@ -710,37 +801,72 @@
           "title": "项目文件",
           "change": "更改",
           "context": {
-            "addToChat": "添加到对话",
+            "addToChat": "将路径插入终端",
             "open": "打开",
-                "modify": "修改",
-                "delete": "删除",
-                "rename": "重命名"
-              },
-              "modal": {
-                "editing": "编辑文件",
-                "save": "保存"
-              }
-            }
-          },
-          "common": {
-            "ok": "确定",
-            "cancel": "取消",
-            "confirm": "确认",
-            "save": "保存",
+            "modify": "内部编辑器编辑",
+            "openInIde": "在 IDE 中打开 (外部)",
             "delete": "删除",
-            "text": "文本",
-            "json": "JSON",
-            "add": "添加",
-            "enabled": "已启用",
-            "settings": "设置",
-            "auto": "自动",
-            "off": "关闭",
-            "on": "开启",
-            "light": "浅色",
-            "dark": "深色",
-            "low": "低",
-            "normal": "正常",
-            "high": "高",
-            "all": "全部"
+            "rename": "重命名"
+          },
+          "modal": {
+            "editing": "编辑文件",
+            "save": "保存"
           }
+        },
+        "contextBuilder": {
+          "title": "上下文篮子",
+          "empty": "尚未勾选文件",
+          "copyXml": "复制为 XML",
+          "copyMd": "复制为 Markdown",
+          "clear": "清空篮子",
+          "copied": "上下文已复制到剪贴板"
+        },
+        "footer": {
+          "connected": "已连接",
+          "disconnected": "未连接"
+        }
+      },
+      "common": {
+        "ok": "确定",
+        "cancel": "取消",
+        "confirm": "确认",
+        "save": "保存",
+        "delete": "删除",
+        "text": "文本",
+        "json": "JSON",
+        "add": "添加",
+        "enabled": "已启用",
+        "settings": "设置",
+        "auto": "自动",
+        "off": "关闭",
+        "on": "开启",
+        "light": "浅色",
+        "dark": "深色",
+        "low": "低",
+        "normal": "正常",
+        "high": "高",
+        "all": "全部"
+      },
+      "about": {
+        "description": "OpenVizUI 是一个强大、现代的 AI CLI 工具可视化界面。它提供了一个统一、美观且高效的方式来管理您的 AI 工作流，从技能管理到复杂的配置。 ",
+        "visitWebsite": "访问官网",
+        "whyTitle": "核心特性",
+        "resourcesTitle": "相关资源",
+        "madeBy": "匠心打造",
+        "byContributors": "由 OpenVizUI 贡献者支持",
+        "features": {
+          "fast": {
+            "title": "极致速度",
+            "desc": "基于 Rust 和 React 优化，性能卓越。"
+          },
+          "community": {
+            "title": "社区驱动",
+            "desc": "开源项目，鼓励协作与共同开发。"
+          },
+          "tools": {
+            "title": "AI 全能助手",
+            "desc": "为顶尖 AI CLI 工具提供统一的操作界面。"
+          }
+        }
+      }
 }

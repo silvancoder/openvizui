@@ -106,6 +106,10 @@ export interface AppConfig {
     env_status: EnvironmentStatus | null;
     tool_statuses: Record<string, ToolStatus> | null;
     tool_configs: Record<string, { working_directory: string | null }> | null;
+    global_instructions: string | null;
+    local_ai_base_url: string | null;
+    local_ai_provider: string | null;
+    ide_path: string | null;
 }
 
 export const getAppConfig = async (): Promise<AppConfig> => {
@@ -133,7 +137,11 @@ export const getAppConfig = async (): Promise<AppConfig> => {
             active_tool_id: null,
             env_status: null,
             tool_statuses: null,
-            tool_configs: null
+            tool_configs: null,
+            global_instructions: null,
+            local_ai_base_url: 'http://localhost:11434',
+            local_ai_provider: 'ollama',
+            ide_path: null
         };
     }
 };

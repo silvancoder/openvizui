@@ -125,12 +125,12 @@ const ClaudeCodeAuthEditor: React.FC = () => {
                     <Form.Item name={['env', 'ANTHROPIC_AUTH_TOKEN']} label="ANTHROPIC_AUTH_TOKEN (API Key)" rules={[{ required: true }]}>
                         <Input.Password placeholder="sk-..." />
                     </Form.Item>
-                    <Form.Item name={['env', 'ANTHROPIC_BASE_URL']} label="ANTHROPIC_BASE_URL">
+                    <Form.Item name={['env', 'ANTHROPIC_BASE_URL']} label="ANTHROPIC_BASE_URL (API URL)">
                         <Input placeholder="https://api.anthropic.com" />
                     </Form.Item>
                     <Row gutter={8}>
                         <Col flex="auto">
-                            <Form.Item name={['env', 'ANTHROPIC_MODEL']} label="ANTHROPIC_MODEL" style={{ marginBottom: 0 }}>
+                            <Form.Item name={['env', 'ANTHROPIC_MODEL']} label="ANTHROPIC_MODEL (Model)" style={{ marginBottom: 0 }}>
                                 <AutoComplete
                                     options={models.map(m => ({ value: m }))}
                                     placeholder="claude-3-5-sonnet-20241022"
@@ -166,7 +166,7 @@ const ClaudeCodeAuthEditor: React.FC = () => {
                     </Space>
 
                     <Divider plain>{t('aiSettings.cliConfig.sections.limits', 'Limits')}</Divider>
-                    <Form.Item name={['env', 'MAX_THINKING_TOKENS']} label="MAX_THINKING_TOKENS">
+                    <Form.Item name={['env', 'MAX_THINKING_TOKENS']} label="MAX_THINKING_TOKENS (MAX Token)">
                         <InputNumber
                             style={{ width: '100%' }}
                             placeholder="16000"
@@ -175,7 +175,7 @@ const ClaudeCodeAuthEditor: React.FC = () => {
                             step={1000}
                         />
                     </Form.Item>
-                    <Form.Item name={['env', 'HTTP_PROXY']} label="HTTP_PROXY">
+                    <Form.Item name={['env', 'HTTP_PROXY']} label="HTTP_PROXY (Proxy Config)">
                         <Input placeholder="http://127.0.0.1:7890" />
                     </Form.Item>
                 </div>

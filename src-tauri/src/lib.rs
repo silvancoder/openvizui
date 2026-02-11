@@ -102,6 +102,11 @@ pub struct AppConfig {
     pub env_status: Option<EnvironmentStatus>,
     pub tool_statuses: Option<std::collections::HashMap<String, ToolStatus>>,
     pub tool_configs: Option<std::collections::HashMap<String, ToolConfig>>,
+    // New Fields
+    pub global_instructions: Option<String>,
+    pub local_ai_base_url: Option<String>,
+    pub local_ai_provider: Option<String>,
+    pub ide_path: Option<String>,
 }
 
 impl Default for AppConfig {
@@ -131,6 +136,10 @@ impl Default for AppConfig {
             env_status: None,
             tool_statuses: None,
             tool_configs: Some(std::collections::HashMap::new()),
+            global_instructions: None,
+            local_ai_base_url: Some("http://localhost:11434".to_string()),
+            local_ai_provider: Some("ollama".to_string()),
+            ide_path: None,
         }
     }
 }
@@ -212,6 +221,20 @@ fn launch_tool_with_args(tool_id: String, args: Option<Vec<String>>) -> Result<S
         "codebuddy" => "codebuddy",
         "copilot" => "copilot",
         "codex" => "codex",
+        "open_in_ide" => {
+            if let Some(ref a) = args {
+                if a.len() >= 2 {
+                    let ide_path = &a[0];
+                    let file_path = &a[1];
+                    Command::new(ide_path)
+                        .arg(file_path)
+                        .spawn()
+                        .map_err(|e| e.to_string())?;
+                    return Ok(format!("Opened {} in IDE", file_path));
+                }
+            }
+            return Err("Invalid arguments for open_in_ide".to_string());
+        }
         _ => return Err("Unknown tool".to_string()),
     };
 
@@ -1088,6 +1111,140 @@ fn uninstall_skills(path: String) -> Result<(), String> {
     }
 }
 
+#[derive(Debug, Serialize, Deserialize, Clone)]
+pub struct McpToolInfo {
+    name: String,
+    description: Option<String>,
+}
+
+#[tauri::command]
+async fn inspect_mcp_server(
+    command: String,
+    args: Vec<String>,
+    env: Option<std::collections::HashMap<String, String>>,
+) -> Result<Vec<McpToolInfo>, String> {
+    use std::io::BufRead;
+    
+    let mut cmd = if cfg!(target_os = "windows") && command == "npx" {
+        let mut c = Command::new("cmd");
+        c.args(&["/C", "npx"]);
+        c.args(&args);
+        c
+    } else {
+        let mut c = Command::new(&command);
+        c.args(&args);
+        c
+    };
+
+    if let Some(e) = env {
+        for (k, v) in e {
+            cmd.env(k, v);
+        }
+    }
+
+    cmd.stdout(std::process::Stdio::piped());
+    cmd.stdin(std::process::Stdio::piped());
+    cmd.stderr(std::process::Stdio::piped());
+
+    #[cfg(windows)]
+    cmd.creation_flags(0x08000000); // CREATE_NO_WINDOW
+
+    let mut child = cmd.spawn().map_err(|e| format!("Failed to spawn MCP server: {}", e))?;
+    
+    let mut stdin = child.stdin.take().ok_or("Failed to open stdin")?;
+    let stdout = child.stdout.take().ok_or("Failed to open stdout")?;
+    let mut reader = std::io::BufReader::new(stdout);
+
+    // 1. Initialize
+    let init_req = serde_json::json!({
+        "jsonrpc": "2.0",
+        "id": 1,
+        "method": "initialize",
+        "params": {
+            "capabilities": {},
+            "clientInfo": {"name": "OpenVizUI", "version": "1.0.0"},
+            "protocolVersion": "2024-11-05"
+        }
+    });
+    
+    let mut init_str = init_req.to_string();
+    init_str.push('\n');
+    stdin.write_all(init_str.as_bytes()).map_err(|e| e.to_string())?;
+    stdin.flush().map_err(|e| e.to_string())?;
+
+    // Read response (ignoring notification or logs until we get a result)
+    let mut line = String::new();
+    let mut initialized = false;
+    for _ in 0..20 { // Try first 20 lines
+        line.clear();
+        if reader.read_line(&mut line).is_err() { break; }
+        if line.trim().is_empty() { continue; }
+        
+        if let Ok(resp) = serde_json::from_str::<serde_json::Value>(&line) {
+            if resp["id"] == 1 {
+                initialized = true;
+                break;
+            }
+        }
+    }
+
+    if !initialized {
+        let _ = child.kill();
+        return Err("Failed to receive initialize response from MCP server".to_string());
+    }
+
+    // 2. List Tools
+    let list_req = serde_json::json!({
+        "jsonrpc": "2.0",
+        "id": 2,
+        "method": "tools/list",
+        "params": {}
+    });
+    
+    let mut list_str = list_req.to_string();
+    list_str.push('\n');
+    stdin.write_all(list_str.as_bytes()).map_err(|e| e.to_string())?;
+    stdin.flush().map_err(|e| e.to_string())?;
+
+    let mut tools = Vec::new();
+    let mut got_tools = false;
+    for _ in 0..20 {
+        line.clear();
+        if reader.read_line(&mut line).is_err() { break; }
+        if line.trim().is_empty() { continue; }
+        
+        if let Ok(resp) = serde_json::from_str::<serde_json::Value>(&line) {
+            if resp["id"] == 2 {
+                if let Some(result) = resp.get("result") {
+                    if let Some(tools_arr) = result.get("tools").and_then(|t| t.as_array()) {
+                        for t in tools_arr {
+                            tools.push(McpToolInfo {
+                                name: t["name"].as_str().unwrap_or("unknown").to_string(),
+                                description: t["description"].as_str().map(|s| s.to_string()),
+                            });
+                        }
+                        got_tools = true;
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    let _ = child.kill();
+    
+    if !got_tools {
+        return Err("Failed to receive tools/list response from MCP server".to_string());
+    }
+
+    Ok(tools)
+}
+
+#[tauri::command]
+fn open_folder(path: String) -> Result<(), String> {
+    opener::open(&path).map_err(|e| e.to_string())
+}
+
 #[tauri::command]
 fn get_models(provider: String) -> Result<Vec<String>, String> {
     let output = if cfg!(target_os = "windows") {
@@ -1152,7 +1309,9 @@ pub fn run() {
             uninstall_skills,
             get_config_file,
             save_config_file,
-            get_models
+            get_models,
+            inspect_mcp_server,
+            open_folder
         ])
         .manage(AppPty::default())
         .setup(|app| {

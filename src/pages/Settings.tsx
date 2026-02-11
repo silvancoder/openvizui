@@ -7,7 +7,8 @@
 
 import { Typography, Form, Input, Select, Button, Slider, Row, Col, Card, ColorPicker, Tabs, message, Divider, Radio, InputNumber, Alert } from 'antd';
 import { useTranslation } from 'react-i18next';
-import { BgColorsOutlined, GlobalOutlined, PlusOutlined, DesktopOutlined } from '@ant-design/icons';
+import { BgColorsOutlined, GlobalOutlined, PlusOutlined, DesktopOutlined, ThunderboltOutlined, SettingOutlined } from '@ant-design/icons';
+import { open } from '@tauri-apps/plugin-dialog';
 import { useAppStore } from '../store/appStore';
 import { useState } from 'react';
 
@@ -354,6 +355,27 @@ const Settings = () => {
     const NetworkSettings = () => {
         const { proxyType, proxyAddress, setProxyType, setProxyAddress } = useAppStore();
         const { t } = useTranslation();
+        const [testing, setTesting] = useState(false);
+
+        const handleTestConnection = async () => {
+            setTesting(true);
+            try {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 5000);
+                
+                // Use a reliable URL to test connectivity
+                await fetch('https://www.google.com/generate_204', { 
+                    mode: 'no-cors',
+                    signal: controller.signal 
+                });
+                clearTimeout(timeoutId);
+                message.success(t('aiSettings.moreConfigs.localAI.checkBtn') + ': Success');
+            } catch (e) {
+                message.error(t('aiSettings.moreConfigs.localAI.checkBtn') + ': Failed (Timeout or Connection Error)');
+            } finally {
+                setTesting(false);
+            }
+        };
 
         return (
             <div style={{ maxWidth: 600, margin: '0 auto' }}>
@@ -377,6 +399,14 @@ const Settings = () => {
                                 />
                             </Form.Item>
                         )}
+                        <Button
+                            icon={<ThunderboltOutlined />}
+                            onClick={handleTestConnection}
+                            loading={testing}
+                            style={{ marginTop: 8 }}
+                        >
+                            {t('aiSettings.moreConfigs.localAI.checkBtn')}
+                        </Button>
                     </Form>
                     <div style={{ marginTop: 16 }}>
                         <Alert
@@ -390,6 +420,46 @@ const Settings = () => {
         );
     };
 
+    const IdeSettings = () => {
+        const { idePath, setIdePath } = useAppStore();
+        const { t } = useTranslation();
+
+        const handleSelectIde = async () => {
+            try {
+                const selected = await open({
+                    multiple: false,
+                    directory: false,
+                });
+                if (selected) {
+                    setIdePath(selected as string);
+                }
+            } catch (e) {
+                console.error("Failed to open dialog", e);
+            }
+        };
+
+        return (
+            <div style={{ maxWidth: 600, margin: '0 auto' }}>
+                <Card title={<span><SettingOutlined /> {t('app.system')}</span>} size="small">
+                    <Form layout="vertical">
+                        <Form.Item
+                            label={t('settings.idePath')}
+                            extra={t('settings.idePathDesc')}
+                        >
+                            <Input.Search
+                                placeholder="C:\Users\...\Code.exe"
+                                value={idePath || ''}
+                                readOnly
+                                enterButton={t('settings.selectIde')}
+                                onSearch={handleSelectIde}
+                            />
+                        </Form.Item>
+                    </Form>
+                </Card>
+            </div>
+        );
+    };
+
     return (
         <div style={{ margin: '0 auto', width: '100%' }}>
             <div style={{ maxWidth: 800, margin: '0 auto', padding: '0 24px' }}>
@@ -397,15 +467,24 @@ const Settings = () => {
             </div>
 
             <Tabs
-                defaultActiveKey="system"
+                defaultActiveKey="appearance"
                 centered={false}
                 items={[
                     {
-                        key: 'system',
+                        key: 'appearance',
                         label: <span style={{ padding: '0 24px' }}><BgColorsOutlined /> {t('settings.systemAppearance')}</span>,
                         children: (
                             <div style={{ maxWidth: 1100, margin: '0 auto', padding: '0 24px' }}>
                                 <Card bordered={false}><AppearanceSettings /></Card>
+                            </div>
+                        )
+                    },
+                    {
+                        key: 'system',
+                        label: <span style={{ padding: '0 24px' }}><SettingOutlined /> {t('app.system')}</span>,
+                        children: (
+                            <div style={{ maxWidth: 1100, margin: '0 auto', padding: '0 24px' }}>
+                                <Card bordered={false}><IdeSettings /></Card>
                             </div>
                         )
                     },

@@ -19,6 +19,9 @@ import { readDir, remove, readTextFile, writeTextFile } from '@tauri-apps/plugin
 import { open as openDialog } from '@tauri-apps/plugin-dialog';
 import type { DataNode } from 'antd/es/tree';
 import { ptyWrite } from '../lib/tauri';
+import { invoke } from '@tauri-apps/api/core';
+import ModelSwitcher from '../components/ModelSwitcher';
+import ContextBucket from '../components/ContextBucket';
 
 const { Sider } = Layout;
 const { Text } = Typography;
@@ -70,7 +73,9 @@ const TerminalPage = () => {
         activeTools,
         currentDirectory,
         setCurrentDirectory,
-        setPendingCommand
+        setPendingCommand,
+        contextFiles,
+        toggleContextFile,
     } = useAppStore();
 
     const [treeData, setTreeData] = useState<DataNode[]>([]);
@@ -143,11 +148,6 @@ const TerminalPage = () => {
         }
     };
 
-    const handleNodeSelect = (_selectedKeys: React.Key[], _info: any) => {
-        // Just select, do not insert into terminal
-        // if (selectedKeys.length > 0) { ... }
-    };
-
     const handleNodeDoubleClick = (_e: any, node: any) => {
         if (node.isLeaf) {
             handleOpenEditor(node.key as string);
@@ -207,6 +207,27 @@ const TerminalPage = () => {
             setEditingFile(path);
         } catch (e) {
             message.error("Failed to read file (maybe binary?)");
+        }
+    };
+
+    const handleOpenInIde = async (path: string) => {
+        const { idePath } = useAppStore.getState();
+        if (!idePath) {
+            message.warning(t('settings.idePathDesc'));
+            return;
+        }
+
+        // Normalize path for Windows
+        const normalizedPath = path.replace(/\//g, '\\');
+
+        try {
+            await invoke('launch_tool_with_args', {
+                toolId: 'open_in_ide',
+                args: [idePath, normalizedPath]
+            });
+            message.success(t('terminal.fileTree.context.openInIde'));
+        } catch (e) {
+            message.error(`Failed to launch IDE: ${e}`);
         }
     };
 
@@ -302,6 +323,12 @@ const TerminalPage = () => {
                             </Space.Compact>
                         </div>
 
+                        {activeToolId && (
+                            <div>
+                                <ModelSwitcher toolId={activeToolId} />
+                            </div>
+                        )}
+
 
 
                         {/* File Tree */}
@@ -311,11 +338,24 @@ const TerminalPage = () => {
                                 <Button size="small" type="text" onClick={handleSelectDirectory}>{t('terminal.fileTree.change')}</Button>
                             </div>
                             <Tree
+                                checkable
+                                checkStrictly
+                                onCheck={(_checked: any, info: any) => {
+                                    // info.node is the one that was toggled
+                                    if (info.node.isLeaf) {
+                                        toggleContextFile(info.node.key as string);
+                                    }
+                                }}
+                                checkedKeys={contextFiles}
+                                onSelect={(_keys, info) => {
+                                    if (info.node.isLeaf) {
+                                        toggleContextFile(info.node.key as string);
+                                    }
+                                }}
                                 showIcon
                                 loadData={onLoadData}
                                 treeData={treeData}
                                 blockNode
-                                onSelect={handleNodeSelect}
                                 onDoubleClick={handleNodeDoubleClick}
                                 titleRender={(node: any) => (
                                     <Dropdown
@@ -336,6 +376,15 @@ const TerminalPage = () => {
                                                     onClick: (e) => {
                                                         e.domEvent.stopPropagation();
                                                         handleOpenEditor(node.key as string);
+                                                    }
+                                                },
+                                                {
+                                                    key: 'openInIde',
+                                                    label: t('terminal.fileTree.context.openInIde'),
+                                                    disabled: !node.isLeaf,
+                                                    onClick: (e) => {
+                                                        e.domEvent.stopPropagation();
+                                                        handleOpenInIde(node.key as string);
                                                     }
                                                 },
                                                 {
@@ -365,6 +414,8 @@ const TerminalPage = () => {
                                 style={{ background: 'transparent' }}
                             />
                         </div>
+
+                        <ContextBucket />
                     </div>
                 </Sider>
 

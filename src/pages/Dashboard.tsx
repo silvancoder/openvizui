@@ -5,7 +5,7 @@
  * Licensed under the MIT License
  */
 
-import { Card, Button, Row, Col, Tag, Typography, message, Modal, Select, Space, Tooltip, theme } from 'antd';
+import { Card, Button, Row, Col, Tag, Typography, message, Modal, Select, Space, Tooltip, theme, Skeleton, Empty } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { ReloadOutlined, PlusOutlined, CodeOutlined } from '@ant-design/icons';
@@ -27,7 +27,7 @@ const Dashboard = () => {
     const { token } = theme.useToken();
     const { t } = useTranslation();
     const navigate = useNavigate();
-    const { toolStatuses, activeTools, refreshTools, addActiveTool, removeActiveTool, setToolStatus } = useAppStore();
+    const { toolStatuses, activeTools, refreshTools, addActiveTool, removeActiveTool, setToolStatus, isLoaded } = useAppStore();
     const [refreshing, setRefreshing] = useState(false);
     const [updating, setUpdating] = useState<Record<string, boolean>>({});
     const [uninstalling, setUninstalling] = useState<Record<string, boolean>>({});
@@ -233,6 +233,31 @@ const Dashboard = () => {
 
     const availableToolsToAdd = toolDefs.filter(t => !activeTools.includes(t.id));
 
+    const DashboardSkeleton = () => (
+        <div style={{ padding: '24px', maxWidth: 1200, margin: '0 auto', width: '100%' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
+                <Skeleton.Button active size="large" style={{ width: 200 }} />
+                <Space>
+                    <Skeleton.Button active size="default" style={{ width: 100 }} />
+                    <Skeleton.Button active size="default" style={{ width: 120 }} />
+                </Space>
+            </div>
+            <Row gutter={[24, 24]}>
+                {[1, 2, 3, 4].map((i) => (
+                    <Col xs={24} sm={12} md={8} lg={6} key={i}>
+                        <Card>
+                            <Skeleton active avatar paragraph={{ rows: 3 }} />
+                        </Card>
+                    </Col>
+                ))}
+            </Row>
+        </div>
+    );
+
+    if (!isLoaded) {
+        return <DashboardSkeleton />;
+    }
+
     return (
         <div style={{ padding: '24px', maxWidth: 1200, margin: '0 auto', width: '100%' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
@@ -334,8 +359,23 @@ const Dashboard = () => {
                 ))}
                 {toolsToDisplay.length === 0 && (
                     <Col span={24}>
-                        <div style={{ textAlign: 'center', padding: '40px', color: '#999' }}>
-                            No active tools. Click "Add Tool" to get started.
+                        <div style={{ padding: '60px 0' }}>
+                            <Empty
+                                image={Empty.PRESENTED_IMAGE_SIMPLE}
+                                description={
+                                    <span style={{ color: token.colorTextSecondary }}>
+                                        {t('app.noActiveTools', 'No active tools. Click "Add Tool" to get started.')}
+                                    </span>
+                                }
+                            >
+                                <Button
+                                    type="primary"
+                                    icon={<PlusOutlined />}
+                                    onClick={() => setIsModalOpen(true)}
+                                >
+                                    {t('app.addTool')}
+                                </Button>
+                            </Empty>
                         </div>
                     </Col>
                 )}

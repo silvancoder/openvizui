@@ -17,6 +17,8 @@
       "fs:default",
       "log:default",
       "fs:read-all",
+      "fs:allow-write-text-file",
+      "fs:allow-read-text-file",
       {
         "identifier": "fs:scope",
         "allow": [

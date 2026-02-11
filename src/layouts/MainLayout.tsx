@@ -12,7 +12,8 @@ import {
     SettingOutlined,
     CodeOutlined,
     AppstoreOutlined,
-    RobotOutlined
+    RobotOutlined,
+    InfoCircleOutlined
 } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 import { useAppStore } from '../store/appStore';
@@ -59,6 +60,11 @@ const MainLayout = () => {
             key: '/settings',
             icon: <SettingOutlined />,
             label: t('app.settings'),
+        },
+        {
+            key: '/about',
+            icon: <InfoCircleOutlined />,
+            label: t('app.about', 'About'),
         },
     ];
 

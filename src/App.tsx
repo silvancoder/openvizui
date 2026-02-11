@@ -12,6 +12,7 @@ import Dashboard from './pages/Dashboard';
 import Settings from './pages/Settings';
 import Apps from './pages/Apps';
 import AISettings from './pages/AISettings';
+import About from './pages/About';
 import { ConfigProvider, theme as antTheme, message } from 'antd';
 import { useAppStore } from './store/appStore';
 
@@ -49,6 +50,7 @@ function App() {
                         <Route path="ai-settings" element={<AISettings />} />
                         <Route path="settings" element={<Settings />} />
                         <Route path="terminal" element={<Terminal />} />
+                        <Route path="about" element={<About />} />
                     </Route>
                 </Routes>
             </BrowserRouter>

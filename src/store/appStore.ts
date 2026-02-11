@@ -36,6 +36,11 @@ interface AppState {
     pendingCommand: string | null;
     currentDirectory: string | null;
     activeToolId: string | null;
+    globalInstructions: string | null;
+    localAiBaseUrl: string;
+    localAiProvider: string;
+    idePath: string | null;
+    contextFiles: string[];
 
     // Actions
     setTheme: (theme: 'light' | 'dark') => void;
@@ -64,6 +69,13 @@ interface AppState {
     loadConfig: () => Promise<void>;
     addActiveTool: (id: string) => Promise<void>;
     removeActiveTool: (id: string) => Promise<void>;
+    setGlobalInstructions: (instructions: string | null) => void;
+    setLocalAiBaseUrl: (url: string) => void;
+    setLocalAiProvider: (provider: string) => void;
+    setIdePath: (path: string | null) => void;
+    toggleContextFile: (path: string) => void;
+    removeContextFile: (path: string) => void;
+    clearContextFiles: () => void;
 }
 
 const persistConfig = async (state: AppState) => {
@@ -90,6 +102,10 @@ const persistConfig = async (state: AppState) => {
             env_status: state.envStatus,
             tool_statuses: state.toolStatuses,
             tool_configs: state.toolConfigs as any,
+            global_instructions: state.globalInstructions,
+            local_ai_base_url: state.localAiBaseUrl,
+            local_ai_provider: state.localAiProvider,
+            ide_path: state.idePath,
         });
     } catch (e) {
         console.error("Failed to persist config", e);
@@ -119,6 +135,11 @@ export const useAppStore = create<AppState>((set, get) => ({
     pendingCommand: null,
     currentDirectory: null,
     activeToolId: null,
+    globalInstructions: null,
+    localAiBaseUrl: 'http://localhost:11434',
+    localAiProvider: 'ollama',
+    idePath: null,
+    contextFiles: [],
 
 
     setTheme: (theme) => {
@@ -200,6 +221,10 @@ export const useAppStore = create<AppState>((set, get) => ({
                 envStatus: config.env_status || null,
                 toolStatuses: config.tool_statuses || {},
                 toolConfigs: (config.tool_configs as any) || {},
+                globalInstructions: config.global_instructions || null,
+                localAiBaseUrl: config.local_ai_base_url || 'http://localhost:11434',
+                localAiProvider: config.local_ai_provider || 'ollama',
+                idePath: config.ide_path || null,
                 isLoaded: true
             });
         } catch (e) {
@@ -255,5 +280,36 @@ export const useAppStore = create<AppState>((set, get) => ({
             };
         });
         persistConfig(get());
+    },
+    setGlobalInstructions: (globalInstructions) => {
+        set({ globalInstructions });
+        persistConfig(get());
+    },
+    setLocalAiBaseUrl: (localAiBaseUrl) => {
+        set({ localAiBaseUrl });
+        persistConfig(get());
+    },
+    setLocalAiProvider: (localAiProvider) => {
+        set({ localAiProvider });
+        persistConfig(get());
+    },
+    setIdePath: (idePath) => {
+        set({ idePath });
+        persistConfig(get());
+    },
+    toggleContextFile: (path) => {
+        const { contextFiles } = get();
+        if (contextFiles.includes(path)) {
+            set({ contextFiles: contextFiles.filter(p => p !== path) });
+        } else {
+            set({ contextFiles: [...contextFiles, path] });
+        }
+    },
+    removeContextFile: (path) => {
+        const { contextFiles } = get();
+        set({ contextFiles: contextFiles.filter(p => p !== path) });
+    },
+    clearContextFiles: () => {
+        set({ contextFiles: [] });
     },
 }));
