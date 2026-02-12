@@ -76,15 +76,30 @@ const getNestedValue = (obj: any, path: string) => {
     return path.split('.').reduce((acc, part) => acc && acc[part], obj);
 };
 
+// Guard against prototype-polluting property names
+const isSafeKey = (key: string) => {
+    return key !== '__proto__' && key !== 'constructor' && key !== 'prototype';
+};
+
 // Helper to set nested value in object using dot notation
 const setNestedValue = (obj: any, path: string, value: any) => {
     const parts = path.split('.');
     let current = obj;
     for (let i = 0; i < parts.length - 1; i++) {
-        if (!current[parts[i]]) current[parts[i]] = {};
-        current = current[parts[i]];
+        const part = parts[i];
+        if (!isSafeKey(part)) {
+            // Unsafe key; avoid prototype pollution
+            return;
+        }
+        if (!current[part]) current[part] = {};
+        current = current[part];
     }
-    current[parts[parts.length - 1]] = value;
+    const lastKey = parts[parts.length - 1];
+    if (!isSafeKey(lastKey)) {
+        // Unsafe key; avoid prototype pollution
+        return;
+    }
+    current[lastKey] = value;
 };
 
 interface ModelSwitcherProps {
