@@ -27,3 +27,5 @@ openvizui.md
 .windsurf/
 .agent/
 install.txt
+coverage/
+website/
