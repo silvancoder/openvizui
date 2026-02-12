@@ -25,4 +25,5 @@ openvizui.md
 *.sln
 *.sw?
 .windsurf/
+.agent/
 install.txt
