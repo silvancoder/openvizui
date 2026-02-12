@@ -17,15 +17,20 @@ import {
     BranchesOutlined
 } from '@ant-design/icons';
 import '@xterm/xterm/css/xterm.css';
-import { ptyOpen, ptyWrite, ptyResize, ptyClose } from '../lib/tauri';
+import { ptyOpen, ptyWrite, ptyResize, ptyClose, ptyExists } from '../lib/tauri';
 import { invoke } from '@tauri-apps/api/core';
 import { useAppStore } from '../store/appStore';
 import { useTranslation } from 'react-i18next';
 
-// Module-level lock to prevent double initialization in Strict Mode
-let isPtyInitializing = false;
+// Module-level lock to prevent double initialization in Strict Mode - PER SESSION ID
+const initializingSessions = new Set<string>();
 
-const TerminalUI = () => {
+interface TerminalProps {
+    sessionId: string;
+    initialCommand?: string;
+}
+
+const TerminalUI = ({ sessionId, initialCommand }: TerminalProps) => {
     const terminalRef = useRef<HTMLDivElement>(null);
     const xtermRef = useRef<Terminal | null>(null);
     const { token } = antdTheme.useToken();
@@ -81,16 +86,19 @@ const TerminalUI = () => {
 
         let unlisten: () => void;
 
+
         const initPty = async () => {
             // 1. Register data listener first so we don't miss the initial prompt
-            const unlistenFn = await listen<number[]>('pty-data', (event) => {
-                term.write(new Uint8Array(event.payload));
+            const unlistenFn = await listen<{ id: string, data: number[] }>('pty-data', (event) => {
+                if (event.payload.id === sessionId) {
+                    term.write(new Uint8Array(event.payload.data));
+                }
             });
             unlisten = unlistenFn;
 
             // 2. Bind terminal input to PTY write
             term.onData((data) => {
-                ptyWrite(data);
+                ptyWrite(sessionId, data);
             });
 
             // 3. Fit dimensions FIRST to ensure we know the correct size
@@ -101,40 +109,42 @@ const TerminalUI = () => {
             // 5. Initialize PTY session
             try {
                 // Wait loop: if locked, poll until free
-                while (isPtyInitializing) {
+                while (initializingSessions.has(sessionId)) {
                     await new Promise(resolve => setTimeout(resolve, 50));
                 }
 
                 // Acquire lock immediately to block other effects
-                isPtyInitializing = true;
+                initializingSessions.add(sessionId);
 
                 let exists = false;
                 try {
-                    exists = await invoke<boolean>('pty_exists');
+                    exists = await ptyExists(sessionId);
 
                     if (exists) {
                         // If PTY exists, just resize and attach.
-                        await ptyResize(initialCols, initialRows);
+                        await ptyResize(sessionId, initialCols, initialRows);
                         setIsReady(true);
                     } else {
                         // Print UI banner only for new sessions
-                        term.write(`\x1b[1;34mOpenVizUI Terminal\x1b[0m \r\n`);
+                        term.write(`\x1b[1;34mOpenVizUI Terminal (${sessionId})\x1b[0m \r\n`);
                         term.write(`\x1b[2mType 'help' to see available commands or 'exit' to close.\x1b[0m\r\n\r\n`);
 
-                        // await ptyClose();
-                        await ptyOpen(initialCols, initialRows);
+                        await ptyOpen(sessionId, initialCols, initialRows);
 
                         setTimeout(() => {
+                            if (initialCommand) {
+                                ptyWrite(sessionId, `${initialCommand}\r`);
+                            }
                             term.focus();
                             setIsReady(true);
                         }, 100);
                     }
                 } finally {
-                    isPtyInitializing = false;
+                    initializingSessions.delete(sessionId);
                 }
 
             } catch (e) {
-                isPtyInitializing = false;
+                initializingSessions.delete(sessionId);
                 console.error('PTY Open failed', e);
                 term.write(`\r\n\x1b[1;31mError: Failed to open terminal session.\x1b[0m\r\n`);
                 return () => unlisten();
@@ -144,7 +154,7 @@ const TerminalUI = () => {
                 try {
                     fitAddon.fit();
                     if (term.cols > 0 && term.rows > 0) {
-                        ptyResize(term.cols, term.rows);
+                        ptyResize(sessionId, term.cols, term.rows);
                     }
                 } catch (e) {
                     console.error("Failed to fit terminal:", e);
@@ -186,7 +196,7 @@ const TerminalUI = () => {
             xtermRef.current = null;
             setIsReady(false);
         };
-    }, [terminalFontFamily, terminalFontSize, terminalBackground, terminalForeground, terminalCursorStyle, token]);
+    }, [terminalFontFamily, terminalFontSize, terminalBackground, terminalForeground, terminalCursorStyle, token, sessionId, initialCommand]);
 
     const [availableFonts, setAvailableFonts] = useState<string[]>([
         'Cascadia Code',
@@ -220,7 +230,7 @@ const TerminalUI = () => {
             if (pendingCommand && xtermRef.current && isReady) {
                 try {
                     // 1. Close existing session to kill any running process
-                    await ptyClose();
+                    await ptyClose(sessionId);
 
                     // 2. Clear terminal visually
                     xtermRef.current.clear();
@@ -229,11 +239,11 @@ const TerminalUI = () => {
                     // 3. Start fresh session
                     const cols = xtermRef.current.cols;
                     const rows = xtermRef.current.rows;
-                    await ptyOpen(cols, rows);
+                    await ptyOpen(sessionId, cols, rows);
 
                     // 4. Execute new command after brief pause for shell init
                     setTimeout(() => {
-                        ptyWrite(`${pendingCommand}\r`);
+                        ptyWrite(sessionId, `${pendingCommand}\r`);
                         setPendingCommand(null);
                         xtermRef.current?.focus();
                     }, 200);
@@ -363,7 +373,7 @@ const TerminalUI = () => {
                                         key: 'git-init',
                                         label: t('terminal.git.init'),
                                         onClick: () => {
-                                            ptyWrite('git init\r');
+                                            ptyWrite(sessionId, 'git init\r');
                                         }
                                     },
                                     {
@@ -384,7 +394,7 @@ const TerminalUI = () => {
                                         key: 'git-add',
                                         label: t('terminal.git.add'),
                                         onClick: () => {
-                                            ptyWrite('git add .\r');
+                                            ptyWrite(sessionId, 'git add .\r');
                                         }
                                     },
                                     {
@@ -404,7 +414,7 @@ const TerminalUI = () => {
                                         key: 'git-push',
                                         label: t('terminal.git.push'),
                                         onClick: () => {
-                                            ptyWrite('git push -u origin master\r');
+                                            ptyWrite(sessionId, 'git push -u origin master\r');
                                         }
                                     }
                                 ]
@@ -458,7 +468,7 @@ const TerminalUI = () => {
                 onOk={() => {
                     if (gitInputModal.value) {
                         const cmd = gitInputModal.commandTemplate.replace('{value}', gitInputModal.value);
-                        ptyWrite(cmd + '\r');
+                        ptyWrite(sessionId, cmd + '\r');
                         setGitInputModal({ ...gitInputModal, open: false, value: '' });
                         xtermRef.current?.focus();
                     }
@@ -472,7 +482,7 @@ const TerminalUI = () => {
                     onPressEnter={() => {
                         if (gitInputModal.value) {
                             const cmd = gitInputModal.commandTemplate.replace('{value}', gitInputModal.value);
-                            ptyWrite(cmd + '\r');
+                            ptyWrite(sessionId, cmd + '\r');
                             setGitInputModal({ ...gitInputModal, open: false, value: '' });
                             xtermRef.current?.focus();
                         }

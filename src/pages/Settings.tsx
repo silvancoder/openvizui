@@ -10,7 +10,9 @@ import { useTranslation } from 'react-i18next';
 import { BgColorsOutlined, GlobalOutlined, PlusOutlined, DesktopOutlined, ThunderboltOutlined, SettingOutlined } from '@ant-design/icons';
 import { open } from '@tauri-apps/plugin-dialog';
 import { useAppStore } from '../store/appStore';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { checkEnvironment, type EnvironmentStatus } from '../lib/tauri';
+import { ReloadOutlined, CheckCircleOutlined, WarningOutlined, CodeOutlined } from '@ant-design/icons';
 
 const { Title } = Typography;
 const { Option } = Select;
@@ -460,6 +462,82 @@ const Settings = () => {
         );
     };
 
+    const EnvironmentSettings = () => {
+        const [status, setStatus] = useState<EnvironmentStatus | null>(null);
+        const [loading, setLoading] = useState(false);
+
+        const loadStatus = async () => {
+            setLoading(true);
+            try {
+                const s = await checkEnvironment();
+                setStatus(s);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        useEffect(() => {
+            loadStatus();
+        }, []);
+
+        const tools = [
+            { key: 'node_version', label: 'Node.js', icon: <DesktopOutlined /> },
+            { key: 'npm_version', label: 'NPM', icon: <DesktopOutlined /> },
+            { key: 'git_version', label: 'Git', icon: <DesktopOutlined /> },
+            { key: 'python_version', label: 'Python', icon: <DesktopOutlined /> },
+            { key: 'go_version', label: 'Go', icon: <DesktopOutlined /> },
+            { key: 'java_version', label: 'Java', icon: <DesktopOutlined /> },
+            { key: 'gh_version', label: 'GitHub CLI', icon: <GlobalOutlined /> },
+            { key: 'claude_version', label: 'Claude CLI', icon: <ThunderboltOutlined /> },
+            { key: 'opencode_version', label: 'OpenCode CLI', icon: <CodeOutlined /> },
+            { key: 'qoder_version', label: 'Qoder', icon: <CodeOutlined /> },
+            { key: 'codebuddy_version', label: 'CodeBuddy', icon: <CodeOutlined /> },
+        ];
+
+        return (
+            <div style={{ padding: 24 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
+                    <Title level={4} style={{ margin: 0 }}>{t('settings.environmentCheck', 'Environment Check')}</Title>
+                    <Button icon={<ReloadOutlined />} onClick={loadStatus} loading={loading}>
+                        {t('settings.refresh', 'Refresh')}
+                    </Button>
+                </div>
+                
+                <Row gutter={[16, 16]}>
+                    {tools.map(tool => {
+                        const version = status ? (status as any)[tool.key] : null;
+                        return (
+                            <Col xs={24} sm={12} md={8} key={tool.key}>
+                                <Card size="small" hoverable>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                                        <div style={{ fontSize: 24, color: version ? '#52c41a' : '#faad14' }}>
+                                            {version ? <CheckCircleOutlined /> : <WarningOutlined />}
+                                        </div>
+                                        <div style={{ flex: 1, overflow: 'hidden' }}>
+                                            <div style={{ fontWeight: 500 }}>{tool.label}</div>
+                                            <div style={{ color: version ? 'rgba(0,0,0,0.45)' : '#faad14', fontSize: 12, display: 'flex', justifyContent: 'space-between' }}>
+                                                <span style={{ textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}>
+                                                    {version || t('settings.notInstalled', 'Not Installed')}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </Card>
+                            </Col>
+                        );
+                    })}
+                </Row>
+                
+                <Alert
+                    message={t('settings.envNote', "Ensure these tools are in your system PATH to be detected.")}
+                    type="info"
+                    showIcon
+                    style={{ marginTop: 24 }}
+                />
+            </div>
+        );
+    };
+
     return (
         <div style={{ margin: '0 auto', width: '100%' }}>
             <div style={{ maxWidth: 800, margin: '0 auto', padding: '0 24px' }}>
@@ -494,6 +572,15 @@ const Settings = () => {
                         children: (
                             <div style={{ maxWidth: 1240, margin: '0 auto', padding: '0 24px' }}>
                                 <Card bordered={false}><NetworkSettings /></Card>
+                            </div>
+                        )
+                    },
+                    {
+                        key: 'environment',
+                        label: <span style={{ padding: '0 24px' }}><ThunderboltOutlined /> {t('settings.environment', 'Environment')}</span>,
+                        children: (
+                            <div style={{ padding: '0 24px' }}>
+                                <Card bordered={false}><EnvironmentSettings /></Card>
                             </div>
                         )
                     },

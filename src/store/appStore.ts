@@ -41,6 +41,7 @@ interface AppState {
     localAiProvider: string;
     idePath: string | null;
     contextFiles: string[];
+    commandPresets: { id: string; name: string; command: string }[];
 
     // Actions
     setTheme: (theme: 'light' | 'dark') => void;
@@ -76,6 +77,9 @@ interface AppState {
     toggleContextFile: (path: string) => void;
     removeContextFile: (path: string) => void;
     clearContextFiles: () => void;
+    addCommandPreset: (preset: { id: string; name: string; command: string }) => void;
+    removeCommandPreset: (id: string) => void;
+    updateCommandPreset: (id: string, preset: Partial<{ name: string; command: string }>) => void;
 }
 
 const persistConfig = async (state: AppState) => {
@@ -106,6 +110,7 @@ const persistConfig = async (state: AppState) => {
             local_ai_base_url: state.localAiBaseUrl,
             local_ai_provider: state.localAiProvider,
             ide_path: state.idePath,
+            command_presets: state.commandPresets,
         });
     } catch (e) {
         console.error("Failed to persist config", e);
@@ -140,6 +145,7 @@ export const useAppStore = create<AppState>((set, get) => ({
     localAiProvider: 'ollama',
     idePath: null,
     contextFiles: [],
+    commandPresets: [],
 
 
     setTheme: (theme) => {
@@ -225,6 +231,11 @@ export const useAppStore = create<AppState>((set, get) => ({
                 localAiBaseUrl: config.local_ai_base_url || 'http://localhost:11434',
                 localAiProvider: config.local_ai_provider || 'ollama',
                 idePath: config.ide_path || null,
+                commandPresets: config.command_presets || [
+                    { id: 'default-1', name: 'Explain Code', command: '/explain' },
+                    { id: 'default-2', name: 'Review Code', command: '/review' },
+                    { id: 'default-3', name: 'Generate Test', command: '/test' }
+                ],
                 isLoaded: true
             });
         } catch (e) {
@@ -311,5 +322,22 @@ export const useAppStore = create<AppState>((set, get) => ({
     },
     clearContextFiles: () => {
         set({ contextFiles: [] });
+    },
+    addCommandPreset: (preset) => {
+        const { commandPresets } = get();
+        set({ commandPresets: [...commandPresets, preset] });
+        persistConfig(get());
+    },
+    removeCommandPreset: (id) => {
+        const { commandPresets } = get();
+        set({ commandPresets: commandPresets.filter(p => p.id !== id) });
+        persistConfig(get());
+    },
+    updateCommandPreset: (id, preset) => {
+        const { commandPresets } = get();
+        set({
+            commandPresets: commandPresets.map(p => p.id === id ? { ...p, ...preset } : p)
+        });
+        persistConfig(get());
     },
 }));

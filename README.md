@@ -1,7 +1,7 @@
 # 项目正在开发中。。。
 # The project is currently under development...
 
-
+[![Super-Linter](https://github.com/silvancoder/openvizui/actions/workflows/super-linter.yml/badge.svg)]
 
 ## License
 

@@ -3,7 +3,11 @@
       "title": "OpenVizUI",
       "dashboard": "Workbench",
       "settings": "Settings",
-      "terminal": "Terminal",
+      "terminal": {
+        "label": "Terminal",
+        "clear": "Clear Terminal",
+        "restart": "Restart Session"
+      },
       "install": "Install",
       "docs": "Docs",
       "installed": "Installed",
@@ -66,7 +70,8 @@
               "checkBtn": "Test Connection",
               "checkSuccess": "Local AI connection successful!",
               "checkStatusError": "Connected, but provider returned error status: {{status}}",
-              "checkError": "Connection failed. Ensure provider is running."
+              "checkError": "Connection failed. Ensure provider is running.",
+              "fetchModels": "Fetch remote models"
             }
           },
           "skillMonitor": {
@@ -774,12 +779,31 @@
         "terminalPresets": "Terminal Presets",
         "proxyWarning": "Note: Proxy is a global setting. All requests will be routed through it.",
         "idePath": "IDE Executable Path",
-        "idePathDesc": "Select your preferred IDE (e.g. VS Code, Cursor) executable path for seamless editing.",
-        "selectIde": "Select IDE"
+        "idePathDesc": "Set the absolute path to your IDE (e.g., VS Code or Cursor) executable for opening files.",
+        "idePathOpen": "Set IDE Path",
+        "environment": "Environment",
+        "environmentCheck": "Environment Check",
+        "notInstalled": "Not Installed",
+        "envNote": "Ensure these tools are in your system PATH or user PATH to be detected."
+      },
+      "search": {
+        "placeholder": "Search files...",
+        "content": "Match Content",
+        "noResults": "No results found"
+      },
+      "diff": {
+        "title": "File Diff",
+        "loadError": "Failed to load diff"
       },
       "terminal": {
         "dirError": "Failed to select directory",
-        "selectTool": "Select Tool",
+        "selectTool": "Select Tool first",
+        "tabs": {
+          "files": "Files",
+          "search": "Search",
+          "shortcuts": "Shortcuts",
+          "new": "Terminal {{number}}"
+        },
         "noDirectory": "No directory selected",
         "workingDir": "Working Directory",
         "chat": {
@@ -808,13 +832,14 @@
         },
         "resumed": "Resumed session...",
         "fileTree": {
-          "title": "Project Files",
+          "title": "Explorer",
           "change": "Change",
           "context": {
-            "addToChat": "Insert path to terminal",
+            "addToChat": "Add to Chat",
             "open": "Open",
-            "modify": "Edit in internal editor",
-            "openInIde": "Open in IDE (external)",
+            "modify": "Modify",
+            "diff": "Diff",
+            "openInIde": "Open in IDE",
             "delete": "Delete",
             "rename": "Rename"
           },
@@ -822,6 +847,18 @@
             "editing": "Edit File",
             "save": "Save"
           }
+        },
+        "commandPresets": {
+          "title": "Shortcut Commands",
+          "add": "Add Command",
+          "edit": "Edit Command",
+          "delete": "Delete",
+          "name": "Name",
+          "command": "Command",
+          "placeholderName": "e.g., Explain Code",
+          "placeholderCommand": "e.g., /explain",
+          "empty": "No commands",
+          "run": "Run"
         },
         "contextBuilder": {
           "title": "Context Bucket",

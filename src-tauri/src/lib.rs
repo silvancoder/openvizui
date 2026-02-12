@@ -7,6 +7,7 @@
 
 use futures_util::StreamExt;
 use portable_pty::{Child, CommandBuilder, MasterPty, NativePtySystem, PtySize, PtySystem};
+use std::collections::HashMap;
 use serde::{Deserialize, Serialize};
 use std::cmp::min;
 use std::fs;
@@ -26,18 +27,20 @@ fn create_background_command(program: &str) -> Command {
     cmd.creation_flags(0x08000000); // ash::windows::process::CREATE_NO_WINDOW
     cmd
 }
+struct PtySession {
+    writer: Box<dyn Write + Send>,
+    master: Box<dyn MasterPty + Send>,
+    child: Box<dyn Child + Send>,
+}
+
 struct AppPty {
-    writer: Arc<Mutex<Option<Box<dyn Write + Send>>>>,
-    master: Arc<Mutex<Option<Box<dyn MasterPty + Send>>>>,
-    child: Arc<Mutex<Option<Box<dyn Child + Send>>>>,
+    sessions: Arc<Mutex<HashMap<String, PtySession>>>,
 }
 
 impl Default for AppPty {
     fn default() -> Self {
         Self {
-            writer: Arc::new(Mutex::new(None)),
-            master: Arc::new(Mutex::new(None)),
-            child: Arc::new(Mutex::new(None)),
+            sessions: Arc::new(Mutex::new(HashMap::new())),
         }
     }
 }
@@ -50,6 +53,12 @@ pub struct EnvironmentStatus {
     python_version: Option<String>,
     go_version: Option<String>,
     java_version: Option<String>,
+    // AI Tools
+    gh_version: Option<String>,
+    claude_version: Option<String>,
+    opencode_version: Option<String>,
+    qoder_version: Option<String>,
+    codebuddy_version: Option<String>,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
@@ -80,6 +89,13 @@ pub struct ToolConfig {
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
+pub struct CommandPreset {
+    pub id: String,
+    pub name: String,
+    pub command: String,
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct AppConfig {
     pub proxy_type: Option<String>,
     pub proxy_address: Option<String>,
@@ -107,6 +123,7 @@ pub struct AppConfig {
     pub local_ai_base_url: Option<String>,
     pub local_ai_provider: Option<String>,
     pub ide_path: Option<String>,
+    pub command_presets: Option<Vec<CommandPreset>>,
 }
 
 impl Default for AppConfig {
@@ -140,6 +157,7 @@ impl Default for AppConfig {
             local_ai_base_url: Some("http://localhost:11434".to_string()),
             local_ai_provider: Some("ollama".to_string()),
             ide_path: None,
+            command_presets: None,
         }
     }
 }
@@ -203,6 +221,11 @@ fn check_environment() -> EnvironmentStatus {
             .or_else(|| get_version("python3", &["--version"])),
         go_version: get_version("go", &["version"]),
         java_version: get_version("java", &["-version"]),
+        gh_version: get_version("gh", &["--version"]),
+        claude_version: get_version("claude", &["--version"]),
+        opencode_version: get_version("opencode", &["--version"]),
+        qoder_version: get_version("qoder", &["--version"]),
+        codebuddy_version: get_version("codebuddy", &["--version"]),
     }
 }
 
@@ -509,7 +532,7 @@ fn save_app_config(app: AppHandle, config: AppConfig) -> Result<(), String> {
 }
 
 #[tauri::command]
-fn pty_open(app: AppHandle, state: State<'_, AppPty>, cols: u16, rows: u16) -> Result<(), String> {
+fn pty_open(app: AppHandle, state: State<'_, AppPty>, id: String, cols: u16, rows: u16) -> Result<(), String> {
     let pty_system = NativePtySystem::default();
 
     let pair = pty_system
@@ -616,19 +639,28 @@ fn pty_open(app: AppHandle, state: State<'_, AppPty>, cols: u16, rows: u16) -> R
     let mut reader = pair.master.try_clone_reader().map_err(|e| e.to_string())?;
     let writer = pair.master.take_writer().map_err(|e| e.to_string())?;
 
-    // Store writer, master and child
-    *state.writer.lock().unwrap() = Some(writer);
-    *state.master.lock().unwrap() = Some(pair.master);
-    *state.child.lock().unwrap() = Some(child);
+    // Store session
+    let session = PtySession {
+        writer,
+        master: pair.master,
+        child,
+    };
+    
+    state.sessions.lock().unwrap().insert(id.clone(), session);
 
     // Spawn thread to read from PTY
+    let incoming_id = id.clone();
     thread::spawn(move || {
         let mut buf = [0u8; 1024];
         loop {
             match reader.read(&mut buf) {
                 Ok(n) if n > 0 => {
                     let data = &buf[..n];
-                    let _ = app.emit("pty-data", data.to_vec());
+                    let payload = serde_json::json!({
+                        "id": incoming_id,
+                        "data": data
+                    });
+                    let _ = app.emit("pty-data", payload);
                 }
                 _ => break,
             }
@@ -639,30 +671,28 @@ fn pty_open(app: AppHandle, state: State<'_, AppPty>, cols: u16, rows: u16) -> R
 }
 
 #[tauri::command]
-fn pty_close(state: State<'_, AppPty>) -> Result<(), String> {
-    if let Some(mut child) = state.child.lock().unwrap().take() {
-        let _ = child.kill();
+fn pty_close(state: State<'_, AppPty>, id: String) -> Result<(), String> {
+    if let Some(mut session) = state.sessions.lock().unwrap().remove(&id) {
+        let _ = session.child.kill();
     }
-    *state.writer.lock().unwrap() = None;
-    *state.master.lock().unwrap() = None;
     Ok(())
 }
 
 #[tauri::command]
-fn pty_write(state: State<'_, AppPty>, data: String) -> Result<(), String> {
-    if let Some(writer) = state.writer.lock().unwrap().as_mut() {
-        write!(writer, "{}", data).map_err(|e| e.to_string())?;
-        writer.flush().map_err(|e| e.to_string())?;
+fn pty_write(state: State<'_, AppPty>, id: String, data: String) -> Result<(), String> {
+    if let Some(session) = state.sessions.lock().unwrap().get_mut(&id) {
+        write!(session.writer, "{}", data).map_err(|e| e.to_string())?;
+        session.writer.flush().map_err(|e| e.to_string())?;
         Ok(())
     } else {
-        Err("PTY writer not initialized".to_string())
+        Err("PTY session not found".to_string())
     }
 }
 
 #[tauri::command]
-fn pty_resize(state: State<'_, AppPty>, cols: u16, rows: u16) -> Result<(), String> {
-    if let Some(master) = state.master.lock().unwrap().as_mut() {
-        master
+fn pty_resize(state: State<'_, AppPty>, id: String, cols: u16, rows: u16) -> Result<(), String> {
+    if let Some(session) = state.sessions.lock().unwrap().get_mut(&id) {
+        session.master
             .resize(PtySize {
                 rows,
                 cols,
@@ -675,8 +705,8 @@ fn pty_resize(state: State<'_, AppPty>, cols: u16, rows: u16) -> Result<(), Stri
 }
 
 #[tauri::command]
-fn pty_exists(state: State<'_, AppPty>) -> bool {
-    state.child.lock().unwrap().is_some()
+fn pty_exists(state: State<'_, AppPty>, id: String) -> bool {
+    state.sessions.lock().unwrap().contains_key(&id)
 }
 
 #[tauri::command]
@@ -932,8 +962,63 @@ fn get_system_fonts() -> Vec<String> {
 
     #[cfg(not(target_os = "windows"))]
     {
-        // TODO: Implement for macOS/Linux using fc-list
-        Vec::new()
+        // Use fc-list for macOS/Linux
+        // Assumes fontconfig is installed, which is standard on most desktop Linux
+        // For macOS, it might not be installed by default, but system_profiler is an option.
+        // Let's try fc-list first as it's cleaner output, fallback to system_profiler on mac if needed.
+        
+        // Command: fc-list : family
+        let output = std::process::Command::new("fc-list")
+            .arg(":")
+            .arg("family")
+            .output();
+
+        if let Ok(out) = output {
+            let stdout = String::from_utf8_lossy(&out.stdout);
+            let mut fonts: Vec<String> = stdout
+                .lines()
+                .flat_map(|line| {
+                    line.split(',')
+                        .map(|font| font.trim().to_string())
+                        .collect::<Vec<String>>()
+                })
+                .filter(|s| !s.is_empty())
+                .collect();
+            
+            fonts.sort();
+            fonts.dedup();
+            fonts
+        } else {
+            // Fallback for macOS if fc-list is missing
+            #[cfg(target_os = "macos")]
+            {
+               let output_mac = std::process::Command::new("system_profiler")
+                    .arg("SPFontsDataType")
+                    .arg("-json")
+                    .output();
+
+                if let Ok(out) = output_mac {
+                     // Parsing JSON in Rust without serde_json dependency here might be verbose.
+                     // Simple grep approach? Or just return common fonts.
+                     // Let's return a safe list if fc-list fails.
+                     vec![
+                        "Arial".to_string(),
+                        "Helvetica".to_string(),
+                        "Courier New".to_string(),
+                        "Times New Roman".to_string(),
+                        "Verdana".to_string(), 
+                        "Monaco".to_string(),
+                        "Menlo".to_string()
+                     ]
+                } else {
+                    Vec::new()
+                }
+            }
+            #[cfg(not(target_os = "macos"))]
+            {
+                Vec::new()
+            }
+        }
     }
 }
 
@@ -1280,52 +1365,190 @@ fn get_models(provider: String) -> Result<Vec<String>, String> {
     }
 }
 
+#[derive(Debug, Serialize, Deserialize, Clone)]
+pub struct SearchResult {
+    file: String,
+    line: Option<u32>,
+    content: Option<String>,
+}
+
+#[tauri::command]
+fn search_files(query: String, path: String, content_search: bool) -> Result<Vec<SearchResult>, String> {
+    let mut results = Vec::new();
+    let search_path = std::path::Path::new(&path);
+
+    if !search_path.exists() {
+        return Err("Path does not exist".to_string());
+    }
+
+    // MVP: Recursive search implementation using walkdir would be better, but we'll use a simple recursive function due to dependency constraints for now
+    // or rely on 'git grep' if available, but pure Rust is safer for portability if git isn't there.
+    // For this environment, we'll try to use `git grep` if content_search is true, or `find` logic if false.
+    // Actually, let's use a simple recursive walker using std::fs for filenames, and standard file reading for content.
+    
+    // Helper function for recursive search
+    fn visit_dirs(dir: &std::path::Path, query: &str, content: bool, results: &mut Vec<SearchResult>) -> std::io::Result<()> {
+        if dir.is_dir() {
+            for entry in fs::read_dir(dir)? {
+                let entry = entry?;
+                let path = entry.path();
+                
+                // Skip .git, node_modules, target, dist, build, .vscode, .idea
+                if let Some(name) = path.file_name().and_then(|n| n.to_str()) {
+                    if name.starts_with(".") || name == "node_modules" || name == "target" || name == "dist" || name == "build" {
+                        continue;
+                    }
+                }
+
+                if path.is_dir() {
+                    visit_dirs(&path, query, content, results)?;
+                } else {
+                    let file_name = path.file_name().and_then(|n| n.to_str()).unwrap_or("");
+                    let path_str = path.to_string_lossy().to_string();
+
+                    if !content {
+                        // Filename search
+                        if file_name.to_lowercase().contains(&query.to_lowercase()) {
+                            results.push(SearchResult {
+                                file: path_str,
+                                line: None,
+                                content: None
+                            });
+                        }
+                    } else {
+                        // Content search
+                        // Only search text files - simplified check
+                        if let Ok(content_str) = fs::read_to_string(&path) {
+                           for (i, line) in content_str.lines().enumerate() {
+                               if line.to_lowercase().contains(&query.to_lowercase()) {
+                                   results.push(SearchResult {
+                                       file: path_str.clone(),
+                                       line: Some((i + 1) as u32),
+                                       content: Some(line.trim().to_string())
+                                   });
+                                   // Limit to 10 matches per file to avoid bloat
+                                   if results.iter().filter(|r| r.file == path_str).count() > 10 {
+                                       break;
+                                   }
+                               }
+                           }
+                        }
+                    }
+                }
+            }
+        }
+        Ok(())
+    }
+
+    visit_dirs(search_path, &query, content_search, &mut results).map_err(|e| e.to_string())?;
+    
+    // Cap results at 100
+    if results.len() > 100 {
+        results.truncate(100);
+    }
+
+    Ok(results)
+}
+
+#[tauri::command]
+fn get_git_diff(file_path: String) -> Result<String, String> {
+    let output = Command::new("git")
+        .args(&["diff", &file_path])
+        .output()
+        .map_err(|e| e.to_string())?;
+
+    if output.status.success() {
+        Ok(String::from_utf8_lossy(&output.stdout).to_string())
+    } else {
+        // Try cached diff if staged
+        let output_cached = Command::new("git")
+            .args(&["diff", "--cached", &file_path])
+            .output()
+            .map_err(|e| e.to_string())?;
+            
+        if output_cached.status.success() {
+             Ok(String::from_utf8_lossy(&output_cached.stdout).to_string())
+        } else {
+             Err(String::from_utf8_lossy(&output.stderr).to_string())
+        }
+    }
+}
+
+#[tauri::command]
+fn get_changed_files() -> Result<Vec<String>, String> {
+    let output = Command::new("git")
+        .args(&["status", "--porcelain"])
+        .output()
+        .map_err(|e| e.to_string())?;
+
+    if output.status.success() {
+        let stdout = String::from_utf8_lossy(&output.stdout);
+        let files: Vec<String> = stdout
+            .lines()
+            .map(|line| {
+                // Porcelain format: " M src/lib.rs" or "?? src/new.rs"
+                // Valid codes are 2 chars, then space, then path
+                if line.len() > 3 {
+                    line[3..].to_string()
+                } else {
+                    line.to_string()
+                }
+            })
+            .collect();
+        Ok(files)
+    } else {
+        Err(String::from_utf8_lossy(&output.stderr).to_string())
+    }
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
+        .plugin(tauri_plugin_fs::init())
+        .plugin(tauri_plugin_dialog::init())
+        .plugin(tauri_plugin_log::Builder::default().build())
+        .setup(|app| {
+            let app_handle = app.handle().clone();
+            
+            // Ensure config exists on startup
+            let _ = get_app_config(app_handle.clone());
+            
+            Ok(())
+        })
+        .manage(AppPty::default())
         .invoke_handler(tauri::generate_handler![
+            pty_open,
+            pty_close,
+            pty_write,
+            pty_resize,
+            pty_exists,
+            check_executable,
             check_environment,
-            check_tool_status,
             launch_tool,
             launch_tool_with_args,
             install_tool,
-            uninstall_tool,
             update_tool,
-            check_executable,
+            uninstall_tool,
+            check_tool_status,
             get_app_config,
             save_app_config,
             open_url,
-            pty_open,
-            pty_write,
-            pty_resize,
-            pty_close,
-            pty_exists,
             download_file,
             extract_file,
             fetch_remote_models,
+            search_files,
+            get_git_diff,
+            get_changed_files,
             get_system_fonts,
             list_installed_skills,
             install_skills,
-            uninstall_skills,
             get_config_file,
             save_config_file,
-            get_models,
+            uninstall_skills,
+            open_folder,
             inspect_mcp_server,
-            open_folder
+            get_models
         ])
-        .manage(AppPty::default())
-        .setup(|app| {
-            app.handle().plugin(tauri_plugin_dialog::init())?;
-            app.handle().plugin(tauri_plugin_fs::init())?;
-            if cfg!(debug_assertions) {
-                app.handle().plugin(
-                    tauri_plugin_log::Builder::default()
-                        .level(log::LevelFilter::Info)
-                        .build(),
-                )?;
-            }
-            Ok(())
-        })
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

@@ -7,26 +7,31 @@
 
 import { useState, useEffect } from 'react';
 import Terminal from '../components/Terminal';
-import { Layout, Select, Space, Button, Tree, Typography, theme, message, Dropdown, Modal } from 'antd';
+import { Layout, Select, Space, Button, Tree, Typography, theme, message, Dropdown, Modal, Tabs } from 'antd';
 import {
     FolderOutlined,
     CodeOutlined,
-    SendOutlined
+    SendOutlined,
+    SearchOutlined
 } from '@ant-design/icons';
+import Editor from '@monaco-editor/react';
 import { useAppStore } from '../store/appStore';
 import { useTranslation } from 'react-i18next';
 import { readDir, remove, readTextFile, writeTextFile } from '@tauri-apps/plugin-fs';
 import { open as openDialog } from '@tauri-apps/plugin-dialog';
 import type { DataNode } from 'antd/es/tree';
-import { ptyWrite } from '../lib/tauri';
+import { ptyWrite, ptyClose } from '../lib/tauri';
 import { invoke } from '@tauri-apps/api/core';
 import ModelSwitcher from '../components/ModelSwitcher';
 import ContextBucket from '../components/ContextBucket';
+import CommandPresets from '../components/CommandPresets';
+import GlobalSearch from '../components/GlobalSearch';
+import DiffViewer from '../components/DiffViewer';
+
+type TargetKey = React.MouseEvent | React.KeyboardEvent | string;
 
 const { Sider } = Layout;
 const { Text } = Typography;
-
-import Editor from '@monaco-editor/react';
 
 const TOOL_COMMANDS: Record<string, string> = {
     qoder: 'qodercli',
@@ -73,13 +78,57 @@ const TerminalPage = () => {
         activeTools,
         currentDirectory,
         setCurrentDirectory,
-        setPendingCommand,
         contextFiles,
         toggleContextFile,
     } = useAppStore();
 
     const [treeData, setTreeData] = useState<DataNode[]>([]);
     const [, setLoadingTree] = useState(false);
+
+    // --- Terminal Tabs State ---
+    const [activeTerminalId, setActiveTerminalId] = useState<string>('1');
+    const [terminals, setTerminals] = useState<{ label: string; key: string; closable?: boolean }[]>([
+        { label: t('terminal.tabs.new', { number: 1 }), key: '1', closable: false },
+    ]);
+
+    const addTerminal = () => {
+        const newActiveKey = `${terminals.length + 1}`;
+        const newPanes = [...terminals];
+        newPanes.push({ label: t('terminal.tabs.new', { number: newActiveKey }), key: newActiveKey });
+        setTerminals(newPanes);
+        setActiveTerminalId(newActiveKey);
+    };
+
+    const removeTerminal = async (targetKey: TargetKey) => {
+        let newActiveKey = activeTerminalId;
+        let lastIndex = -1;
+        terminals.forEach((item, i) => {
+            if (item.key === targetKey) {
+                lastIndex = i - 1;
+            }
+        });
+        const newPanes = terminals.filter((item) => item.key !== targetKey);
+        if (newPanes.length && newActiveKey === targetKey) {
+            if (lastIndex >= 0) {
+                newActiveKey = newPanes[lastIndex].key;
+            } else {
+                newActiveKey = newPanes[0].key;
+            }
+        }
+        setTerminals(newPanes);
+        setActiveTerminalId(newActiveKey);
+        
+        // Clean up PTY session
+        await ptyClose(targetKey as string);
+    };
+
+    const onEdit = (targetKey: TargetKey, action: 'add' | 'remove') => {
+        if (action === 'add') {
+            addTerminal();
+        } else {
+            removeTerminal(targetKey);
+        }
+    };
 
 
     // --- File Tree Logic ---
@@ -162,11 +211,14 @@ const TerminalPage = () => {
         setActiveToolId(val);
         const cmd = TOOL_COMMANDS[val] || val;
         // Execute tool command in terminal
-        setPendingCommand(cmd);
+        if (activeTerminalId) {
+             ptyWrite(activeTerminalId, `${cmd}\r`);
+        }
     };
 
     /* File Operation Handlers */
     const [editingFile, setEditingFile] = useState<string | null>(null);
+    const [diffFile, setDiffFile] = useState<string | null>(null);
     const [fileContent, setFileContent] = useState('');
     const handleAddChat = (path: string) => {
         // Normalize path separators to backslashes for Windows consistency
@@ -174,7 +226,9 @@ const TerminalPage = () => {
 
         const pathToInsert = normalizedPath.includes(' ') ? `"${normalizedPath}"` : normalizedPath;
         // Write directly to PTY instead of state
-        ptyWrite(pathToInsert);
+        if (activeTerminalId) {
+             ptyWrite(activeTerminalId, pathToInsert);
+        }
         message.success("Inserted path to terminal");
     };
 
@@ -323,106 +377,162 @@ const TerminalPage = () => {
                             </Space.Compact>
                         </div>
 
+                        {/* Model Switcher */}
                         {activeToolId && (
-                            <div>
+                           <div style={{ marginBottom: 12 }}>
                                 <ModelSwitcher toolId={activeToolId} />
-                            </div>
+                           </div>
                         )}
 
-
-
-                        {/* File Tree */}
-                        <div style={{ flex: 1, overflow: 'auto', borderTop: `1px solid ${token.colorBorderSecondary}`, paddingTop: 12, minHeight: 0 }}>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
-                                <Text strong><FolderOutlined /> {t('terminal.fileTree.title')}</Text>
-                                <Button size="small" type="text" onClick={handleSelectDirectory}>{t('terminal.fileTree.change')}</Button>
-                            </div>
-                            <Tree
-                                checkable
-                                checkStrictly
-                                onCheck={(_checked: any, info: any) => {
-                                    // info.node is the one that was toggled
-                                    if (info.node.isLeaf) {
-                                        toggleContextFile(info.node.key as string);
+                        <div style={{ flex: 1, minHeight: 0, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+                             <Tabs
+                                defaultActiveKey="files"
+                                size="small"
+                                tabBarStyle={{ marginBottom: 4 }}
+                                items={[
+                                    {
+                                        key: 'files',
+                                        label: <Space><FolderOutlined />{t('terminal.tabs.files', 'Files')}</Space>,
+                                        children: (
+                                            <div style={{ display: 'flex', flexDirection: 'column', height: '100%', overflow: 'hidden' }}>
+                                                <div style={{ flex: 1, overflow: 'auto', borderTop: `1px solid ${token.colorBorderSecondary}`, paddingTop: 12, minHeight: 0 }}>
+                                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8, padding: '0 4px' }}>
+                                                        <Text strong>{t('terminal.fileTree.title')}</Text>
+                                                        <Button size="small" type="text" onClick={handleSelectDirectory}>{t('terminal.fileTree.change')}</Button>
+                                                    </div>
+                                                    <Tree
+                                                        checkable
+                                                        checkStrictly
+                                                        onCheck={(_checked: any, info: any) => {
+                                                            if (info.node.isLeaf) {
+                                                                toggleContextFile(info.node.key as string);
+                                                            }
+                                                        }}
+                                                        checkedKeys={contextFiles}
+                                                        onSelect={(_keys, info) => {
+                                                            if (info.node.isLeaf) {
+                                                                toggleContextFile(info.node.key as string);
+                                                            }
+                                                        }}
+                                                        showIcon
+                                                        loadData={onLoadData}
+                                                        treeData={treeData}
+                                                        blockNode
+                                                        titleRender={(node: any) => (
+                                                            <Dropdown
+                                                                menu={{
+                                                                    items: [
+                                                                        {
+                                                                            key: 'chat',
+                                                                            label: t('terminal.fileTree.context.addToChat'),
+                                                                            onClick: (e) => {
+                                                                                e.domEvent.stopPropagation();
+                                                                                handleAddChat(node.key as string);
+                                                                            }
+                                                                        },
+                                                                        {
+                                                                            key: 'modify',
+                                                                            label: t('terminal.fileTree.context.modify'),
+                                                                            disabled: !node.isLeaf,
+                                                                            onClick: (e) => {
+                                                                                e.domEvent.stopPropagation();
+                                                                                handleOpenEditor(node.key as string);
+                                                                            }
+                                                                        },
+                                                                        {
+                                                                            key: 'diff',
+                                                                            label: t('terminal.fileTree.context.diff', 'Diff'),
+                                                                            disabled: !node.isLeaf,
+                                                                            onClick: (e) => {
+                                                                                e.domEvent.stopPropagation();
+                                                                                setDiffFile(node.key as string);
+                                                                            }
+                                                                        },
+                                                                        {
+                                                                            key: 'openInIde',
+                                                                            label: t('terminal.fileTree.context.openInIde'),
+                                                                            disabled: !node.isLeaf,
+                                                                            onClick: (e) => {
+                                                                                e.domEvent.stopPropagation();
+                                                                                handleOpenInIde(node.key as string);
+                                                                            }
+                                                                        },
+                                                                        {
+                                                                            key: 'delete',
+                                                                            label: t('terminal.fileTree.context.delete'),
+                                                                            danger: true,
+                                                                            onClick: (e) => {
+                                                                                e.domEvent.stopPropagation();
+                                                                                handleDeleteFile(node.key as string);
+                                                                            }
+                                                                        }
+                                                                    ]
+                                                                }}
+                                                                trigger={['contextMenu']}
+                                                            >
+                                                                <span onDoubleClick={(e) => handleNodeDoubleClick(e, node)} style={{
+                                                                    userSelect: 'none',
+                                                                    whiteSpace: 'nowrap',
+                                                                    overflow: 'hidden',
+                                                                    textOverflow: 'ellipsis',
+                                                                    display: 'inline-block',
+                                                                    maxWidth: '100%',
+                                                                    verticalAlign: 'middle'
+                                                                }}>{node.title}</span>
+                                                            </Dropdown>
+                                                        )}
+                                                        style={{ background: 'transparent' }}
+                                                    />
+                                                </div>
+                                                <ContextBucket />
+                                            </div>
+                                        )
+                                    },
+                                    {
+                                        key: 'search',
+                                        label: <Space><div style={{ transform: 'rotate(90deg)' }}><SearchOutlined /></div>{t('terminal.tabs.search', 'Search')}</Space>,
+                                        children: (
+                                            <GlobalSearch onOpenFile={handleOpenEditor} />
+                                        )
+                                    },
+                                    {
+                                        key: 'shortcuts',
+                                        label: <Space><CodeOutlined />{t('terminal.tabs.shortcuts', 'Shortcuts')}</Space>,
+                                        children: (
+                                            <div style={{ height: '100%', overflow: 'hidden' }}>
+                                                <CommandPresets sessionId={activeTerminalId} />
+                                            </div>
+                                        )
                                     }
-                                }}
-                                checkedKeys={contextFiles}
-                                onSelect={(_keys, info) => {
-                                    if (info.node.isLeaf) {
-                                        toggleContextFile(info.node.key as string);
-                                    }
-                                }}
-                                showIcon
-                                loadData={onLoadData}
-                                treeData={treeData}
-                                blockNode
-                                onDoubleClick={handleNodeDoubleClick}
-                                titleRender={(node: any) => (
-                                    <Dropdown
-                                        menu={{
-                                            items: [
-                                                {
-                                                    key: 'chat',
-                                                    label: t('terminal.fileTree.context.addToChat'),
-                                                    onClick: (e) => {
-                                                        e.domEvent.stopPropagation();
-                                                        handleAddChat(node.key as string);
-                                                    }
-                                                },
-                                                {
-                                                    key: 'modify',
-                                                    label: t('terminal.fileTree.context.modify'),
-                                                    disabled: !node.isLeaf,
-                                                    onClick: (e) => {
-                                                        e.domEvent.stopPropagation();
-                                                        handleOpenEditor(node.key as string);
-                                                    }
-                                                },
-                                                {
-                                                    key: 'openInIde',
-                                                    label: t('terminal.fileTree.context.openInIde'),
-                                                    disabled: !node.isLeaf,
-                                                    onClick: (e) => {
-                                                        e.domEvent.stopPropagation();
-                                                        handleOpenInIde(node.key as string);
-                                                    }
-                                                },
-                                                {
-                                                    key: 'delete',
-                                                    label: t('terminal.fileTree.context.delete'),
-                                                    danger: true,
-                                                    onClick: (e) => {
-                                                        e.domEvent.stopPropagation();
-                                                        handleDeleteFile(node.key as string);
-                                                    }
-                                                }
-                                            ]
-                                        }}
-                                        trigger={['contextMenu']}
-                                    >
-                                        <span style={{
-                                            userSelect: 'none',
-                                            whiteSpace: 'nowrap',
-                                            overflow: 'hidden',
-                                            textOverflow: 'ellipsis',
-                                            display: 'inline-block',
-                                            maxWidth: '100%',
-                                            verticalAlign: 'middle'
-                                        }}>{node.title}</span>
-                                    </Dropdown>
-                                )}
-                                style={{ background: 'transparent' }}
+                                ]}
+                                style={{ flex: 1, overflow: 'hidden', height: '100%' }}
                             />
                         </div>
-
-                        <ContextBucket />
                     </div>
                 </Sider>
 
                 <div style={{ flex: 1, overflow: 'hidden' }}>
-                    <Terminal />
+                    <Tabs
+                        type="editable-card"
+                        onChange={setActiveTerminalId}
+                        activeKey={activeTerminalId}
+                        onEdit={onEdit}
+                        items={terminals.map((pane) => ({
+                            label: pane.label,
+                            key: pane.key,
+                            children: <Terminal sessionId={pane.key} />,
+                            closable: pane.closable,
+                        }))}
+                        style={{ height: '100%' }}
+                    />
                 </div>
             </Layout>
+
+            <DiffViewer
+                open={!!diffFile}
+                onClose={() => setDiffFile(null)}
+                filePath={diffFile || undefined}
+            />
 
 
 
@@ -469,6 +579,11 @@ const TerminalPage = () => {
                     }}
                 />
             )}
+            <style>{`
+                .ant-tabs-content, .ant-tabs-content-holder, .ant-tabs-tabpane {
+                    height: 100%;
+                }
+            `}</style>
         </div>
     );
 };

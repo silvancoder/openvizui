@@ -234,7 +234,7 @@ const ModelSwitcher: React.FC<ModelSwitcherProps> = ({ toolId }) => {
                     showSearch
                     options={models.length > 0 ? models.map(m => ({ label: m, value: m })) : (currentModel ? [{ label: currentModel, value: currentModel }] : [])}
                 />
-                <Tooltip title="Fetch remote models">
+                <Tooltip title={t('aiSettings.moreConfigs.localAI.fetchModels')}>
                     <Button 
                         icon={<CloudDownloadOutlined />} 
                         onClick={fetchModels} 

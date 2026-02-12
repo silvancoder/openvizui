@@ -54,7 +54,7 @@ const MainLayout = () => {
         {
             key: '/terminal',
             icon: <CodeOutlined />,
-            label: t('app.terminal'),
+            label: t('app.terminal.label'),
         },
         {
             key: '/settings',
