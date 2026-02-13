@@ -96,6 +96,10 @@ OpenVizUI 是一个现代桌面应用程序，基于 [Tauri](https://tauri.app/)
 -   `src-tauri/`: Rust 后端源代码和 Tauri 配置。
 -   `public/`: 静态资源。
 
+## 相关项目
+
+-   [OpenVizUI - 另一个 Docker 界面化管理平台](https://github.com/silvancoder/openvizui)
+
 ## 许可证
 
 Copyright 2026 The OpenVizUI Authors

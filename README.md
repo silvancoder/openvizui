@@ -96,6 +96,10 @@ The following scripts are available in `package.json`:
 -   `src-tauri/`: Rust backend source code and Tauri configuration.
 -   `public/`: Static assets.
 
+## Related Projects
+
+-   [OpenVizUI - Another Docker GUI Management Platform](https://github.com/silvancoder/openvizui)
+
 ## License
 
 Copyright 2026 The OpenVizUI Authors
