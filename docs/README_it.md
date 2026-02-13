@@ -96,6 +96,10 @@ I seguenti script sono disponibili in `package.json`:
 -   `src-tauri/`: Codice sorgente backend Rust e configurazione Tauri.
 -   `public/`: Asset statici.
 
+## Related Projects
+
+-   [SteerDock - Another Docker GUI Management Platform](https://github.com/silvancoder/steerdock)
+
 ## Licenza
 
 Copyright 2026 The OpenVizUI Authors

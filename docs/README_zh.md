@@ -98,7 +98,7 @@ OpenVizUI 是一个现代桌面应用程序，基于 [Tauri](https://tauri.app/)
 
 ## 相关项目
 
--   [OpenVizUI - 另一个 Docker 界面化管理平台](https://github.com/silvancoder/openvizui)
+-   [SteerDock - 另一个 Docker 界面化管理平台](https://github.com/silvancoder/steerdock)
 
 ## 许可证
 

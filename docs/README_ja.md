@@ -96,6 +96,10 @@ OpenVizUI は [Tauri](https://tauri.app/)、[React](https://react.dev/)、[Vite]
 -   `src-tauri/`: Rust バックエンドのソースコードと Tauri 設定。
 -   `public/`: 静的アセット。
 
+## Related Projects
+
+-   [SteerDock - Another Docker GUI Management Platform](https://github.com/silvancoder/steerdock)
+
 ## ライセンス
 
 Copyright 2026 The OpenVizUI Authors

@@ -96,6 +96,10 @@ OpenVizUI는 [Tauri](https://tauri.app/), [React](https://react.dev/), [Vite](ht
 -   `src-tauri/`: Rust 백엔드 소스 코드 및 Tauri 구성.
 -   `public/`: 정적 리소스.
 
+## Related Projects
+
+-   [SteerDock - Another Docker GUI Management Platform](https://github.com/silvancoder/steerdock)
+
 ## 라이선스
 
 Copyright 2026 The OpenVizUI Authors

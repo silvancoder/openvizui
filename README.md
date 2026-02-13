@@ -98,7 +98,7 @@ The following scripts are available in `package.json`:
 
 ## Related Projects
 
--   [OpenVizUI - Another Docker GUI Management Platform](https://github.com/silvancoder/openvizui)
+-   [SteerDock - Another Docker GUI Management Platform](https://github.com/silvancoder/steerdock)
 
 ## License
 
