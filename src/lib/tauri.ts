@@ -143,7 +143,7 @@ export const getAppConfig = async (): Promise<AppConfig> => {
             terminal_background: '#1e1e1e',
             terminal_foreground: '#d4d4d4',
             terminal_cursor_style: 'block',
-            terminal_shell: 'powershell.exe',
+            terminal_shell: 'bash.exe',
             current_directory: null,
             active_tool_id: null,
             env_status: null,

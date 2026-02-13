@@ -52,6 +52,14 @@ const Settings = () => {
                         <Select value={useAppStore.getState().language} onChange={setLanguage}>
                             <Option value="en">English</Option>
                             <Option value="zh">中文</Option>
+                            <Option value="de">Deutsch</Option>
+                            <Option value="es">Español</Option>
+                            <Option value="fr">Français</Option>
+                            <Option value="it">Italiano</Option>
+                            <Option value="ja">日本語</Option>
+                            <Option value="ko">한국어</Option>
+                            <Option value="pt">Português</Option>
+                            <Option value="ru">Русский</Option>
                         </Select>
                     </Form.Item>
                     <Form.Item label={t('settings.theme')}>
@@ -262,8 +270,10 @@ const Settings = () => {
                                     )}
                                 >
                                     <Option value="bash.exe">Git Bash (Default)</Option>
+                                    <Option value="powershell.exe">PowerShell</Option>
+                                    <Option value="cmd.exe">Command Prompt</Option>
                                     <Option value="wsl">WSL (Linux)</Option>
-                                    {!['wsl', 'bash.exe'].includes(terminalShell) && (
+                                    {!['bash.exe', 'powershell.exe', 'cmd.exe', 'wsl'].includes(terminalShell) && (
                                         <Option value={terminalShell}>{terminalShell}</Option>
                                     )}
                                 </Select>

@@ -144,7 +144,12 @@ impl Default for AppConfig {
             terminal_foreground: Some("#d4d4d4".to_string()),
             terminal_cursor_style: Some("block".to_string()),
             terminal_shell: if cfg!(target_os = "windows") {
-                Some("powershell.exe".to_string())
+                let git_bash = std::path::Path::new("C:\\Program Files\\Git\\bin\\bash.exe");
+                if git_bash.exists() {
+                     Some("bash.exe".to_string())
+                } else {
+                     Some("powershell.exe".to_string())
+                }
             } else {
                 Some("bash".to_string())
             },
@@ -545,9 +550,15 @@ fn pty_open(app: AppHandle, state: State<'_, AppPty>, id: String, cols: u16, row
         .map_err(|e| e.to_string())?;
 
     let config = get_app_config(app.clone());
-    let cmd_line = config.terminal_shell.unwrap_or_else(|| {
+    let cmd_line = config.terminal_shell.clone().unwrap_or_else(|| {
         if cfg!(target_os = "windows") {
-            "powershell.exe".to_string()
+            // Try to find Git Bash first
+            let git_bash = std::path::Path::new("C:\\Program Files\\Git\\bin\\bash.exe");
+            if git_bash.exists() {
+                "bash.exe".to_string()
+            } else {
+                "powershell.exe".to_string()
+            }
         } else {
             "bash".to_string()
         }
@@ -562,7 +573,14 @@ fn pty_open(app: AppHandle, state: State<'_, AppPty>, id: String, cols: u16, row
             if default_path.exists() {
                 default_path.to_str().unwrap().to_string()
             } else {
-                cmd_line
+                 // If bash.exe is requested but not found at standard location, 
+                 // and we are on windows, fallback to powershell if "bash" isn't in path?
+                 // For now, let's just trust the user or the default logic above
+                 if cfg!(target_os = "windows") && !which::which("bash").is_ok() {
+                    "powershell.exe".to_string()
+                 } else {
+                    cmd_line
+                 }
             }
         } else {
             cmd_line

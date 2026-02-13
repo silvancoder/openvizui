@@ -1,4 +1,9 @@
 <div align="center">
+  <p>
+    <a href="README.md">English</a> | <a href="docs/README_zh.md">中文</a> | <a href="docs/README_de.md">Deutsch</a> | <a href="docs/README_es.md">Español</a> | <a href="docs/README_fr.md">Français</a> | <a href="docs/README_it.md">Italiano</a> | <a href="docs/README_ja.md">日本語</a> | <a href="docs/README_ko.md">한국어</a> | <a href="docs/README_pt.md">Português</a> | <a href="docs/README_ru.md">Русский</a>
+  </p>
+</div>
+<div align="center">
   <img src="public/openvizui.png" alt="OpenVizUI Logo" width="400" height="80" />
 
   # OpenVizUI
@@ -11,8 +16,7 @@
   [![Rust](https://img.shields.io/badge/Rust-1.77+-orange?logo=rust&logoColor=white)](https://www.rust-lang.org/)
   [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
   [![License](https://img.shields.io/badge/License-Apache%202.0-green.svg)](https://opensource.org/licenses/Apache-2.0)
-  [![License](https://img.shields.io/badge/License-Apache%202.0-green.svg)](https://opensource.org/licenses/Apache-2.0)
-  [![Test Coverage](https://img.shields.io/badge/coverage-100%25-brightgreen.svg)]
+  ![Test Coverage](https://img.shields.io/badge/coverage-100%25-brightgreen.svg)
 
   [Official Website](https://www.openvizui.com) | [GitHub Repository](https://github.com/silvancoder/openvizui)
 </div>
@@ -68,10 +72,10 @@ The following scripts are available in `package.json`:
     npm run tauri dev
     ```
 
--   **`npm run build`**:
+-   **`npm run tauri build`**:
     Builds the frontend and backend for production.
     ```bash
-    npm run build
+    npm run tauri build
     ```
 
 -   **`npm run test`**:

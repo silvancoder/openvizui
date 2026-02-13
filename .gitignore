@@ -29,3 +29,4 @@ openvizui.md
 install.txt
 coverage/
 website/
+src/locales/i18n-translate.js

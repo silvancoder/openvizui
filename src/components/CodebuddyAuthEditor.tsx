@@ -175,8 +175,16 @@ const CodebuddyAuthEditor: React.FC = () => {
                         <Col span={12}>
                             <Form.Item name="language" label={t('aiSettings.cliConfig.codebuddy.fields.language')}>
                                 <Select options={[
+                                    { label: 'English', value: 'English' },
                                     { label: '简体中文', value: '简体中文' },
-                                    { label: 'English', value: 'English' }
+                                    { label: 'Deutsch', value: 'Deutsch' },
+                                    { label: 'Español', value: 'Español' },
+                                    { label: 'Français', value: 'Français' },
+                                    { label: 'Italiano', value: 'Italiano' },
+                                    { label: '日本語', value: '日本語' },
+                                    { label: '한국어', value: '한국어' },
+                                    { label: 'Português', value: 'Português' },
+                                    { label: 'Русский', value: 'Русский' }
                                 ]} />
                             </Form.Item>
                         </Col>
