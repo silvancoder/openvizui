@@ -4,7 +4,7 @@
   </p>
 </div>
 <div align="center">
-  <img src="public/openvizui.png" alt="OpenVizUI Logo" width="400" height="80" />
+  <img src="../public/openvizui.png" alt="OpenVizUI Logo" width="400" height="80" />
 
   # OpenVizUI
 
