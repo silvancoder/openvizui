@@ -21,7 +21,7 @@
   [공식 웹사이트](https://www.openvizui.com) | [GitHub 리포지토리](https://github.com/silvancoder/openvizui)
 </div>
 
-OpenVizUI는 [Tauri](https://tauri.app/), [React](https://react.dev/), [Vite](https://vitejs.dev/)로 구축된 최신 데스크톱 애플리케이션입니다. 백엔드에는 Rust의 강력한 성능을, 프론트엔드 사용자 인터페이스에는 React의 유연성을 활용합니다.
+OpenVizUI는 AI CLI 도구를 위한 통합되고 아름답으며 효율적인 시각화 인터페이스를 제공하는 최신 데스크톱 애플리케이션입니다. [Tauri](https://tauri.app/), [React](https://react.dev/), [Vite](https://vitejs.dev/)로 구축되었으며, Rust의 강력한 백엔드 성능과 React의 유연성을 활용하여 스킬 관리부터 복잡한 구성에 이르기까지 AI 워크플로우를 관리합니다.
 
 ## 기술 스택
 

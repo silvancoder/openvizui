@@ -21,7 +21,7 @@
   [Offizielle Website](https://www.openvizui.com) | [GitHub Repository](https://github.com/silvancoder/openvizui)
 </div>
 
-OpenVizUI ist eine moderne Desktop-Anwendung, die mit [Tauri](https://tauri.app/), [React](https://react.dev/) und [Vite](https://vitejs.dev/) erstellt wurde. Sie nutzt die Leistungsfähigkeit von Rust für das Backend und die Flexibilität von React für die Benutzeroberfläche des Frontends.
+OpenVizUI ist eine moderne Desktop-Anwendung, die eine einheitliche, schöne und effiziente Visualisierungsoberfläche für AI-CLI-Tools bietet. Erstellt mit [Tauri](https://tauri.app/), [React](https://react.dev/) und [Vite](https://vitejs.dev/), nutzt es die Leistungsfähigkeit von Rust für das Backend und die Flexibilität von React, um Ihre AI-Workflows zu verwalten – von Skill-Management bis hin zu komplexen Konfigurationen.
 
 ## Tech-Stack
 
