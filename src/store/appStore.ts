@@ -1,0 +1,343 @@
+/*
+ * @Author: Anthony Rivera && opcnlin@gmail.com
+ * @FilePath: \src\store\appStore.ts
+ * Copyright (c) 2026 OpenVizUI Contributors
+ * Licensed under the MIT License
+ */
+
+import { create } from 'zustand';
+import { checkEnvironment, checkToolStatus, getAppConfig, saveAppConfig, type EnvironmentStatus, type ToolStatus } from '../lib/tauri';
+
+export interface ToolConfig {
+    working_directory: string | null;
+}
+
+interface AppState {
+    theme: 'light' | 'dark';
+    language: string;
+    isLoaded: boolean;
+    envStatus: EnvironmentStatus | null;
+    toolStatuses: Record<string, ToolStatus>;
+    toolConfigs: Record<string, ToolConfig>;
+    activeTools: string[];
+    primaryColor: string;
+    opacity: number;
+    fontFamily: string;
+    textColor: string | null;
+    proxyType: string;
+    proxyAddress: string;
+    // Terminal settings
+    terminalFontFamily: string;
+    terminalFontSize: number;
+    terminalBackground: string;
+    terminalForeground: string;
+    terminalCursorStyle: 'block' | 'underline' | 'bar';
+    terminalShell: string;
+    pendingCommand: string | null;
+    currentDirectory: string | null;
+    activeToolId: string | null;
+    globalInstructions: string | null;
+    localAiBaseUrl: string;
+    localAiProvider: string;
+    idePath: string | null;
+    contextFiles: string[];
+    commandPresets: { id: string; name: string; command: string }[];
+
+    // Actions
+    setTheme: (theme: 'light' | 'dark') => void;
+    setLanguage: (lang: string) => void;
+    setProxyType: (type: string) => void;
+    setProxyAddress: (address: string) => void;
+    setPrimaryColor: (color: string) => void;
+    setOpacity: (opacity: number) => void;
+    setFontFamily: (font: string) => void;
+    setTextColor: (color: string) => void;
+    setPendingCommand: (command: string | null) => void;
+    setCurrentDirectory: (dir: string | null) => void;
+    setActiveToolId: (toolId: string | null) => void;
+    setTerminalSettings: (settings: Partial<{
+        terminalFontFamily: string;
+        terminalFontSize: number;
+        terminalBackground: string;
+        terminalForeground: string;
+        terminalCursorStyle: 'block' | 'underline' | 'bar';
+        terminalShell: string;
+    }>) => void;
+    checkEnv: () => Promise<void>;
+    refreshTools: (ids: string[]) => Promise<void>;
+    setToolStatus: (status: ToolStatus) => void;
+    setToolConfig: (toolId: string, config: Partial<ToolConfig>) => void;
+    loadConfig: () => Promise<void>;
+    addActiveTool: (id: string) => Promise<void>;
+    removeActiveTool: (id: string) => Promise<void>;
+    setGlobalInstructions: (instructions: string | null) => void;
+    setLocalAiBaseUrl: (url: string) => void;
+    setLocalAiProvider: (provider: string) => void;
+    setIdePath: (path: string | null) => void;
+    toggleContextFile: (path: string) => void;
+    removeContextFile: (path: string) => void;
+    clearContextFiles: () => void;
+    addCommandPreset: (preset: { id: string; name: string; command: string }) => void;
+    removeCommandPreset: (id: string) => void;
+    updateCommandPreset: (id: string, preset: Partial<{ name: string; command: string }>) => void;
+}
+
+const persistConfig = async (state: AppState) => {
+    if (!state.isLoaded) return;
+    try {
+        await saveAppConfig({
+            proxy_type: state.proxyType,
+            proxy_address: state.proxyAddress,
+            theme: state.theme,
+            language: state.language,
+            active_tools: state.activeTools,
+            primary_color: state.primaryColor,
+            opacity: state.opacity,
+            font_family: state.fontFamily,
+            text_color: state.textColor,
+            terminal_font_family: state.terminalFontFamily,
+            terminal_font_size: state.terminalFontSize,
+            terminal_background: state.terminalBackground,
+            terminal_foreground: state.terminalForeground,
+            terminal_cursor_style: state.terminalCursorStyle,
+            terminal_shell: state.terminalShell,
+            current_directory: state.currentDirectory,
+            active_tool_id: state.activeToolId,
+            env_status: state.envStatus,
+            tool_statuses: state.toolStatuses,
+            tool_configs: state.toolConfigs as any,
+            global_instructions: state.globalInstructions,
+            local_ai_base_url: state.localAiBaseUrl,
+            local_ai_provider: state.localAiProvider,
+            ide_path: state.idePath,
+            command_presets: state.commandPresets,
+        });
+    } catch (e) {
+        console.error("Failed to persist config", e);
+    }
+};
+
+export const useAppStore = create<AppState>((set, get) => ({
+    theme: 'light',
+    language: 'zh',
+    isLoaded: false,
+    envStatus: null,
+    toolStatuses: {},
+    toolConfigs: {},
+    activeTools: [],
+    primaryColor: '#1677ff',
+    opacity: 1.0,
+    fontFamily: 'Segoe UI',
+    textColor: null,
+    proxyType: 'none',
+    proxyAddress: '',
+    terminalFontFamily: 'Cascadia Code',
+    terminalFontSize: 14,
+    terminalBackground: '#1e1e1e',
+    terminalForeground: '#d4d4d4',
+    terminalCursorStyle: 'block',
+    terminalShell: 'bash.exe',
+    pendingCommand: null,
+    currentDirectory: null,
+    activeToolId: null,
+    globalInstructions: null,
+    localAiBaseUrl: 'http://localhost:11434',
+    localAiProvider: 'ollama',
+    idePath: null,
+    contextFiles: [],
+    commandPresets: [],
+
+
+    setTheme: (theme) => {
+        set({ theme });
+        persistConfig(get());
+    },
+    setLanguage: (language) => {
+        set({ language });
+        persistConfig(get());
+    },
+    setProxyType: (proxyType) => {
+        set({ proxyType });
+        persistConfig(get());
+    },
+    setProxyAddress: (proxyAddress) => {
+        set({ proxyAddress });
+        persistConfig(get());
+    },
+    setPrimaryColor: (primaryColor) => {
+        set({ primaryColor });
+        persistConfig(get());
+    },
+    setOpacity: (opacity) => {
+        set({ opacity });
+        persistConfig(get());
+    },
+    setFontFamily: (fontFamily) => {
+        set({ fontFamily });
+        persistConfig(get());
+    },
+    setTextColor: (textColor) => {
+        set({ textColor });
+        persistConfig(get());
+    },
+    setPendingCommand: (pendingCommand) => {
+        set({ pendingCommand });
+    },
+    setCurrentDirectory: (currentDirectory) => {
+        set({ currentDirectory });
+        persistConfig(get());
+    },
+    setActiveToolId: (activeToolId) => {
+        set({ activeToolId });
+        persistConfig(get());
+    },
+    setTerminalSettings: (settings) => {
+        set((state) => ({ ...state, ...settings }));
+        persistConfig(get());
+    },
+    checkEnv: async () => {
+        try {
+            const status = await checkEnvironment();
+            set({ envStatus: status });
+            persistConfig(get());
+        } catch (e) {
+            console.error("Failed to check environment", e);
+        }
+    },
+    loadConfig: async () => {
+        try {
+            const config = await getAppConfig();
+            set({
+                language: config.language || 'zh',
+                theme: (config.theme as 'light' | 'dark') || 'light',
+                primaryColor: config.primary_color || '#1677ff',
+                fontFamily: config.font_family || 'Segoe UI',
+                textColor: config.text_color || null,
+                terminalFontFamily: config.terminal_font_family || 'Cascadia Code',
+                terminalFontSize: config.terminal_font_size || 14,
+                terminalBackground: config.terminal_background || '#1e1e1e',
+                terminalForeground: config.terminal_foreground || '#d4d4d4',
+                terminalCursorStyle: (config.terminal_cursor_style as 'block' | 'underline' | 'bar') || 'block',
+                terminalShell: config.terminal_shell || 'bash.exe',
+                proxyType: config.proxy_type || 'none',
+                proxyAddress: config.proxy_address || '',
+                activeTools: config.active_tools || [],
+                currentDirectory: config.current_directory || null,
+                activeToolId: config.active_tool_id || null,
+                envStatus: config.env_status || null,
+                toolStatuses: config.tool_statuses || {},
+                toolConfigs: (config.tool_configs as any) || {},
+                globalInstructions: config.global_instructions || null,
+                localAiBaseUrl: config.local_ai_base_url || 'http://localhost:11434',
+                localAiProvider: config.local_ai_provider || 'ollama',
+                idePath: config.ide_path || null,
+                commandPresets: config.command_presets || [
+                    { id: 'default-1', name: 'Explain Code', command: '/explain' },
+                    { id: 'default-2', name: 'Review Code', command: '/review' },
+                    { id: 'default-3', name: 'Generate Test', command: '/test' }
+                ],
+                isLoaded: true
+            });
+        } catch (e) {
+            console.error("Load config failed", e);
+        }
+    },
+    addActiveTool: async (id) => {
+        const { activeTools } = get();
+        if (!activeTools.includes(id)) {
+            const newTools = [...activeTools, id];
+            set({ activeTools: newTools });
+            persistConfig(get());
+        }
+    },
+    removeActiveTool: async (id) => {
+        const { activeTools } = get();
+        const newTools = activeTools.filter(t => t !== id);
+        set({ activeTools: newTools });
+        persistConfig(get());
+    },
+    refreshTools: async (ids) => {
+        try {
+            // Create an array of promises where each one updates the state individually upon completion
+            const checks = ids.map(async (id) => {
+                try {
+                    const status = await checkToolStatus(id);
+                    set((state) => ({
+                        toolStatuses: { ...state.toolStatuses, [status.id]: status }
+                    }));
+                } catch (e) {
+                    console.error(`Failed to check tool status: ${id}`, e);
+                }
+            });
+            // Wait for all to finish so the caller knows when the batch is done
+            await Promise.all(checks);
+            persistConfig(get());
+        } catch (e) {
+            console.error("Failed to refresh tools batch", e);
+        }
+    },
+    setToolStatus: (status) => {
+        set((state) => ({
+            toolStatuses: { ...state.toolStatuses, [status.id]: status }
+        }));
+        persistConfig(get());
+    },
+    setToolConfig: (toolId, config) => {
+        set((state) => {
+            const current = state.toolConfigs[toolId] || { working_directory: null };
+            const updated = { ...current, ...config };
+            return {
+                toolConfigs: { ...state.toolConfigs, [toolId]: updated }
+            };
+        });
+        persistConfig(get());
+    },
+    setGlobalInstructions: (globalInstructions) => {
+        set({ globalInstructions });
+        persistConfig(get());
+    },
+    setLocalAiBaseUrl: (localAiBaseUrl) => {
+        set({ localAiBaseUrl });
+        persistConfig(get());
+    },
+    setLocalAiProvider: (localAiProvider) => {
+        set({ localAiProvider });
+        persistConfig(get());
+    },
+    setIdePath: (idePath) => {
+        set({ idePath });
+        persistConfig(get());
+    },
+    toggleContextFile: (path) => {
+        const { contextFiles } = get();
+        if (contextFiles.includes(path)) {
+            set({ contextFiles: contextFiles.filter(p => p !== path) });
+        } else {
+            set({ contextFiles: [...contextFiles, path] });
+        }
+    },
+    removeContextFile: (path) => {
+        const { contextFiles } = get();
+        set({ contextFiles: contextFiles.filter(p => p !== path) });
+    },
+    clearContextFiles: () => {
+        set({ contextFiles: [] });
+    },
+    addCommandPreset: (preset) => {
+        const { commandPresets } = get();
+        set({ commandPresets: [...commandPresets, preset] });
+        persistConfig(get());
+    },
+    removeCommandPreset: (id) => {
+        const { commandPresets } = get();
+        set({ commandPresets: commandPresets.filter(p => p.id !== id) });
+        persistConfig(get());
+    },
+    updateCommandPreset: (id, preset) => {
+        const { commandPresets } = get();
+        set({
+            commandPresets: commandPresets.map(p => p.id === id ? { ...p, ...preset } : p)
+        });
+        persistConfig(get());
+    },
+}));

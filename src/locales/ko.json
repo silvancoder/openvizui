@@ -1,0 +1,944 @@
+{
+  "app": {
+    "title": "OpenVizUI",
+    "dashboard": "대시보드",
+    "settings": "설정",
+    "terminal": {
+      "label": "터미널",
+      "clear": "터미널 지우기",
+      "restart": "세ッション 재시작"
+    },
+    "install": "설치",
+    "docs": "문서",
+    "installed": "설치됨",
+    "uninstall": "제거",
+    "launch": "실행",
+    "update": "업데이트",
+    "config": "구성",
+    "refresh": "새로 고침",
+    "addTool": "도구 추가",
+    "apps": "앱 스토어",
+    "aiSettings": "AI 설정",
+    "about": "정보",
+    "system": "시스템",
+    "messages": {
+      "checking": "{{name}} 확인 중...",
+      "alreadyInstalled": "{{name}}이(가) 이미 설치되어 있습니다. 워크벤치에 추가합니다.",
+      "installing": "{{name}} 설치 중...",
+      "installed": "{{name}} 설치 및 추가됨",
+      "installFailed": "{{name}} 추가 실패: {{error}}",
+      "uninstalling": "{{name}} 제거 중...",
+      "uninstalled": "제거하고 워크벤치에서 삭제했습니다",
+      "uninstallFailed": "{{name}} 제거 실패",
+      "updating": "{{name}} 업데이트 중...",
+      "updated": "{{name}} 업데이트 성공",
+      "updateFailed": "{{name}} 업데이트 실패: {{error}}"
+    },
+    "noActiveTools": "활성 도구가 없습니다. 시작하려면 '도구 추가'를 클릭하세요.",
+    "addToolModal": {
+      "title": "CLI 도구 추가",
+      "desc": "워크벤치에 추가할 도구를 선택하세요. 설치되어 있지 않으면 확인 후 설치해 드립니다.",
+      "placeholder": "도구 선택",
+      "cancel": "취소",
+      "confirm": "추가 및 설치"
+    }
+  },
+  "aiSettings": {
+    "title": "AI 설정",
+    "tabs": {
+      "skills": "스킬 관리",
+      "cliConfig": "CLI 구성",
+      "mcpConfig": "MCP 구성",
+      "mcpMonitor": "MCP 모니터",
+      "skillMonitor": "스킬 모니터",
+      "more": "기타 설정",
+      "comingSoon": "더 많은 AI 설정이 곧 제공될 예정입니다..."
+    },
+    "moreConfigs": {
+      "export": {
+        "title": "구성 관리",
+        "desc": "모든 AI CLI 도구 구성을 백업하거나 마이그레이션합니다.",
+        "exportBtn": "모두 내보내기 (JSON/TOML)",
+        "importBtn": "구성 가져오기",
+        "success": "구성 내보내기 성공!",
+        "importSuccess": "구성 가져오기 성공! 다시 로드 중..."
+      },
+      "saved": "설정이 업데이트되었습니다",
+      "docs": {
+        "title": "공식 리소스",
+        "desc": "구성된 CLI 도구에 대한 문서 및 가이드에 액세스합니다.",
+        "visit": "공식 문서"
+      },
+      "diagnostics": {
+        "title": "시스템 진단",
+        "desc": "문제 해결을 위해 시스템 환경 및 도구 경로를 확인합니다.",
+        "runBtn": "진단 실행",
+        "copyBtn": "보고서 복사",
+        "reportTitle": "시스템 진단 보고서",
+        "failed": "진단 실패: {{error}}"
+      },
+      "instructions": {
+        "title": "시스템 공통 지침 (System Instructions)",
+        "desc": "모든 AI 도구에서 사용될 메인 프롬프트/역할을 설정합니다.",
+        "placeholder": "예: 당신은 숙련된 TypeScript 개발자입니다. 답변은 간결하게 해주세요.",
+        "saveBtn": "지침 업데이트"
+      },
+      "localAI": {
+        "title": "로컬 AI 브리지",
+        "desc": "Ollama 또는 LM Studio와 같은 로컬 공급자에 빠르게 연결합니다.",
+        "provider": "공급자 유형",
+        "baseUrl": "기본 URL",
+        "checkBtn": "연결 테스트",
+        "checkSuccess": "로컬 AI 연결 성공!",
+        "checkStatusError": "연결되었지만 공급자가 오류를 반환했습니다: {{status}}",
+        "checkError": "연결 실패. 공급자가 실행 중인지 확인하십시오.",
+        "fetchModels": "모델 목록 가져오기"
+      }
+    },
+    "skillMonitor": {
+      "title": "스킬 모니터링 센터",
+      "noSkills": "이 디렉토리에 설치된 스킬이 없습니다",
+      "table": {
+        "name": "스킬 이름",
+        "description": "설명",
+        "actions": "작업"
+      },
+      "actions": {
+        "view": "보기",
+        "folder": "폴더",
+        "confirmDelete": "삭제 확인",
+        "deleteDesc": "이 스킬을 제거하고 삭제하시겠습니까: "
+      },
+      "status": {
+        "deleted": "스킬이 삭제되었습니다",
+        "deleteFailed": "스킬 삭제 실패"
+      },
+      "errors": {
+        "noMetadata": "메타데이터 파일을 찾을 수 없습니다 (SKILL.md, AGENTS.md, README.md, package.json)"
+      }
+    },
+    "mcpMonitor": {
+      "title": "MCP 서버 모니터",
+      "refresh": "목록 새로 고침",
+      "toolsCount": "{{count}}개 도구",
+      "table": {
+        "name": "MCP 서버",
+        "command": "명령",
+        "status": "상태",
+        "tools": "사용 가능한 도구",
+        "actions": "작업"
+      },
+      "status": {
+        "testing": "테스트 중",
+        "online": "온라인",
+        "error": "오류",
+        "unknown": "알 수 없음"
+      },
+      "actions": {
+        "test": "Test Status",
+        "tools": "View Tools"
+      },
+      "serverOnline": "{{serverName}}이(가) {{toolCount}}개의 도구와 함께 온라인 상태입니다",
+      "serverFailed": "{{serverName}} 실패: {{error}}",
+      "noTools": "도구를 찾을 수 없거나 아직 검사하지 않았습니다.",
+      "noDescription": "설명 없음",
+      "close": "닫기",
+      "config": "{{name}} 구성",
+      "toolsFrom": "{{serverName}}의 도구",
+      "about": {
+        "title": "About MCP Monitoring",
+        "desc": "이 모니터는 AI 도구 프로필을 스캔하고 MCP 서버(stdio 모드)가 올바르게 작동하는지 확인합니다. 테스트는 서비스를 시작하고 제공된 도구를 쿼리합니다."
+      }
+    },
+    "installedTitle": "설치된 스킬",
+    "refresh": "새로 고침",
+    "noMcps": "아직 설치된 스킬이 없습니다",
+    "uninstallConfirmTitle": "제거 확인",
+    "uninstallConfirmDesc": "이 스킬을 제거하시겠습니까?",
+    "uninstall": "제거",
+    "quickInstallTitle": "빠른 설치",
+    "installViaUrl": "명령 또는 URL로 설치",
+    "installHint": "'npx skills add <url> --skill <name>' 또는 GitHub HTTPS URL 입력.",
+    "install": "설치",
+    "popularTitle": "인기 스킬",
+    "status": {
+      "installing": "스킬 설치 중...",
+      "installSuccess": "스킬이 성공적으로 설치되었습니다!",
+      "uninstallSuccess": "스킬이 제거되었습니다",
+      "modelsFetched": "{{count}}개 모델 가져오기 성공"
+    },
+    "errors": {
+      "loadFailed": "스킬 로드 실패: ",
+      "installFailed": "설치 실패: ",
+      "uninstallFailed": "제거 실패: ",
+      "fetchFailed": "가져오기 실패: "
+    },
+    "warnings": {
+      "enterUrl": "유효한 GitHub URL을 입력하세요",
+      "noBaseUrl": "먼저 기본 URL을 입력하세요",
+      "noApiKey": "먼저 Codex API 키를 설정하세요"
+    },
+    "mcpConfig": {
+      "tab": "MCP 구성",
+      "configured": "구성된 MCP",
+      "tool": "CLI 도구",
+      "save": "구성 저장",
+      "reload": "다시 로드",
+      "configPath": "구성 경로",
+      "quickAdd": "MCP 빠른 추가",
+      "edit": "구성 편집",
+      "locateHint": "구성 내 {{key}} 위치 확인.",
+      "quickAddWarning": "빠른 추가는 현재 JSON 프로필만 지원합니다.",
+      "quickAddWarningYAML": "빠른 추가는 현재 YAML을 지원하지 않습니다.",
+      "uninstallWarning": "제거는 현재 JSON 파일만 지원합니다.",
+      "uninstallWarningYAML": "YAML 제거는 현재 지원되지 않습니다.",
+      "addedAndSaved": "{{key}} 추가 및 구성 저장됨.",
+      "loadFailed": "구성 로드 실패: ",
+      "saved": "구성 저장됨: ",
+      "saveFailed": "구성 저장 실패: ",
+      "exists": "구성에 이미 존재합니다.",
+      "uninstalled": "{{key}} 성공적으로 제거 및 구성 저장됨.",
+      "uninstallFailed": "MCP 제거 실패.",
+      "added": "{{key}} 구성에 추가됨. 확인 후 저장하세요.",
+      "parseError": "JSON 구문 분석 실패. 먼저 구문 오류를 수정하세요.",
+      "links": {
+        "awesome": "Awesome MCP",
+        "official": "공식 MCP",
+        "cursor": "Cursor 카탈로그",
+        "chinese": "MCP 중국어"
+      },
+      "selectProvider": "공급자 선택 또는 입력",
+      "selectProviderFirst": "먼저 공급자를 선택하세요",
+      "modelsFetched": "{{count}}개 모델 가져옴",
+      "fetchModelsFailed": "모델 가져오기 실패",
+      "fetchModels": "모델 가져오기",
+      "pluginsHint": "플러그인 디렉토리: ~/.config/opencode/plugins",
+      "savePathTip": "설정이 {{path}}에 저장되었습니다",
+      "quickAdds": {
+        "filesystem": {
+          "desc": "AI가 로컬 파일 시스템의 파일을 안전하게 읽고 쓸 수 있도록 합니다."
+        },
+        "context7": {
+          "desc": "Upstash Context7 Cache - 긴 컨텍스트를 효율적으로 관리합니다."
+        },
+        "playwright": {
+          "desc": "Playwright를 사용하여 브라우저 상호 작용 및 테스트를 자동화합니다."
+        },
+        "browserTools": {
+          "desc": "클릭, 스크롤 및 스크린샷과 같은 브라우저 상호 작용 기능을 제공합니다."
+        },
+        "gitmcp": {
+          "desc": "GitHub 리포지토리에서 직접 Git 작업 및 코드 검색을 수행합니다."
+        },
+        "everything": {
+          "desc": "MCP 프로토콜의 모든 상호 작용 모드를 보여주는 참조 서버입니다."
+        },
+        "firecrawl": {
+          "desc": "웹 콘텐츠를 AI 친화적인 Markdown 또는 JSON으로 변환합니다."
+        },
+        "mysql": {
+          "desc": "MySQL 데이터베이스에 연결하고 쿼리합니다. 스키마 검색 및 읽기 전용 쿼리 지원."
+        }
+      }
+    },
+    "popularPacks": {
+      "findSkills": {
+        "name": "스킬 찾기",
+        "desc": "사용 가능한 스킬 검색 및 발견 도구."
+      },
+      "vercelBestPractices": {
+        "name": "Vercel React 모범 사례",
+        "desc": "React 개발을 위한 공식 Vercel 모범 사례."
+      },
+      "webDesign": {
+        "name": "웹 디자인 가이드",
+        "desc": "최신 웹 디자인 표준 및 지침."
+      },
+      "remotion": {
+        "name": "Remotion 모범 사례",
+        "desc": "React로 비디오를 제작하기 위한 모범 사례."
+      },
+      "frontendDesign": {
+        "name": "프론트엔드 디자인",
+        "desc": "프론트엔드 디자인 패턴 및 구현 기술."
+      },
+      "composition": {
+        "name": "Vercel 구성 패턴",
+        "desc": "Vercel 구성 요소 구성 패턴."
+      },
+      "agentBrowser": {
+        "name": "에이전트 브라우저",
+        "desc": "에이전트의 브라우저 기능을 활성화합니다."
+      },
+      "skillCreator": {
+        "name": "스킬 크리에이터",
+        "desc": "새로운 스킬 제작을 돕는 도구."
+      }
+    }
+  },
+  "cliConfig": {
+    "fetchModels": "모델 가져오기",
+    "modelsFetched": "{{count}}개 모델 가져옴",
+    "fetchModelsFailed": "모델 가져오기 실패",
+    "oauthPrompt": "1. 터미널로 전환하여 'gemini'를 실행하세요\n2. 'Connect Antigravity'에서 아니요(2)를 선택하세요\n3. /auth를 입력하고 'Login with Google'을 선택하세요",
+    "qoder": {
+      "sections": {
+        "apiKeys": "서비스 공급자 API",
+        "appearance": "모양 및 테마",
+        "formatting": "서식",
+        "behavior": "동작",
+        "minimap": "미니맵",
+        "highlighting": "강조 표시",
+        "aiModels": "AI 모델",
+        "parameters": "매개변수",
+        "usage": "사용량 제한",
+        "analysis": "분석",
+        "network": "네트워크"
+      },
+      "fields": {
+        "endpoint": "엔드포인트",
+        "timeout": "시간 초과 (ms)",
+        "maxRetries": "최대 재시도",
+        "organization": "조직 ID",
+        "themeMode": "테마 모드",
+        "lightTheme": "라이트 테마",
+        "darkTheme": "다크 테마",
+        "contrast": "대비",
+        "fontFamily": "글꼴 모음",
+        "fontSize": "글꼴 크기",
+        "lineHeight": "줄 높이",
+        "ligatures": "글꼴 합자",
+        "cursorStyle": "커서 스타일",
+        "blink": "커서 깜박임",
+        "smoothCaret": "부드러운 커서",
+        "tabSize": "탭 크기",
+        "insertSpaces": "공백 삽입",
+        "trimWhitespace": "공백 제거",
+        "finalNewline": "마지막 줄 바꿈",
+        "wordWrap": "줄 바꿈",
+        "wordWrapColumn": "줄 바꿈 열",
+        "autoSave": "자동 저장",
+        "autoSaveDelay": "자동 저장 지연",
+        "formatOnSave": "저장 시 서식 지정",
+        "formatOnPaste": "붙여넣기 시 서식 지정",
+        "formatOnType": "입력 시 서식 지정",
+        "semanticHighlighting": "의미론적 강조",
+        "bracketMatching": "괄호 일치",
+        "colorDecorators": "색상 장식",
+        "indentGuides": "들여쓰기 가이드",
+        "lineNumbers": "줄 번호",
+        "activeLineHighlight": "활성 줄 강조",
+        "modifiedTabsHighlight": "수정된 탭 강조",
+        "primaryModel": "주 모델",
+        "fallbackModel": "대체 모델",
+        "autoModelSelection": "자동 모델 선택",
+        "codeCompletion": "코드 완성을",
+        "codeReview": "코드 리뷰",
+        "archDesign": "아키텍처 설계",
+        "documentation": "문서화",
+        "dailyRequests": "일일 요청 제한",
+        "hourlyRequests": "시간당 요청 제한",
+        "dailyCost": "일일 비용 제한 ($)",
+        "monthlyCost": "월간 비용 제한 ($)",
+        "alertThreshold": "알림 임계값",
+        "autoThrottle": "자동 조절",
+        "analysisDepth": "분석 깊이",
+        "maxFileSize": "최대 파일 크기",
+        "maxFiles": "최대 파일 수",
+        "includeDeps": "종속성 포함",
+        "analyzeExternal": "외부 라이브러리 분석",
+        "semanticAnalysis": "의미론적 분석",
+        "crossRef": "상호 참조",
+        "addProvider": "공급자 추가",
+        "providerName": "공급자 이름 (ID)",
+        "fetchModels": "모델 가져오기",
+        "maxOutputTokens": "Max Output Tokens",
+        "maxContextTokens": "Max Context Tokens",
+        "temperature": "온도 (Temperature)",
+        "topP": "Top P",
+        "presencePenalty": "Presence Penalty",
+        "modelsFetched": "{{count}}개 모델 가져옴",
+        "showSlider": "슬라이더 표시",
+        "side": "측면",
+        "scale": "비율",
+        "preferences": "환경 설정",
+        "stopSequences": "중지 시퀀스",
+        "stopSequencesPlaceholder": "Enter를 눌러 추가",
+        "frequencyPenalty": "Frequency Penalty",
+        "host": "호스트",
+        "port": "포트",
+        "username": "사용자 이름",
+        "password": "암호",
+        "line": "줄",
+        "block": "블록",
+        "underline": "밑줄",
+        "bounded": "경계",
+        "afterDelay": "지연 후",
+        "onFocusChange": "포커스 변경 시",
+        "always": "항상",
+        "mouseover": "마우스 오버 시",
+        "left": "왼쪽",
+        "right": "오른쪽",
+        "basic": "기본",
+        "standard": "표준",
+        "comprehensive": "포괄적",
+        "small": "작음",
+        "large": "큼"
+      }
+    },
+    "codebuddy": {
+      "sections": {
+        "env": "환경 변수",
+        "general": "일반 설정",
+        "advanced": "고급 설정",
+        "plugins": "플러그인 및 마켓플레이스",
+        "network": "네트워크 및 시스템"
+      },
+      "fields": {
+        "apiKey": "API 키 (CODEBUDDY_API_KEY)",
+        "baseUrl": "기본 URL (CODEBUDDY_BASE_URL)",
+        "internetEnv": "인터넷 환경",
+        "authToken": "인증 토큰 (CODEBUDDY_AUTH_TOKEN)",
+        "model": "권장 모델",
+        "cleanupDays": "정리 주기 (일)",
+        "alwaysThinking": "항상 Thinking 모드",
+        "showTokens": "토큰 카운터 표시",
+        "promptSuggestion": "프롬프트 제안",
+        "autoCompact": "자동 압축",
+        "envRouteMode": "환경 라우팅 모드",
+        "internal": "내부",
+        "ioa": "iOA 계정",
+        "production": "프로덕션",
+        "staging": "스테이징",
+        "plan": "계획 모드 (Plan)",
+        "act": "실행 모드 (Act)",
+        "statusLineCommand": "상태 표시줄 명령",
+        "permissions": "기본 권한 모드",
+        "marketplaces": "플러그인 마켓플레이스",
+        "memory": "메모리",
+        "endpoint": "서버 엔드포인트",
+        "sandbox": "Bash 샌드박스 활성화",
+        "plugins": "활성화된 플러그인",
+        "language": "표시 언어",
+        "autoUpdates": "자동 업데이트",
+        "fetchModels": "모델 가져오기",
+        "modelsFetched": "{{count}}개 모델 가져옴"
+      }
+    },
+    "opencode": {
+      "sections": {
+        "auth": "인증",
+        "general": "일반 설정",
+        "server": "서버 구성",
+        "permissions": "권한 제어",
+        "advanced": "고급 옵션"
+      },
+      "fields": {
+        "theme": "테마",
+        "address": "엔드포인트 주소",
+        "fetchFrom": "모델 소스 가져오기",
+        "readModels": "모델 읽기",
+        "model": "주 모델",
+        "smallModel": "소형 모델",
+        "autoupdate": "자동 업데이트",
+        "share": "공유 모드",
+        "defaultAgent": "기본 에이전트",
+        "serverPort": "서버 포트",
+        "serverHostname": "호스트 이름",
+        "serverMdns": "mDNS 활성화",
+        "serverMdnsDomain": "mDNS 도메인",
+        "serverCors": "CORS 허용 출처",
+        "toolsWrite": "파일 쓰기 허용",
+        "toolsBash": "명령 실행 허용",
+        "compactionAuto": "컨텍스트 자동 압축",
+        "compactionPrune": "컨텍스트 정리 (Prune)",
+        "plugins": "활성화된 플러그인",
+        "instructions": "모델 지침 (Instructions)",
+        "permEdit": "파일 편집 (edit)",
+        "permBash": "명령 실행 (bash)",
+        "permRead": "파일 읽기 (read)",
+        "permGrep": "정규식 검색 (grep)",
+        "permGlob": "패턴 일치 (glob)",
+        "permList": "디렉터리 나열 (list)",
+        "permSkill": "스킬 로드 (skill)",
+        "permTodoWrite": "작업 관리 (todowrite)",
+        "permTodoRead": "작업 읽기 (todoread)",
+        "permWebFetch": "웹 가져오기 (webfetch)",
+        "permQuestion": "사용자 질문 (question)"
+      }
+    },
+    "codex": {
+      "sections": {
+        "auth": "인증",
+        "general": "일반 설정",
+        "provider": "모델 공급자"
+      },
+      "fields": {
+        "model": "모델 이름",
+        "reasoningEffort": "추론 노력 (Reasoning Effort)",
+        "preferredAuth": "선호하는 인증 방법",
+        "modelProvider": "공급자 유형",
+        "baseUrl": "API 기본 URL",
+        "providerName": "공급자 이름",
+        "wireApi": "Wire API (예: response)",
+        "timeout": "시간 초과 (초)",
+        "retryAttempts": "재시도 횟수"
+      }
+    },
+    "oauthTitle": "Gemini OAuth 단계",
+    "common": {
+      "enabled": "활성화됨",
+      "disabled": "비활성화됨",
+      "settings": "설정",
+      "save": "저장",
+      "cancel": "취소",
+      "delete": "삭제",
+      "edit": "편집"
+    },
+    "copilotPrompt": "1. 터미널로 전환하여 'gh auth login'을 실행하세요\n2. GitHub.com을 선택하고 지침을 따르세요\n3. 설치되지 않은 경우 'gh extension install github/gh-copilot'을 실행하세요",
+    "copilotTitle": "GitHub Copilot 인증 단계",
+    "fields": {
+      "verbose": "상세 로그",
+      "theme": "테마",
+      "preferredModel": "선호 모델",
+      "editor": "에디터",
+      "autoUpdate": "자동 업데이트",
+      "maxContextTokens": "Max Context Tokens",
+      "maxOutputTokens": "Max Output Tokens",
+      "model": "모델",
+      "modelProvider": "모델 공급자",
+      "reasoningEffort": "추론 노력",
+      "disableResponseStorage": "응답 저장 비활성화",
+      "preferredAuthMethod": "선호하는 인증 방법",
+      "temperature": "온도 (Temperature)",
+      "topP": "Top P",
+      "topK": "Top K",
+      "safetySettings": "안전 설정",
+      "defaultModel": "기본 모델",
+      "language": "언어",
+      "enableMcp": "MCP 활성화",
+      "telemetry": "원격 측정",
+      "defaultPermission": "기본 권한",
+      "apiKey": "API 키",
+      "editorIntegration": "에디터 통합",
+      "debugMode": "디버그 모드",
+      "confirmExecute": "실행 확인",
+      "githubToken": "GitHub 토큰",
+      "autoUpdater": "자동 업데이터",
+      "providerName": "서비스 공급자",
+      "baseUrl": "기본 URL",
+      "authType": "인증 유형",
+      "defaultAgent": "기본 에이전트",
+      "instructions": "지침 (Instructions)",
+      "disabledProviders": "비활성화된 공급자",
+      "server": {
+        "port": "포트",
+        "hostname": "호스트 이름",
+        "mdns": "mDNS 검색",
+        "cors": "CORS 출처"
+      },
+      "tui": {
+        "scrollSpeed": "스크롤 속도",
+        "diffStyle": "Diff 스타일"
+      },
+      "tools": {
+        "write": "파일 쓰기 허용",
+        "bash": "명령 실행 허용"
+      },
+      "permission": {
+        "edit": "편집 권한",
+        "bash": "실행 권한"
+      },
+      "compaction": {
+        "auto": "자동 압축",
+        "prune": "정리 (Prune)"
+      },
+      "provider": {
+        "timeout": "시간 초과 (ms)",
+        "baseUrl": "기본 URL",
+        "name": "공급자 이름"
+      },
+      "configuredProviders": "구성된 공급자",
+      "allProviders": "모든 공급자",
+      "cleanupDays": "정리 일수",
+      "thinkingMode": "Thinking 모드",
+      "showDuration": "기간 표시",
+      "updateChannel": "업데이트 채널",
+      "plansDir": "Plans 디렉토리",
+      "spinnerTips": "로딩 팁",
+      "progressBar": "터미널 진행률 표시줄",
+      "allowList": "허용 목록 (Allowlist)",
+      "denyList": "거부 목록 (Denylist)",
+      "allowedDirs": "추가 허용 디렉토리",
+      "autoAllowBash": "샌드박스 내 Bash 자동 허용",
+      "excludedCmds": "제외된 명령",
+      "allowLocalBind": "로컬 바인딩 허용",
+      "unixSockets": "Unix 소켓 허용",
+      "apiKeyRequired": "먼저 API 키를 입력하세요",
+      "apiKeyPlaceholder": "Gemini API 키 입력",
+      "oauthLogin": "OAuth 로그인",
+      "loginWithGoogle": "Google로 로그인",
+      "candidateCount": "후보 수",
+      "outputFormat": "출력 형식",
+      "syntaxHighlighting": "구문 강조",
+      "showLineNumbers": "줄 번호 표시",
+      "harassment": "괴롭힘",
+      "hateSpeech": "혐오 발언",
+      "sexuallyExplicit": "성적인 콘텐츠",
+      "dangerousContent": "위험한 콘텐츠",
+      "respectGitIgnore": ".gitignore 준수",
+      "recursiveSearch": "재귀 검색",
+      "autoAcceptTools": "도구 자동 수락",
+      "enableSandbox": "샌드박스 활성화",
+      "toolDiscoveryCommand": "도구 검색 명령",
+      "toolCallCommand": "도구 호출 명령",
+      "checkpointsEnabled": "체크포인트 활성화",
+      "telemetryEnabled": "원격 측정 활성화",
+      "otlpEndpoint": "OTLP 엔드포인트",
+      "maxSessionTurns": "최대 세션 턴 수",
+      "compressionThreshold": "압축 임계값",
+      "fileFiltering": "파일 필터링",
+      "toolsAndSandbox": "도구 및 샌드박스",
+      "debugAndTelemetry": "디버그 및 원격 측정",
+      "sessionManagement": "세션 관리"
+    },
+    "sections": {
+      "basic": "기본",
+      "permissions": "권한",
+      "sandbox": "샌드박스",
+      "env": "환경",
+      "network": "네트워크",
+      "controls": "제어",
+      "limits": "제한",
+      "auth": "인증",
+      "advanced": "고급",
+      "generation": "생성",
+      "safety": "안전",
+      "features": "기능"
+    },
+    "descriptions": {
+      "verbose": "상세 로깅 활성화",
+      "editor": "에디터를 여는 명령 (예: 'code')",
+      "limitContext": "컨텍스트 크기 제한",
+      "randomness": "무작위성 제어",
+      "safety": "안전 설정 JSON 문자열 (복잡함)",
+      "githubToken": "선택 사항: 인증 토큰 덮어쓰기",
+      "tencentKey": "Tencent Cloud API 키",
+      "confirmExecute": "실행 전 확인",
+      "modelProvider": "공급자 유형 (예: openai, anthropic). DeepSeek와 같은 사용자 정의 엔드포인트는 'openai'를 사용할 수 있습니다."
+    }
+  },
+  "apps": {
+    "title": "앱 스토어",
+    "subtitle": "개발자 도구, 언어 및 서비스를 발견하고 설치합니다.",
+    "searchPlaceholder": "앱 검색...",
+    "categories": {
+      "languages": "언어",
+      "web": "웹 서비스",
+      "database": "데이터베이스",
+      "cache_queue": "캐시 & 큐",
+      "tools": "도구 & 컨테이너",
+      "config_tools": "구성 도구"
+    },
+    "downloadModal": {
+      "title": "{{name}} 다운로드 중",
+      "waiting": "다운로드 중... 잠시 기다려 주세요",
+      "extracting": "파일 압축 해제 중... 기다려 주세요",
+      "savePath": "/download 디렉토리에 저장",
+      "success": "{{name}} 다운로드 및 압축 해제 완료!",
+      "failed": "작업 실패: {{error}}"
+    },
+    "messages": {
+      "alreadyInstalled": "{{name}}이(가) 이미 설치되어 있습니다.",
+      "actuallyAlreadyInstalled": "{{name}}은(는) 이미 설치되어 있습니다: {{version}}",
+      "notConfigured": "{{name}}이(가) 다운로드용으로 구성되지 않았습니다.",
+      "gitMissing": "Git이 설치되지 않았습니다. 앱 스토어로 리디렉션 중..."
+    },
+    "items": {
+      "python": {
+        "name": "Python",
+        "desc": "고수준 범용 프로그래밍 언어."
+      },
+      "go": {
+        "name": "Go",
+        "desc": "Google이 지원하는 오픈 소스 프로그래밍 언어."
+      },
+      "java": {
+        "name": "Java",
+        "desc": "클래스 기반 객체 지향 프로그래밍 언어."
+      },
+      "bun": {
+        "name": "Bun",
+        "desc": "초고속 올인원 JavaScript 런타임, 번들러, 테스트 실행기 및 패키지 관리자."
+      },
+      "rust": {
+        "name": "Rust",
+        "desc": "안정적이고 효율적인 소프트웨어를 구축하기 위한 언어."
+      },
+      "php": {
+        "name": "PHP",
+        "desc": "웹 개발에 특히 적합한 인기 있는 스크립트 언어."
+      },
+      "erlang": {
+        "name": "Erlang",
+        "desc": "확장 가능한 실시간 시스템을 구축하기 위한 프로그래밍 언어."
+      },
+      "perl": {
+        "name": "Perl",
+        "desc": "30년 이상의 역사를 가진 기능이 풍부한 프로그래밍 언어."
+      },
+      "ruby": {
+        "name": "Ruby",
+        "desc": "단순성과 생산성에 초점을 맞춘 동적 오픈 소스 언어."
+      },
+      "apache": {
+        "name": "Apache",
+        "desc": "세계에서 가장 널리 사용되는 웹 서버 소프트웨어."
+      },
+      "caddy": {
+        "name": "Caddy",
+        "desc": "자동 HTTPS를 갖춘 최고의 서버."
+      },
+      "tomcat": {
+        "name": "Tomcat",
+        "desc": "Jakarta Servlet, Jakarta Server Pages 등의 오픈 소스 구현."
+      },
+      "nginx": {
+        "name": "Nginx",
+        "desc": "고성능 로드 밸런서, 웹 서버 및 리버스 프록시."
+      },
+      "consul": {
+        "name": "Consul",
+        "desc": "네트워크 구성을 자동화하고 서비스를 검색하며 연결을 보호합니다."
+      },
+      "mariadb": {
+        "name": "MariaDB",
+        "desc": "가장 인기 있는 데이터베이스 서버 중 하나입니다. MySQL 원본 개발자가 만들었습니다."
+      },
+      "mongodb": {
+        "name": "MongoDB",
+        "desc": "클라우드 시대를 위한 애플리케이션 데이터 플랫폼."
+      },
+      "mysql": {
+        "name": "MySQL",
+        "desc": "세계에서 가장 인기 있는 오픈 소스 데이터베이스."
+      },
+      "postgresql": {
+        "name": "PostgreSQL",
+        "desc": "세계에서 가장 진보된 오픈 소스 관계형 데이터베이스."
+      },
+      "redis": {
+        "name": "Redis",
+        "desc": "수백만 명의 개발자가 사용하는 인메모리 데이터 저장소."
+      },
+      "memcached": {
+        "name": "Memcached",
+        "desc": "고성능 분산 메모리 객체 캐싱 시스템."
+      },
+      "rabbitmq": {
+        "name": "RabbitMQ",
+        "desc": "가장 인기 있는 오픈 소스 메시지 브로커 중 하나."
+      },
+      "etcd": {
+        "name": "Etcd",
+        "desc": "강력하게 일관된 분산 키-값 저장소."
+      },
+      "nodejs": {
+        "name": "NodeJS",
+        "desc": "Chrome의 V8 엔진을 기반으로 구축된 JavaScript 런타임."
+      },
+      "git": {
+        "name": "Git",
+        "desc": "무료 오픈 소스 분산 버전 관리 시스템."
+      },
+      "podman": {
+        "name": "Podman",
+        "desc": "OCI 컨테이너 및 포드를 관리하기 위한 도구."
+      },
+      "docker": {
+        "name": "Docker",
+        "desc": "애플리케이션 구축, 공유 및 실행을 가속화합니다."
+      }
+    }
+  },
+  "tools": {
+    "claude": "Claude Code",
+    "google": "Gemini",
+    "opencode": "OpenCode",
+    "qoder": "Qoder",
+    "codebuddy": "CodeBuddy",
+    "copilot": "GitHub Copilot",
+    "codex": "OpenAI Codex"
+  },
+  "settings": {
+    "theme": "테마",
+    "language": "언어",
+    "systemAppearance": "시스템 모양",
+    "proxySettings": "프록시 설정",
+    "systemFont": "시스템 글꼴",
+    "primaryColor": "기본 색상",
+    "textColor": "텍스트 색상 (재정의)",
+    "textColorDesc": "설정하면 라이트 모드에서 이 색상이 사용됩니다. 다크 모드는 가독성을 위해 기본 고대비 색상을 사용합니다.",
+    "windowOpacity": "창 불투명도",
+    "proxyType": "프록시 유형",
+    "proxyAddress": "프록시 주소",
+    "noProxy": "프록시 없음",
+    "saveConfig": "구성 저장",
+    "appearancePresets": "모양 사전 설정",
+    "applyPreset": "적용",
+    "preset1": "기본 (핑크)",
+    "preset2": "오션 블루",
+    "preset3": "포레스트 그린",
+    "preset4": "로얄 퍼플",
+    "preset5": "선셋 옐로우",
+    "preset6": "볼케이노 레드",
+    "preset7": "사이버 골드",
+    "preset8": "기크 그레이",
+    "customFontPlaceholder": "글꼴 이름 입력...",
+    "addFont": "글꼴 추가",
+    "selectIde": "IDE 실행 파일 선택",
+    "terminal": "터미널",
+    "terminalFont": "터미널 글꼴",
+    "fontFamily": "글꼴 모음",
+    "fontSize": "글꼴 크기",
+    "cursorStyle": "커서 스타일",
+    "terminalShell": "터미널 쉘",
+    "terminalColors": "터미널 색상",
+    "terminalBackground": "배경",
+    "terminalForeground": "전경",
+    "terminalPresets": "터미널 사전 설정",
+    "proxyWarning": "참고: 프록시는 전역 설정입니다. 모든 요청이 이를 통과합니다.",
+    "idePath": "IDE 경로",
+    "idePathDesc": "파일을 여는 데 사용할 IDE 실행 파일(예: VS Code 또는 Cursor)의 절대 경로입니다.",
+    "idePathOpen": "경로 설정",
+    "environment": "환경",
+    "environmentCheck": "환경 확인",
+    "notInstalled": "설치되지 않음",
+    "envNote": "이러한 도구가 감지되려면 시스템 또는 사용자 PATH에 있어야 합니다."
+  },
+  "search": {
+    "placeholder": "파일 검색...",
+    "content": "일치하는 내용",
+    "noResults": "결과를 찾을 수 없습니다"
+  },
+  "diff": {
+    "title": "파일 차이점 (Diff)",
+    "loadError": "Diff를 로드하지 못했습니다"
+  },
+  "terminal": {
+    "dirError": "디렉토리 선택 실패",
+    "selectTool": "먼저 도구를 선택하세요",
+    "tabs": {
+      "files": "파일",
+      "search": "검색",
+      "shortcuts": "바로 가기",
+      "new": "터미널 {{number}}"
+    },
+    "noDirectory": "디렉토리가 선택되지 않음",
+    "workingDir": "작업 디렉토리",
+    "chat": {
+      "placeholder": "메시지 입력... (Shift+Enter 줄바꿈)",
+      "send": "전송"
+    },
+    "git": {
+      "menu": "Git 작업",
+      "setUser": "User Name 설정",
+      "setEmail": "User Email 설정",
+      "init": "리포지토리 초기화",
+      "addRemote": "Remote Origin 추가",
+      "add": "모두 추가 (git add .)",
+      "commit": "커밋 (Commit)",
+      "push": "푸시 (origin master)",
+      "modal": {
+        "userName": "Git User Name 설정",
+        "userEmail": "Git User Email 설정",
+        "remote": "Remote Origin 추가",
+        "commit": "Git 커밋",
+        "labelName": "이름",
+        "labelEmail": "이메일",
+        "labelUrl": "Repo URL",
+        "labelMessage": "커밋 메시지"
+      }
+    },
+    "resumed": "세션 재개됨...",
+    "fileTree": {
+      "title": "파일 탐색기",
+      "change": "변경",
+      "context": {
+        "addToChat": "채팅에 추가",
+        "open": "열기",
+        "modify": "수정",
+        "diff": "Diff 보기",
+        "openInIde": "IDE에서 열기",
+        "delete": "삭제",
+        "rename": "이름 바꾸기"
+      },
+      "modal": {
+        "editing": "파일 편집",
+        "save": "저장"
+      }
+    },
+    "commandPresets": {
+      "title": "빠른 명령",
+      "add": "명령 추가",
+      "edit": "명령 편집",
+      "delete": "삭제",
+      "name": "이름",
+      "command": "명령",
+      "placeholderName": "예: 코드 설명",
+      "placeholderCommand": "예: /explain",
+      "empty": "명령 없음",
+      "run": "실행"
+    },
+    "contextBuilder": {
+      "title": "컨텍스트 버킷",
+      "empty": "파일이 선택되지 않음",
+      "copyXml": "XML로 복사",
+      "copyMd": "Markdown으로 복사",
+      "clear": "버킷 비우기",
+      "copied": "컨텍스트가 클립보드에 복사되었습니다"
+    }
+  },
+  "common": {
+    "ok": "확인",
+    "cancel": "취소",
+    "confirm": "확인",
+    "save": "저장",
+    "delete": "삭제",
+    "text": "텍스트",
+    "json": "JSON",
+    "enabled": "활성화됨",
+    "settings": "설정",
+    "auto": "자동",
+    "off": "끄기",
+    "on": "켜기",
+    "light": "라이트",
+    "dark": "다크",
+    "low": "낮음",
+    "normal": "보통",
+    "high": "높음",
+    "all": "모두"
+  },
+  "about": {
+    "description": "OpenVizUI는 AI CLI 도구를 위한 강력하고 현대적인 시각화 인터페이스입니다. 스킬 관리에서 복잡한 구성에 이르기까지 AI 워크플로를 관리할 수 있는 통합되고 미려하며 효율적인 방법을 제공합니다.",
+    "visitWebsite": "웹사이트 방문",
+    "whyTitle": "주요 기능",
+    "resourcesTitle": "리소스",
+    "madeBy": "제작:",
+    "byContributors": "OpenVizUI 기여자",
+    "features": {
+      "fast": {
+        "title": "압도적인 속도",
+        "desc": "Rust와 React로 성능 최적화."
+      },
+      "community": {
+        "title": "커뮤니티 주도",
+        "desc": "오픈 소스 및 협업 개발."
+      },
+      "tools": {
+        "title": "AI 멀티 툴",
+        "desc": "주요 AI CLI 도구를 위한 통합 인터페이스."
+      }
+    }
+  }
+}
