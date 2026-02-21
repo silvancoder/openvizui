@@ -779,7 +779,7 @@
     "primaryColor": "主色调",
     "textColor": "文本颜色 (强制覆盖)",
     "textColorDesc": "如果设置，此颜色将应用于浅色模式。深色模式使用默认的高对比度文本以保证可见性。",
-    "windowOpacity": "窗口不透明度",
+    "windowOpacity": "窗口透明度",
     "proxyType": "代理类型",
     "proxyAddress": "代理地址",
     "noProxy": "无代理",
@@ -817,6 +817,7 @@
     "envNote": "确保这些工具在您的系统 PATH 或用户 PATH 中，以便被检测到。"
   },
   "search": {
+    "title": "搜索",
     "placeholder": "搜索文件...",
     "content": "匹配内容",
     "noResults": "未找到结果"
@@ -828,6 +829,9 @@
   "terminal": {
     "dirError": "选择目录失败",
     "selectTool": "请先选择工具",
+    "cliTool": "CLI 工具",
+    "model": "模型",
+    "selectModel": "选择模型",
     "tabs": {
       "files": "文件",
       "search": "搜索",

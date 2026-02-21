@@ -23,6 +23,38 @@
 
 OpenVizUI is a modern desktop application that provides a unified, beautiful, and efficient visualization interface for AI CLI tools. Built with [Tauri](https://tauri.app/), [React](https://react.dev/), and [Vite](https://vitejs.dev/), it leverages the power of Rust for the backend and the flexibility of React to manage your AI workflows—from skills management to complex configurations.
 
+## Screenshots
+
+### 🛠️ Workbench — AI Tool Manager
+
+Manage all your AI CLI tools in one place. View installation status, version info, and run, update, or uninstall tools with a single click. Supports Claude Code, Gemini, OpenCode, Qoder, GitHub Copilot, and more.
+
+![Workbench](docs/ScreenShot_2026-02-21_134214_518.png)
+
+### 🏪 App Store — Developer Environment
+
+Discover and install programming languages, databases, web servers, cache systems, and container tools directly from the built-in App Store. Categories include Languages, Web Services, Databases, Cache & Queue, Tools & Containers.
+
+![App Store](docs/ScreenShot_2026-02-21_134225_527.png)
+
+### 🤖 AI Settings — Skills & MCP Configuration
+
+Centralize all AI configuration in one panel. Manage installed skills, configure CLI parameters, set up MCP servers, monitor skill activity, and fine-tune provider settings across tabs: Skills Management, CLI Config, MCP Config, Skill Monitor, MCP Monitor, and More Settings.
+
+![AI Settings](docs/ScreenShot_2026-02-21_134233_038.png)
+
+## Key Features
+
+| Feature | Description |
+|---------|-------------|
+| **Multi-tool Workbench** | Unified dashboard for Claude Code, Gemini, OpenCode, Qoder, Copilot & Codex |
+| **App Store** | One-click install/uninstall of dev tools, languages, databases, and services |
+| **AI Settings** | Skills management, CLI config, MCP server setup, and live monitoring |
+| **Integrated Terminal** | Built-in terminal with multi-tab support, file tree, global search, and command presets |
+| **Internationalization** | Full UI support for 10 languages: EN, ZH, DE, ES, FR, IT, JA, KO, PT, RU |
+| **Theme & Appearance** | Light/Dark mode, custom primary color, font, and window opacity control |
+| **MCP Ecosystem** | Browse, install, and monitor Model Context Protocol servers and skills |
+
 ## Tech Stack
 
 -   **Frontend**:

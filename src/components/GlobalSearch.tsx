@@ -57,7 +57,7 @@ const GlobalSearch: React.FC<GlobalSearchProps> = ({ onOpenFile }) => {
             <Title level={5} style={{ marginBottom: 12 }}>
                 <Space>
                     <SearchOutlined />
-                    {t('common.search', 'Search')}
+                    {t('search.title')}
                 </Space>
             </Title>
             

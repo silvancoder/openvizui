@@ -817,6 +817,7 @@
     "envNote": "Ensure these tools are in your system PATH or user PATH to be detected."
   },
   "search": {
+    "title": "Search",
     "placeholder": "Search files...",
     "content": "Match Content",
     "noResults": "No results found"
@@ -828,6 +829,9 @@
   "terminal": {
     "dirError": "Failed to select directory",
     "selectTool": "Select Tool first",
+    "cliTool": "CLI Tool",
+    "model": "Model",
+    "selectModel": "Select Model",
     "tabs": {
       "files": "Files",
       "search": "Search",

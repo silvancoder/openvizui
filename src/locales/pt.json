@@ -817,6 +817,7 @@
     "envNote": "Certifique-se de que essas ferramentas estejam no PATH do sistema ou do usuário para serem detectadas."
   },
   "search": {
+    "title": "Buscar",
     "placeholder": "Buscar arquivos...",
     "content": "Conteúdo correspondente",
     "noResults": "Nenhum resultado encontrado"
@@ -828,6 +829,9 @@
   "terminal": {
     "dirError": "Falha na seleção de diretório",
     "selectTool": "Selecione uma ferramenta primeiro",
+    "cliTool": "Ferramenta CLI",
+    "model": "Modelo",
+    "selectModel": "Selecionar Modelo",
     "tabs": {
       "files": "Arquivos",
       "search": "Buscar",

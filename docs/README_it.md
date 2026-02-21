@@ -23,6 +23,38 @@
 
 OpenVizUI è una moderna applicazione desktop che fornisce un'interfaccia di visualizzazione unificata, bella ed efficiente per gli strumenti CLI AI. Costruita con [Tauri](https://tauri.app/), [React](https://react.dev/) e [Vite](https://vitejs.dev/), sfrutta la potenza di Rust per il backend e la flessibilità di React per gestire i tuoi flussi di lavoro AI, dalla gestione delle abilità alle configurazioni complesse.
 
+## Screenshot
+
+### 🛠️ Area di Lavoro — Gestione Strumenti AI
+
+Gestisci tutti i tuoi strumenti AI CLI in un unico posto. Visualizza stato di installazione e versione, ed esegui, aggiorna o disinstalla strumenti con un solo clic. Supporta Claude Code, Gemini, OpenCode, Qoder, GitHub Copilot e altri.
+
+![Area di Lavoro](ScreenShot_2026-02-21_134214_518.png)
+
+### 🏪 App Store — Ambiente di Sviluppo
+
+Scopri e installa linguaggi di programmazione, database, server web, sistemi di cache e strumenti container direttamente dall'App Store integrato. Categorie: Linguaggi, Servizi Web, Database, Cache & Queue, Strumenti e Container.
+
+![App Store](ScreenShot_2026-02-21_134225_527.png)
+
+### 🤖 Impostazioni AI — Skills & Configurazione MCP
+
+Centralizza tutta la configurazione AI in un pannello. Gestisci skill installate, configura parametri CLI, configura server MCP, monitora l'attività. Schede: Gestione Skill, Config CLI, Config MCP, Monitor Skill, Monitor MCP.
+
+![Impostazioni AI](ScreenShot_2026-02-21_134233_038.png)
+
+## Funzionalità Principali
+
+| Funzionalità | Descrizione |
+|--------------|-------------|
+| **Area di Lavoro Multi-strumento** | Dashboard unificato per Claude Code, Gemini, OpenCode, Qoder, Copilot e Codex |
+| **App Store** | Installazione/disinstallazione con un clic di strumenti, linguaggi, database e servizi |
+| **Impostazioni AI** | Gestione skill, configurazione CLI, setup server MCP e monitoraggio live |
+| **Terminale Integrato** | Terminale con multi-tab, albero file, ricerca globale e comandi predefiniti |
+| **Internazionalizzazione** | Supporto UI completo per 10 lingue: IT, EN, ZH, DE, ES, FR, JA, KO, PT, RU |
+| **Tema & Aspetto** | Modalità chiaro/scuro, colore primario personalizzato, font e trasparenza finestra |
+| **Ecosistema MCP** | Sfoglia, installa e monitora server e skill Model Context Protocol |
+
 ## Stack Tecnologico
 
 -   **Frontend**:

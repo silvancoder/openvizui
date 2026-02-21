@@ -817,6 +817,7 @@
     "envNote": "Stellen Sie sicher, dass diese Tools im System- oder Benutzer-PATH liegen."
   },
   "search": {
+    "title": "Suchen",
     "placeholder": "Dateien suchen...",
     "content": "Inhaltstreffer",
     "noResults": "Keine Ergebnisse gefunden"
@@ -828,6 +829,9 @@
   "terminal": {
     "dirError": "Verzeichnisauswahl fehlgeschlagen",
     "selectTool": "Bitte wählen Sie zuerst ein Werkzeug",
+    "cliTool": "CLI-Werkzeug",
+    "model": "Modell",
+    "selectModel": "Modell auswählen",
     "tabs": {
       "files": "Dateien",
       "search": "Suchen",

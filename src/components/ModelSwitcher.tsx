@@ -269,13 +269,13 @@ const ModelSwitcher: React.FC<ModelSwitcherProps> = ({ toolId }) => {
     return (
         <div>
             <div style={{ marginBottom: 4 }}>
-                <span style={{ fontSize: 12, color: 'rgba(0,0,0,0.45)' }}>Model</span>
+                <span style={{ fontSize: 12, color: 'rgba(0,0,0,0.45)' }}>{t('terminal.model')}</span>
             </div>
             <Space.Compact style={{ width: '100%' }}>
                 <Select
                     size="middle"
                     style={{ width: '100%' }}
-                    placeholder="Select Model"
+                    placeholder={t('terminal.selectModel')}
                     loading={loading}
                     value={currentModel}
                     onChange={handleModelChange}

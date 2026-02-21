@@ -23,6 +23,38 @@
 
 OpenVizUI es una aplicación de escritorio moderna que proporciona una interfaz de visualización unificada, hermosa y eficiente para herramientas CLI de IA. Construida con [Tauri](https://tauri.app/), [React](https://react.dev/) y [Vite](https://vitejs.dev/), aprovecha el poder de Rust para el backend y la flexibilidad de React para gestionar sus flujos de trabajo de IA, desde la gestión de habilidades hasta configuraciones complejas.
 
+## Capturas de Pantalla
+
+### 🛠️ Área de Trabajo — Gestión de Herramientas AI
+
+Gestione todas sus herramientas AI CLI en un solo lugar. Vea el estado de instalación e información de versión, y ejecute, actualice o desinstale herramientas con un solo clic. Compatible con Claude Code, Gemini, OpenCode, Qoder, GitHub Copilot y más.
+
+![Área de Trabajo](ScreenShot_2026-02-21_134214_518.png)
+
+### 🏪 Tienda de Aplicaciones — Entorno de Desarrollo
+
+Descubra e instale lenguajes de programación, bases de datos, servidores web, sistemas de caché y herramientas de contenedores directamente desde la Tienda de Aplicaciones integrada. Categorías: Lenguajes, Servicios Web, Bases de Datos, Caché y Cola, Herramientas y Contenedores.
+
+![Tienda de Aplicaciones](ScreenShot_2026-02-21_134225_527.png)
+
+### 🤖 Configuración AI — Habilidades y MCP
+
+Centralice toda la configuración de AI en un panel. Gestione habilidades instaladas, configure parámetros CLI, configure servidores MCP, monitorice la actividad. Pestañas: Gestión de Habilidades, Config CLI, Config MCP, Monitor de Habilidades, Monitor MCP.
+
+![Configuración AI](ScreenShot_2026-02-21_134233_038.png)
+
+## Características Principales
+
+| Característica | Descripción |
+|----------------|-------------|
+| **Área de Trabajo Multi-herramienta** | Panel unificado para Claude Code, Gemini, OpenCode, Qoder, Copilot y Codex |
+| **Tienda de Aplicaciones** | Instalación/desinstalación con un clic de herramientas, lenguajes, bases de datos y servicios |
+| **Configuración AI** | Gestión de habilidades, configuración CLI, configuración de servidores MCP y monitoreo en vivo |
+| **Terminal Integrado** | Terminal con multi-pestaña, árbol de archivos, búsqueda global y comandos predefinidos |
+| **Internacionalización** | Soporte completo de UI para 10 idiomas: ES, EN, ZH, DE, FR, IT, JA, KO, PT, RU |
+| **Tema y Apariencia** | Modo claro/oscuro, color primario personalizado, fuente y transparencia de ventana |
+| **Ecosistema MCP** | Buscar, instalar y monitorear servidores y habilidades de Model Context Protocol |
+
 ## Stack Tecnológico
 
 -   **Frontend**:

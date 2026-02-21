@@ -817,6 +817,7 @@
     "envNote": "検出されるには、これらのツールがシステムPATHまたはユーザーPATHに含まれている必要があります。"
   },
   "search": {
+    "title": "検索",
     "placeholder": "ファイルを検索...",
     "content": "一致する内容",
     "noResults": "結果が見つかりませんでした"
@@ -828,6 +829,9 @@
   "terminal": {
     "dirError": "ディレクトリ選択失敗",
     "selectTool": "先にツールを選択してください",
+    "cliTool": "CLIツール",
+    "model": "モデル",
+    "selectModel": "モデルを選択",
     "tabs": {
       "files": "ファイル",
       "search": "検索",

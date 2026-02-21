@@ -87,14 +87,14 @@ const TerminalPage = () => {
 
     // --- Terminal Tabs State ---
     const [activeTerminalId, setActiveTerminalId] = useState<string>('1');
-    const [terminals, setTerminals] = useState<{ label: string; key: string; closable?: boolean }[]>([
-        { label: t('terminal.tabs.new', { number: 1 }), key: '1', closable: false },
+    const [terminals, setTerminals] = useState<{ key: string; closable?: boolean }[]>([
+        { key: '1', closable: false },
     ]);
 
     const addTerminal = () => {
         const newActiveKey = `${terminals.length + 1}`;
         const newPanes = [...terminals];
-        newPanes.push({ label: t('terminal.tabs.new', { number: newActiveKey }), key: newActiveKey });
+        newPanes.push({ key: newActiveKey });
         setTerminals(newPanes);
         setActiveTerminalId(newActiveKey);
     };
@@ -364,7 +364,7 @@ const TerminalPage = () => {
                     <div style={{ display: 'flex', flexDirection: 'column', height: '100%', gap: 16 }}>
                         {/* CLI Tool Selection */}
                         <div>
-                            <Text type="secondary" style={{ fontSize: 12 }}>CLI Tool</Text>
+                            <Text type="secondary" style={{ fontSize: 12 }}>{t('terminal.cliTool')}</Text>
                             <Space.Compact style={{ width: '100%' }}>
                                 <Select
                                     placeholder={t('terminal.selectTool')}
@@ -518,7 +518,7 @@ const TerminalPage = () => {
                         activeKey={activeTerminalId}
                         onEdit={onEdit}
                         items={terminals.map((pane) => ({
-                            label: pane.label,
+                            label: t('terminal.tabs.new', { number: pane.key }),
                             key: pane.key,
                             children: <Terminal sessionId={pane.key} />,
                             closable: pane.closable,

@@ -74,7 +74,7 @@ const CommandPresets: React.FC<CommandPresetsProps> = ({ sessionId }) => {
     return (
         <div style={{ display: 'flex', flexDirection: 'column', height: '100%', borderTop: '1px solid #303030', paddingTop: 12 }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
-                <Text strong><ThunderboltOutlined /> {t('commandPresets.title', 'Shortcuts')}</Text>
+                <Text strong><ThunderboltOutlined /> {t('terminal.commandPresets.title')}</Text>
                 <Button size="small" type="text" icon={<PlusOutlined />} onClick={handleAdd} />
             </div>
             
@@ -82,11 +82,11 @@ const CommandPresets: React.FC<CommandPresetsProps> = ({ sessionId }) => {
                 <List
                     size="small"
                     dataSource={commandPresets}
-                    locale={{ emptyText: <Text type="secondary" style={{ fontSize: 12 }}>{t('commandPresets.empty', 'No presets')}</Text> }}
+                    locale={{ emptyText: <Text type="secondary" style={{ fontSize: 12 }}>{t('terminal.commandPresets.empty')}</Text> }}
                     renderItem={item => (
                         <List.Item
                             actions={[
-                                <Tooltip title={t('commandPresets.run', 'Run')}>
+                                <Tooltip title={t('terminal.commandPresets.run')}>
                                     <Button type="text" size="small" icon={<PlayCircleOutlined />} onClick={() => handleRun(item.command)} />
                                 </Tooltip>,
                                 <Button type="text" size="small" icon={<EditOutlined />} onClick={() => handleEdit(item)} />,
@@ -107,20 +107,20 @@ const CommandPresets: React.FC<CommandPresetsProps> = ({ sessionId }) => {
             </div>
 
             <Modal
-                title={editingId ? t('commandPresets.edit', 'Edit Preset') : t('commandPresets.add', 'Add Preset')}
+                title={editingId ? t('terminal.commandPresets.edit') : t('terminal.commandPresets.add')}
                 open={isModalOpen}
                 onOk={handleOk}
                 onCancel={() => setIsModalOpen(false)}
                 destroyOnClose
-                okText={t('common.save', 'Save')}
-                cancelText={t('common.cancel', 'Cancel')}
+                okText={t('terminal.commandPresets.save', t('common.save'))}
+                cancelText={t('common.cancel')}
             >
                 <Form form={form} layout="vertical">
-                    <Form.Item name="name" label={t('commandPresets.name', 'Name')} rules={[{ required: true, message: 'Please input name' }]}>
-                        <Input placeholder={t('commandPresets.placeholderName', 'e.g., Explain Code')} />
+                    <Form.Item name="name" label={t('terminal.commandPresets.name')} rules={[{ required: true, message: 'Please input name' }]}>
+                        <Input placeholder={t('terminal.commandPresets.placeholderName')} />
                     </Form.Item>
-                    <Form.Item name="command" label={t('commandPresets.command', 'Command')} rules={[{ required: true, message: 'Please input command' }]}>
-                        <Input.TextArea placeholder={t('commandPresets.placeholderCommand', 'e.g., /explain')} rows={3} />
+                    <Form.Item name="command" label={t('terminal.commandPresets.command')} rules={[{ required: true, message: 'Please input command' }]}>
+                        <Input.TextArea placeholder={t('terminal.commandPresets.placeholderCommand')} rows={3} />
                     </Form.Item>
                 </Form>
             </Modal>

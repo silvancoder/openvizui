@@ -23,6 +23,38 @@
 
 OpenVizUI ist eine moderne Desktop-Anwendung, die eine einheitliche, schöne und effiziente Visualisierungsoberfläche für AI-CLI-Tools bietet. Erstellt mit [Tauri](https://tauri.app/), [React](https://react.dev/) und [Vite](https://vitejs.dev/), nutzt es die Leistungsfähigkeit von Rust für das Backend und die Flexibilität von React, um Ihre AI-Workflows zu verwalten – von Skill-Management bis hin zu komplexen Konfigurationen.
 
+## Screenshots
+
+### 🛠️ Workbench — KI-Tool-Verwaltung
+
+Verwalten Sie alle AI-CLI-Tools an einem Ort. Zeigen Sie Installationsstatus und Versionsinformationen an und führen Sie Tools mit einem Klick aus, aktualisieren oder deinstallieren Sie sie. Unterstützt Claude Code, Gemini, OpenCode, Qoder, GitHub Copilot und mehr.
+
+![Workbench](ScreenShot_2026-02-21_134214_518.png)
+
+### 🏪 App Store — Entwicklerumgebung
+
+Entdecken und installieren Sie Programmiersprachen, Datenbanken, Webserver, Cache-Systeme und Container-Tools direkt aus dem integrierten App Store. Kategorien: Sprachen, Webdienste, Datenbanken, Cache & Queue, Tools & Container.
+
+![App Store](ScreenShot_2026-02-21_134225_527.png)
+
+### 🤖 AI-Einstellungen — Skills & MCP-Konfiguration
+
+Zentralisieren Sie alle KI-Konfigurationen in einem Panel. Installierte Skills verwalten, CLI-Parameter konfigurieren, MCP-Server einrichten und Skill-Aktivitäten überwachen: Skills, CLI Config, MCP Config, Skill Monitor, MCP Monitor.
+
+![AI Settings](ScreenShot_2026-02-21_134233_038.png)
+
+## Hauptfunktionen
+
+| Funktion | Beschreibung |
+|----------|--------------|
+| **Multi-Tool-Workbench** | Einheitliches Dashboard für Claude Code, Gemini, OpenCode, Qoder, Copilot & Codex |
+| **App Store** | Ein-Klick-Installation/Deinstallation von Dev-Tools, Sprachen, Datenbanken und Diensten |
+| **AI-Einstellungen** | Skill-Verwaltung, CLI-Konfiguration, MCP-Server-Setup und Live-Monitoring |
+| **Integriertes Terminal** | Eingebautes Terminal mit Multi-Tab, Dateibaum, globaler Suche und Befehlsvorlagen |
+| **Internationalisierung** | Vollständige UI-Unterstützung für 10 Sprachen: DE, EN, ZH, ES, FR, IT, JA, KO, PT, RU |
+| **Theme & Erscheinungsbild** | Hell-/Dunkel-Modus, benutzerdefinierte Primärfarbe, Schriftart und Fenstertransparenz |
+| **MCP-Ökosystem** | Model Context Protocol Server und Skills durchsuchen, installieren und überwachen |
+
 ## Tech-Stack
 
 -   **Frontend**:
