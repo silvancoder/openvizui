@@ -49,6 +49,7 @@
       "skills": "Gestão de Skills",
       "cliConfig": "Configuração da CLI",
       "mcpConfig": "Configuração MCP",
+      "plugins": "Gestão de Plugins",
       "mcpMonitor": "Monitor MCP",
       "skillMonitor": "Monitor de Skills",
       "more": "Mais Configurações",
@@ -273,6 +274,80 @@
       "skillCreator": {
         "name": "Criador de Skills",
         "desc": "Ferramentas para ajudar a criar novas skills."
+      }
+    },
+    "plugins": {
+      "title": "Gerenciamento de Plugins",
+      "desc": "Plugins de IA e ferramentas de fluxo de trabalho selecionados. Clique para adicionar ao Claude ou às configurações de ferramentas correspondentes.",
+      "install": "Adicionar",
+      "installed": "Adicionado",
+      "manualInstall": "Instalação Manual",
+      "viewDocs": "Ver Docs",
+      "categories": {
+        "all": "Todos os Plugins",
+        "installed": "Instalados"
+      },
+      "recommendedFor": "Recomendado para {{tool}}",
+      "empty": {
+        "installed": "Nenhum plugin instalado ainda",
+        "available": "Nenhum plugin disponível"
+      },
+      "modal": {
+        "title": "Instalar Plugin Manualmente",
+        "name": "Nome do Plugin",
+        "namePlaceholder": "ex: Meu Plugin Personalizado",
+        "desc": "Descrição Simples",
+        "descPlaceholder": "Descreva o que este plugin faz...",
+        "url": "URL / Comando de Instalação",
+        "urlPlaceholder": "URL do GitHub ou comando npx",
+        "docsUrl": "URL da Documentação (Opcional)",
+        "docsUrlPlaceholder": "ex: https://github.com/...",
+        "type": "Tipo de Plugin",
+        "recommendedTool": "Ferramenta Recomendada",
+        "addBtn": "Adicionar Plugin",
+        "editTitle": "Editar Plugin"
+      },
+      "list": {
+        "composio": {
+          "name": "Awesome Claude Plugins (ComposioHQ)",
+          "desc": "Registro de plugins curado + roteador de ferramentas que transforma o Claude em um orquestrador de fluxo de trabalho em vários serviços."
+        },
+        "mem": {
+          "name": "Claude-Mem",
+          "desc": "Adiciona memória de longo prazo, permitindo que o Claude mantenha o contexto e as preferências entre as sessões."
+        },
+        "superpowers": {
+          "name": "Superpowers",
+          "desc": "Planejamento estruturado do ciclo de vida + estrutura de skills para brainstorming, TDD, depuração e revisão de código."
+        },
+        "localReview": {
+          "name": "Local-Review",
+          "desc": "Revisão de código de diff local paralela (multi-agente) para detectar problemas antes de confirmar."
+        },
+        "plannotator": {
+          "name": "Plannotator",
+          "desc": "Torna o modo de planejamento mais claro com planos anotados estruturados que são revisáveis e compartilháveis."
+        },
+        "ralphWiggum": {
+          "name": "Ralph Wiggum Plugin",
+          "desc": "Testes visuais para verificar a aparência do aplicativo (especialmente Swift) por meio de simuladores Xcode."
+        },
+        "shipyard": {
+          "name": "Shipyard",
+          "desc": "Ciclo de vida no estilo Superpowers + validação de IaC e auditorias de segurança para fluxos de trabalho mais de 'produção'."
+        },
+        "devBrowser": {
+          "name": "Dev-Browser Plugin",
+          "desc": "Alternativa de navegação/teste leve e rápida com menor sobrecarga de contexto do que fluxos no estilo Playwright."
+        },
+        "lsp": {
+          "name": "TypeScript & Rust LSP Plugins",
+          "desc": "Executa verificações de tipo reais via LSP, exibindo erros de tipo/lint no fluxo de trabalho do Claude."
+        },
+        "peerReview": {
+          "name": "Agent-Peer-Review",
+          "desc": "Permite que o Claude e o Codex revisem o trabalho um do outro, com escalonamento para ferramentas de pesquisa na web, se necessário."
+        }
       }
     }
   },

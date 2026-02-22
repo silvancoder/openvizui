@@ -49,7 +49,7 @@ Centralize all AI configuration in one panel. Manage installed skills, configure
 |---------|-------------|
 | **Multi-tool Workbench** | Unified dashboard for Claude Code, Gemini, OpenCode, Qoder, Copilot & Codex |
 | **App Store** | One-click install/uninstall of dev tools, languages, databases, and services |
-| **AI Settings** | Skills management, CLI config, MCP server setup, and live monitoring |
+| **AI Settings** | Skills management, CLI config, MCP server setup, Plugins management,and live monitoring |
 | **Integrated Terminal** | Built-in terminal with multi-tab support, file tree, global search, and command presets |
 | **Internationalization** | Full UI support for 10 languages: EN, ZH, DE, ES, FR, IT, JA, KO, PT, RU |
 | **Theme & Appearance** | Light/Dark mode, custom primary color, font, and window opacity control |

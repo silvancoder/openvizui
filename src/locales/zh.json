@@ -49,6 +49,7 @@
       "skills": "技能管理",
       "cliConfig": "CLI 配置",
       "mcpConfig": "MCP 配置",
+      "plugins": "插件管理",
       "mcpMonitor": "MCP 监控",
       "skillMonitor": "技能监控",
       "more": "更多设置",
@@ -273,6 +274,80 @@
       "skillCreator": {
         "name": "技能创建器",
         "desc": "帮助创建新技能的工具。"
+      }
+    },
+    "plugins": {
+      "title": "插件管理",
+      "desc": "精选 AI 插件和工作流工具。点击“添加到 Claude”或相应的工具配置中。",
+      "install": "添加",
+      "installed": "已添加",
+      "manualInstall": "手动安装",
+      "viewDocs": "查看文档",
+      "categories": {
+        "all": "全部插件",
+        "installed": "已安装"
+      },
+      "recommendedFor": "推荐用于 {{tool}}",
+      "empty": {
+        "installed": "尚未安装任何插件",
+        "available": "暂无可用插件"
+      },
+      "modal": {
+        "title": "手动安装插件",
+        "name": "插件名称",
+        "namePlaceholder": "例如: My Custom Plugin",
+        "desc": "简单描述",
+        "descPlaceholder": "描述插件的功能...",
+        "url": "安装地址 / 命令",
+        "urlPlaceholder": "GitHub URL 或 npx 命令",
+        "docsUrl": "文档地址 (可选)",
+        "docsUrlPlaceholder": "例如: https://github.com/...",
+        "type": "插件类型",
+        "recommendedTool": "推荐工具",
+        "addBtn": "确认添加",
+        "editTitle": "编辑插件"
+      },
+      "list": {
+        "composio": {
+          "name": "Awesome Claude Plugins (ComposioHQ)",
+          "desc": "精选插件注册中心 + 工具路由器，将 Claude 转变为跨多服务的工作流编排器。"
+        },
+        "mem": {
+          "name": "Claude-Mem",
+          "desc": "添加长期记忆，让 Claude 能够跨会话保持上下文和偏好设置。"
+        },
+        "superpowers": {
+          "name": "Superpowers",
+          "desc": "结构化生命周期规划 + 技能框架，支持头脑风暴、TDD、调试和代码审查。"
+        },
+        "localReview": {
+          "name": "Local-Review",
+          "desc": "并行本地差异代码审查（多代理），在提交前捕获问题。"
+        },
+        "plannotator": {
+          "name": "Plannotator",
+          "desc": "使规划模式更清晰，提供可审查和共享的结构化注释计划。"
+        },
+        "ralphWiggum": {
+          "name": "Ralph Wiggum Plugin",
+          "desc": "通过驱动 Xcode 模拟器检查应用外观的视觉测试（尤其适用于 Swift）。"
+        },
+        "shipyard": {
+          "name": "Shipyard",
+          "desc": "Superpowers 风格生命周期 + IaC 验证和安全审计，适用于更“生产级”的工作流。"
+        },
+        "devBrowser": {
+          "name": "Dev-Browser Plugin",
+          "desc": "轻量级、更快的浏览/测试替代方案，比 Playwright 风格流程上下文开销更低。"
+        },
+        "lsp": {
+          "name": "TypeScript & Rust LSP Plugins",
+          "desc": "通过 LSP 运行真正的类型检查，在 Claude 工作流中显示类型/lint 错误。"
+        },
+        "peerReview": {
+          "name": "Agent-Peer-Review",
+          "desc": "让 Claude 和 Codex 相互审查对方的工作，必要时升级到网络搜索工具。"
+        }
       }
     }
   },

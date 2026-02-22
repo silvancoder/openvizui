@@ -42,6 +42,7 @@ import QoderAuthEditor from '../components/QoderAuthEditor';
 import CodebuddyAuthEditor from '../components/CodebuddyAuthEditor';
 import McpMonitor from '../components/McpMonitor';
 import SkillMonitor from '../components/SkillMonitor';
+import PluginManagement from '../components/PluginManagement';
 import { save, open } from '@tauri-apps/plugin-dialog';
 import { readTextFile, writeTextFile } from '@tauri-apps/plugin-fs';
 
@@ -633,6 +634,15 @@ const AISettings = () => {
                             children: (
                                 <div style={{ padding: '0 24px' }}>
                                     <McpMonitor />
+                                </div>
+                            )
+                        },
+                        {
+                            key: 'PluginManagement',
+                            label: t('aiSettings.tabs.plugins', 'Plugins Monitor'),
+                            children: (
+                                <div style={{ padding: '0 24px' }}>
+                                    <PluginManagement />
                                 </div>
                             )
                         },

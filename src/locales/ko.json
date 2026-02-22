@@ -49,6 +49,7 @@
       "skills": "스킬 관리",
       "cliConfig": "CLI 구성",
       "mcpConfig": "MCP 구성",
+      "plugins": "플러그인 관리",
       "mcpMonitor": "MCP 모니터",
       "skillMonitor": "스킬 모니터",
       "more": "기타 설정",
@@ -273,6 +274,80 @@
       "skillCreator": {
         "name": "스킬 크리에이터",
         "desc": "새로운 스킬 제작을 돕는 도구."
+      }
+    },
+    "plugins": {
+      "title": "플러그인 관리",
+      "desc": "엄선된 AI 플러그인 및 워크플로 도구입니다. 클릭하여 Claude 또는 해당 도구 구성에 추가하세요.",
+      "install": "추가",
+      "installed": "추가됨",
+      "manualInstall": "수동 설치",
+      "viewDocs": "문서 보기",
+      "categories": {
+        "all": "모든 플러그인",
+        "installed": "설치됨"
+      },
+      "recommendedFor": "{{tool}}에 권장",
+      "empty": {
+        "installed": "아직 설치된 플러그인이 없습니다",
+        "available": "사용 가능한 플러그인이 없습니다"
+      },
+      "modal": {
+        "title": "플러그인 수동 설치",
+        "name": "플러그인 이름",
+        "namePlaceholder": "예: My Custom Plugin",
+        "desc": "간단한 설명",
+        "descPlaceholder": "플러그인의 기능을 설명해 주세요...",
+        "url": "설치 URL / 명령",
+        "urlPlaceholder": "GitHub URL 또는 npx 명령",
+        "docsUrl": "문서 URL (선택 사항)",
+        "docsUrlPlaceholder": "예: https://github.com/...",
+        "type": "플러그인 유형",
+        "recommendedTool": "권장 도구",
+        "addBtn": "플러그인 추가",
+        "editTitle": "플러그인 편집"
+      },
+      "list": {
+        "composio": {
+          "name": "Awesome Claude Plugins (ComposioHQ)",
+          "desc": "엄선된 플러그인 레지스트리 + 도구 라우터. Claude를 여러 서비스에 걸친 워크플로 오케스트레이터로 변환합니다."
+        },
+        "mem": {
+          "name": "Claude-Mem",
+          "desc": "장기 기억을 추가하여 Claude가 세션을 연동하여 컨텍스트와 선호도를 유지할 수 있도록 합니다."
+        },
+        "superpowers": {
+          "name": "Superpowers",
+          "desc": "구조화된 수명 주기 계획 + 스킬 프레임워크로 브레인스토밍, TDD, 디버깅 및 코드 리뷰를 지원합니다."
+        },
+        "localReview": {
+          "name": "Local-Review",
+          "desc": "병렬 로컬 차이 코드 리뷰(멀티 에이전트)로 커밋 전에 문제를 감지합니다."
+        },
+        "plannotator": {
+          "name": "Plannotator",
+          "desc": "계획 모드를 명확하게 하고 검토 및 공유가 가능한 구조화된 주석 계획을 제공합니다."
+        },
+        "ralphWiggum": {
+          "name": "Ralph Wiggum Plugin",
+          "desc": "Xcode 시뮬레이터를 구동하여 앱 모양을 확인하는 시각적 테스트(특히 Swift용)."
+        },
+        "shipyard": {
+          "name": "Shipyard",
+          "desc": "Superpowers 스타일의 수명 주기 + IaC 검증 및 보안 감사. 더 '프로덕션' 수준의 워크플로를 위해."
+        },
+        "devBrowser": {
+          "name": "Dev-Browser Plugin",
+          "desc": "경량화되고 더 빠른 브라우징/테스트 대안으로 Playwright 스타일의 흐름보다 컨텍스트 오버헤드가 적습니다."
+        },
+        "lsp": {
+          "name": "TypeScript & Rust LSP Plugins",
+          "desc": "LSP를 통해 실제 유형 검사를 실행하여 Claude 워크플로 내에서 유형/린트 오류를 표시합니다."
+        },
+        "peerReview": {
+          "name": "Agent-Peer-Review",
+          "desc": "Claude와 Codex가 서로의 작업을 검토하게 하고 필요에 따라 웹 검색 도구로 에스컬레이션합니다."
+        }
       }
     }
   },
