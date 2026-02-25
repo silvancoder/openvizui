@@ -41,7 +41,8 @@
       "placeholder": "ツールを選択",
       "cancel": "キャンセル",
       "confirm": "追加してインストール"
-    }
+    },
+    "chat": "チャット"
   },
   "aiSettings": {
     "title": "AI設定",
@@ -355,6 +356,7 @@
     "fetchModels": "モデル取得",
     "modelsFetched": "{{count}} 個のモデルを取得しました",
     "fetchModelsFailed": "モデル取得失敗",
+    "loginWithGithub": "GitHubでログイン",
     "oauthPrompt": "1. ターミナルに切り替えて 'gemini' を実行してください\n2. 'Connect Antigravity' には No (2) を選択\n3. /auth と入力し 'Login with Google' を選択",
     "qoder": {
       "sections": {
@@ -570,8 +572,8 @@
       "delete": "削除",
       "edit": "編集"
     },
-    "copilotPrompt": "1. ターミナルに切り替えて 'gh auth login' を実行\n2. GitHub.comを選択し、指示に従ってログイン\n3. 未インストールの場合、'gh extension install github/gh-copilot' を実行",
-    "copilotTitle": "GitHub Copilot 認証手順",
+    "copilotPrompt": "1. ターミナルに切り替えて 'copilot login' を実行\n2. プロンプトに従ってアカウントを認証します",
+    "copilotTitle": "Copilot 認証手順",
     "fields": {
       "verbose": "詳細ログ",
       "theme": "テーマ",
@@ -700,8 +702,10 @@
       "githubToken": "オプション: 認証トークンを上書き",
       "tencentKey": "Tencent Cloud APIキー",
       "confirmExecute": "コマンド実行前に確認",
-      "modelProvider": "プロバイダーの種類 (例: openai, anthropic)。DeepSeekなどのカスタムエンドポイントは 'openai' を使用可。"
-    }
+      "modelProvider": "プロバイダーの種類 (例: openai, anthropic)。DeepSeekなどのカスタムエンドポイントは 'openai' を使用可。",
+      "githubAuth": "Copilot CLIを使用してアカウントを認証します。"
+    },
+    "switchAccount": "アカウントを切り替える"
   },
   "apps": {
     "title": "App Store",
@@ -833,6 +837,10 @@
       "docker": {
         "name": "Docker",
         "desc": "アプリケーションの構築、共有、実行を加速します。"
+      },
+      "minio": {
+        "name": "MinIO",
+        "desc": "高性能でS3互換のオブジェクトストレージ。"
       }
     }
   },
@@ -976,7 +984,15 @@
       "copyMd": "Markdownとしてコピー",
       "clear": "バケットを空にする",
       "copied": "コンテキストをクリップボードにコピーしました"
-    }
+    },
+    "aiGenerated": "言語モデルによって生成されたコンテンツ",
+    "helpButton": "ヘルプ",
+    "helpModalTitle": "CLIツールクイックガイド",
+    "copilotHelp": "**GitHub Copilot**: `copilot [command]` または `?? [question]` を使用して質問します。",
+    "geminiHelp": "**Google Gemini**: `gemini [prompt]` を使用して対話します。`gemini models` でモデルを一覧表示します。",
+    "claudeHelp": "**Anthropic Claude**: `claude [prompt]` を使用して対話します。",
+    "generalHelp": "`Shift + Tab` を押してフォーカスを切り替えます。`Ctrl + S` で保存します。",
+    "oauthModelHint": "注: OAuth経由でログインしている場合は、`/models`コマンドを使用するか、チャットのコンテキストメニューで`Change Model`を選択してください。"
   },
   "common": {
     "ok": "OK",
@@ -996,7 +1012,8 @@
     "low": "低",
     "normal": "中",
     "high": "高",
-    "all": "すべて"
+    "all": "すべて",
+    "goToTerminal": "ターミナルへ移動"
   },
   "about": {
     "description": "OpenVizUIは、AI CLIツールのための強力でモダンな可視化インターフェースです。スキル管理から複雑な設定まで、AIワークフローを管理するための統一された、美しく効率的な方法を提供します。",
@@ -1004,7 +1021,21 @@
     "whyTitle": "主な機能",
     "resourcesTitle": "リソース",
     "madeBy": "Made with",
-    "byContributors": "by OpenVizUI Contributors",
+    "byContributors": "OpenVizUI コントリビューター",
+    "update": {
+      "check": "アップデートを確認",
+      "checking": "確認中...",
+      "available": "新しいバージョンが利用可能です: {{version}}",
+      "latest": "最新の状態です！",
+      "error": "アップデートの確認に失敗しました。",
+      "newVersion": "最新バージョン: {{version}}",
+      "isLatest": "最新バージョン",
+      "now": "今すぐアップデート"
+    },
+    "version": {
+      "local": "ローカルバージョン",
+      "server": "サーバーバージョン"
+    },
     "features": {
       "fast": {
         "title": "超高速",
@@ -1019,5 +1050,14 @@
         "desc": "主要なAI CLIツールのための統一インターフェース。"
       }
     }
+  },
+  "chat": {
+    "title": "ターミナルチャット",
+    "newChat": "新しいチャット",
+    "currentSession": "現在のセッション",
+    "startTypingEmpty": "入力してシェルと対話を開始...",
+    "startTypingTool": "{{tool}} との対話を開始...",
+    "placeholder": "ターミナルのメッセージまたはコマンドを入力してください...",
+    "devNotice": "注：このチャット機能は現在開発中であり、完全に安定していない可能性があります。"
   }
 }

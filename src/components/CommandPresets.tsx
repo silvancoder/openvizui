@@ -111,7 +111,7 @@ const CommandPresets: React.FC<CommandPresetsProps> = ({ sessionId }) => {
                 open={isModalOpen}
                 onOk={handleOk}
                 onCancel={() => setIsModalOpen(false)}
-                destroyOnClose
+                destroyOnHidden
                 okText={t('terminal.commandPresets.save', t('common.save'))}
                 cancelText={t('common.cancel')}
             >

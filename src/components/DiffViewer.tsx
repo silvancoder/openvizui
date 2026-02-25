@@ -60,7 +60,9 @@ const DiffViewer: React.FC<DiffViewerProps> = ({ open, onClose, filePath }) => {
                 </Button>
             ]}
             centered
-            bodyStyle={{ height: '70vh', padding: 0 }}
+            styles={{
+                body: { height: '70vh', padding: 0 }
+            }}
         >
              <div style={{ height: '100%' }}>
                 <Editor

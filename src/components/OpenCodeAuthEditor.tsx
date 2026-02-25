@@ -266,7 +266,7 @@ const OpenCodeAuthEditor: React.FC = () => {
     const authTab = (
         <div style={{ padding: '16px 0' }}>
             <Alert
-                message={t('aiSettings.mcpConfig.savePathTip', { path: AUTH_CONFIG_PATH })}
+                title={t('aiSettings.mcpConfig.savePathTip', { path: AUTH_CONFIG_PATH })}
                 type="info"
                 showIcon
                 style={{ marginBottom: 24 }}
@@ -410,7 +410,7 @@ const OpenCodeAuthEditor: React.FC = () => {
 
     const permissionsTab = (
         <div style={{ padding: '16px 0' }}>
-            <Alert message={t('cliConfig.opencode.sections.permissions', 'Permission Controls')} type="warning" showIcon style={{ marginBottom: 16 }} />
+            <Alert title={t('cliConfig.opencode.sections.permissions', 'Permission Controls')} type="warning" showIcon style={{ marginBottom: 16 }} />
             <Row gutter={[16, 16]}>
                 {[
                     { key: 'edit', label: t('cliConfig.opencode.fields.permEdit') },

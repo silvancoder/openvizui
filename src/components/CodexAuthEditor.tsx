@@ -125,7 +125,7 @@ const CodexAuthEditor: React.FC = () => {
     const authTab = (
         <div style={{ padding: '16px 0' }}>
             <Alert
-                message={t('aiSettings.mcpConfig.savePathTip', { path: AUTH_CONFIG_PATH })}
+                title={t('aiSettings.mcpConfig.savePathTip', { path: AUTH_CONFIG_PATH })}
                 type="info"
                 showIcon
                 style={{ marginBottom: 24 }}
@@ -148,7 +148,7 @@ const CodexAuthEditor: React.FC = () => {
     const generalTab = (
         <div style={{ padding: '16px 0' }}>
             <Divider orientation={"left" as any}><SettingOutlined /> {t('cliConfig.codex.sections.general', 'General Settings')}</Divider>
-            <Space direction="vertical" style={{ width: '100%' }}>
+            <Space orientation="vertical" style={{ width: '100%' }}>
                 <Form.Item name="model" label={t('cliConfig.codex.fields.model', 'Model')}>
                     <Input placeholder="deepseek-reasoner" />
                 </Form.Item>

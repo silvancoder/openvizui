@@ -347,7 +347,7 @@ const CodebuddyAuthEditor: React.FC = () => {
             style={{ marginTop: 24, marginBottom: 24 }}
         >
             <Alert
-                message={t('aiSettings.mcpConfig.savePathTip', { path: SETTINGS_PATH })}
+                title={t('aiSettings.mcpConfig.savePathTip', { path: SETTINGS_PATH })}
                 type="info"
                 showIcon
                 style={{ marginBottom: 24 }}

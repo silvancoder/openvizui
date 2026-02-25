@@ -19,8 +19,27 @@ const GeminiAuthEditor: React.FC = () => {
     const { t } = useTranslation();
     const [loading, setLoading] = useState(false);
     const [fetchingModels, setFetchingModels] = useState(false);
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [models, setModels] = useState<string[]>([]);
     const [form] = Form.useForm();
+
+    const checkLoginStatus = async () => {
+        try {
+            const result = await invoke<string>('get_config_file', { path: '~/.gemini/oauth_creds.json' });
+            if (result && result.trim() !== '') {
+                const parsed = JSON.parse(result);
+                if (parsed.access_token || parsed.refresh_token) {
+                    setIsLoggedIn(true);
+                } else {
+                    setIsLoggedIn(false);
+                }
+            } else {
+                setIsLoggedIn(false);
+            }
+        } catch (error) {
+            setIsLoggedIn(false);
+        }
+    };
 
     const loadConfig = async () => {
         setLoading(true);
@@ -42,6 +61,7 @@ const GeminiAuthEditor: React.FC = () => {
 
     useEffect(() => {
         loadConfig();
+        checkLoginStatus();
     }, []);
 
     const handleSave = async (values: any) => {
@@ -153,8 +173,8 @@ const GeminiAuthEditor: React.FC = () => {
                         <Input.Password placeholder={t('cliConfig.fields.apiKeyPlaceholder', 'Enter your Gemini API Key')} />
                     </Form.Item>
                     <Form.Item label={t('cliConfig.fields.oauthLogin', 'OAuth Login')}>
-                        <Button icon={<GoogleOutlined />} onClick={runOAuthLogin}>
-                            {t('cliConfig.fields.loginWithGoogle', 'Login with Google')}
+                        <Button type={isLoggedIn ? "default" : "primary"} icon={<GoogleOutlined />} onClick={runOAuthLogin}>
+                            {isLoggedIn ? t('cliConfig.switchAccount', 'Switch Account') : t('cliConfig.fields.loginWithGoogle', 'Login with Google')}
                         </Button>
                     </Form.Item>
                     
@@ -339,7 +359,7 @@ const GeminiAuthEditor: React.FC = () => {
             style={{ marginTop: 24, marginBottom: 24 }}
         >
             <Alert
-                message={t('aiSettings.mcpConfig.savePathTip', { path: SETTINGS_PATH })}
+                title={t('aiSettings.mcpConfig.savePathTip', { path: SETTINGS_PATH })}
                 type="info"
                 showIcon
                 style={{ marginBottom: 24 }}

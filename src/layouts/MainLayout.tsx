@@ -14,7 +14,7 @@ import {
     AppstoreOutlined,
     RobotOutlined,
     InfoCircleOutlined,
-    //MessageOutlined
+    MessageOutlined
 } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 import { useAppStore } from '../store/appStore';
@@ -22,8 +22,6 @@ import { useEffect, useState } from 'react';
 import EnvironmentStatusInfo from '../components/EnvironmentStatusInfo';
 import Logo from '../components/Logo';
 import TitleBar from '../components/TitleBar';
-
-
 
 const { Header, Content, Sider, Footer } = Layout;
 
@@ -51,11 +49,11 @@ const MainLayout = () => {
             icon: <RobotOutlined />,
             label: t('app.aiSettings'),
         },
-        /* {
+        {
             key: '/chat',
             icon: <MessageOutlined />,
-            label: 'Chat',
-        }, */
+            label: t('app.chat', 'Chat'),
+        },
         {
             key: '/terminal',
             icon: <CodeOutlined />,
@@ -197,7 +195,7 @@ const MainLayout = () => {
                             <EnvironmentStatusInfo />
                         </div>
                         <div style={{ color: token.colorTextSecondary, fontSize: '10px', whiteSpace: 'nowrap' }}>
-                            OpenVizUI v1.0.1
+                            OpenVizUI v1.0.2
                         </div>
                     </Footer>
                 </Layout>

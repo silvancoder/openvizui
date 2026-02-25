@@ -560,7 +560,7 @@ const Apps = () => {
                 />
             </div>
 
-            <Card styles={{ body: { padding: 0 } }} bordered={false}>
+            <Card styles={{ body: { padding: 0 } }} variant="borderless">
                 <Tabs
                     tabPosition="left"
                     defaultActiveKey={defaultTab}

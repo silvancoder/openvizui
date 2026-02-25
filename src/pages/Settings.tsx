@@ -15,7 +15,6 @@ import { checkEnvironment, type EnvironmentStatus } from '../lib/tauri';
 import { ReloadOutlined, CheckCircleOutlined, WarningOutlined, CodeOutlined } from '@ant-design/icons';
 
 const { Title } = Typography;
-const { Option } = Select;
 
 const Settings = () => {
     const { t } = useTranslation();
@@ -49,24 +48,32 @@ const Settings = () => {
                 {/* Column 1: General */}
                 <Col xs={24} md={8}>
                     <Form.Item label={t('settings.language')}>
-                        <Select value={useAppStore.getState().language} onChange={setLanguage}>
-                            <Option value="en">English</Option>
-                            <Option value="zh">中文</Option>
-                            <Option value="de">Deutsch</Option>
-                            <Option value="es">Español</Option>
-                            <Option value="fr">Français</Option>
-                            <Option value="it">Italiano</Option>
-                            <Option value="ja">日本語</Option>
-                            <Option value="ko">한국어</Option>
-                            <Option value="pt">Português</Option>
-                            <Option value="ru">Русский</Option>
-                        </Select>
+                        <Select 
+                            value={useAppStore.getState().language} 
+                            onChange={setLanguage}
+                            options={[
+                                { value: "en", label: "English" },
+                                { value: "zh", label: "中文" },
+                                { value: "de", label: "Deutsch" },
+                                { value: "es", label: "Español" },
+                                { value: "fr", label: "Français" },
+                                { value: "it", label: "Italiano" },
+                                { value: "ja", label: "日本語" },
+                                { value: "ko", label: "한국어" },
+                                { value: "pt", label: "Português" },
+                                { value: "ru", label: "Русский" },
+                            ]}
+                        />
                     </Form.Item>
                     <Form.Item label={t('settings.theme')}>
-                        <Select value={useAppStore.getState().theme} onChange={setTheme}>
-                            <Option value="light">Light</Option>
-                            <Option value="dark">Dark</Option>
-                        </Select>
+                        <Select 
+                            value={useAppStore.getState().theme} 
+                            onChange={setTheme}
+                            options={[
+                                { value: "light", label: "Light" },
+                                { value: "dark", label: "Dark" }
+                            ]}
+                        />
                     </Form.Item>
                     <Form.Item
                         label={t('settings.textColor')}
@@ -89,7 +96,11 @@ const Settings = () => {
                             value={fontFamily}
                             onChange={setFontFamily}
                             showSearch
-                            dropdownRender={(menu) => {
+                            options={[
+                                ...fonts.map(f => ({ value: f, label: f })),
+                                ...(!fonts.includes(fontFamily) ? [{ value: fontFamily, label: fontFamily }] : [])
+                            ]}
+                            popupRender={(menu) => {
                                 const [customValue, setCustomValue] = useState('');
                                 return (
                                     <>
@@ -120,10 +131,7 @@ const Settings = () => {
                                     </>
                                 );
                             }}
-                        >
-                            {fonts.map(f => <Option key={f} value={f}>{f}</Option>)}
-                            {!fonts.includes(fontFamily) && <Option value={fontFamily}>{fontFamily}</Option>}
-                        </Select>
+                        />
                     </Form.Item>
                     <Form.Item label={t('settings.primaryColor')}>
                         <ColorPicker
@@ -217,7 +225,11 @@ const Settings = () => {
                                 <Select
                                     value={terminalFontFamily}
                                     onChange={(val) => setTerminalSettings({ terminalFontFamily: val })}
-                                    dropdownRender={(menu) => (
+                                    options={[
+                                        ...terminalFonts.map(f => ({ value: f, label: f })),
+                                        ...(!terminalFonts.includes(terminalFontFamily) ? [{ value: terminalFontFamily, label: terminalFontFamily }] : [])
+                                    ]}
+                                    popupRender={(menu) => (
                                         <>
                                             {menu}
                                             <Divider style={{ margin: '4px 0' }} />
@@ -229,10 +241,7 @@ const Settings = () => {
                                             </div>
                                         </>
                                     )}
-                                >
-                                    {terminalFonts.map(f => <Option key={f} value={f}>{f}</Option>)}
-                                    {!terminalFonts.includes(terminalFontFamily) && <Option value={terminalFontFamily}>{terminalFontFamily}</Option>}
-                                </Select>
+                                />
                             </Form.Item>
                             <Form.Item label={t('settings.fontSize')}>
                                 <InputNumber
@@ -256,7 +265,15 @@ const Settings = () => {
                                 <Select
                                     value={terminalShell}
                                     onChange={(val) => setTerminalSettings({ terminalShell: val })}
-                                    dropdownRender={(menu) => (
+                                    options={[
+                                        { value: "bash.exe", label: "Git Bash (Default)" },
+                                        { value: "powershell.exe", label: "PowerShell" },
+                                        { value: "cmd.exe", label: "Command Prompt" },
+                                        { value: "wsl", label: "WSL (Linux)" },
+                                        ...(!['bash.exe', 'powershell.exe', 'cmd.exe', 'wsl'].includes(terminalShell) 
+                                                ? [{ value: terminalShell, label: terminalShell }] : [])
+                                    ]}
+                                    popupRender={(menu) => (
                                         <>
                                             {menu}
                                             <Divider style={{ margin: '4px 0' }} />
@@ -268,15 +285,7 @@ const Settings = () => {
                                             </div>
                                         </>
                                     )}
-                                >
-                                    <Option value="bash.exe">Git Bash (Default)</Option>
-                                    <Option value="powershell.exe">PowerShell</Option>
-                                    <Option value="cmd.exe">Command Prompt</Option>
-                                    <Option value="wsl">WSL (Linux)</Option>
-                                    {!['bash.exe', 'powershell.exe', 'cmd.exe', 'wsl'].includes(terminalShell) && (
-                                        <Option value={terminalShell}>{terminalShell}</Option>
-                                    )}
-                                </Select>
+                                />
                             </Form.Item>
                         </Card>
                     </Col>
@@ -394,11 +403,15 @@ const Settings = () => {
                 <Card title={<span><GlobalOutlined /> {t('settings.proxySettings')}</span>} size="small">
                     <Form layout="vertical">
                         <Form.Item label={t('settings.proxyType')}>
-                            <Select value={proxyType} onChange={setProxyType}>
-                                <Option value="none">{t('settings.noProxy')}</Option>
-                                <Option value="http">HTTP/HTTPS</Option>
-                                <Option value="socks5">SOCKS5</Option>
-                            </Select>
+                            <Select 
+                                value={proxyType} 
+                                onChange={setProxyType}
+                                options={[
+                                    { value: 'none', label: t('settings.noProxy') },
+                                    { value: 'http', label: 'HTTP/HTTPS' },
+                                    { value: 'socks5', label: 'SOCKS5' },
+                                ]}
+                            />
                         </Form.Item>
 
                         {proxyType !== 'none' && (
@@ -424,7 +437,7 @@ const Settings = () => {
                         <Alert
                             type="warning"
                             showIcon
-                            message={<span style={{ fontSize: 12 }}>{t('settings.proxyWarning')}</span>}
+                            description={<span style={{ fontSize: 12 }}>{t('settings.proxyWarning')}</span>}
                         />
                     </div>
                 </Card>
@@ -539,7 +552,7 @@ const Settings = () => {
                 </Row>
                 
                 <Alert
-                    message={t('settings.envNote', "Ensure these tools are in your system PATH to be detected.")}
+                    description={t('settings.envNote', "Ensure these tools are in your system PATH to be detected.")}
                     type="info"
                     showIcon
                     style={{ marginTop: 24 }}
@@ -563,7 +576,7 @@ const Settings = () => {
                         label: <span style={{ padding: '0 24px' }}><BgColorsOutlined /> {t('settings.systemAppearance')}</span>,
                         children: (
                             <div style={{ maxWidth: 1100, margin: '0 auto', padding: '0 24px' }}>
-                                <Card bordered={false}><AppearanceSettings /></Card>
+                                <Card variant="borderless"><AppearanceSettings /></Card>
                             </div>
                         )
                     },
@@ -572,7 +585,7 @@ const Settings = () => {
                         label: <span style={{ padding: '0 24px' }}><SettingOutlined /> {t('app.system')}</span>,
                         children: (
                             <div style={{ maxWidth: 1100, margin: '0 auto', padding: '0 24px' }}>
-                                <Card bordered={false}><IdeSettings /></Card>
+                                <Card variant="borderless"><IdeSettings /></Card>
                             </div>
                         )
                     },
@@ -581,7 +594,7 @@ const Settings = () => {
                         label: <span style={{ padding: '0 24px' }}><GlobalOutlined /> {t('settings.proxySettings')}</span>,
                         children: (
                             <div style={{ maxWidth: 1240, margin: '0 auto', padding: '0 24px' }}>
-                                <Card bordered={false}><NetworkSettings /></Card>
+                                <Card variant="borderless"><NetworkSettings /></Card>
                             </div>
                         )
                     },
@@ -590,7 +603,7 @@ const Settings = () => {
                         label: <span style={{ padding: '0 24px' }}><ThunderboltOutlined /> {t('settings.environment', 'Environment')}</span>,
                         children: (
                             <div style={{ padding: '0 24px' }}>
-                                <Card bordered={false}><EnvironmentSettings /></Card>
+                                <Card variant="borderless"><EnvironmentSettings /></Card>
                             </div>
                         )
                     },
@@ -599,7 +612,7 @@ const Settings = () => {
                         label: <span style={{ padding: '0 24px' }}><DesktopOutlined /> {t('settings.terminal')}</span>,
                         children: (
                             <div style={{ maxWidth: 1240, margin: '0 auto', padding: '0 24px' }}>
-                                <Card bordered={false}><TerminalSettings /></Card>
+                                <Card variant="borderless"><TerminalSettings /></Card>
                             </div>
                         )
                     }

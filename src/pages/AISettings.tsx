@@ -546,7 +546,6 @@ const AISettings = () => {
 
 
     // --- Render Components moved outside for stability ---
-
     return (
         <div style={{ margin: '0 auto', width: '100%', height: '100%', overflowY: 'auto' }}>
             <div style={{ maxWidth: 1200, margin: '0 auto', padding: '24px' }}>
@@ -664,7 +663,6 @@ const AISettings = () => {
 };
 
 // --- Extracted Components ---
-
 interface SkillsTabProps {
     t: any;
     installedMcps: McpInfo[];
@@ -998,7 +996,7 @@ const McpConfigTab = ({
             onOk={handleMcpSaveFromModal}
             onCancel={() => setEditModalVisible(false)}
             width={700}
-            destroyOnClose
+            destroyOnHidden
             okText={t('common.save', 'Save')}
             cancelText={t('common.cancel', 'Cancel')}
         >

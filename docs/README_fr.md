@@ -131,6 +131,12 @@ Les scripts suivants sont disponibles dans `package.json` :
 -   `src/`: Code source frontend React.
 -   `src-tauri/`: Code source backend Rust et configuration Tauri.
 -   `public/`: Ressources statiques.
+-   `CHANGELOG.md`: [Historique détaillé des modifications du projet](../CHANGELOG.md).
+
+## Journal des modifications
+
+Pour un historique détaillé des modifications, veuillez consulter [CHANGELOG.md](../CHANGELOG.md).
+
 
 ## Related Projects
 

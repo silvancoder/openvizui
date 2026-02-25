@@ -41,7 +41,8 @@
       "placeholder": "도구 선택",
       "cancel": "취소",
       "confirm": "추가 및 설치"
-    }
+    },
+    "chat": "채팅"
   },
   "aiSettings": {
     "title": "AI 설정",
@@ -355,6 +356,7 @@
     "fetchModels": "모델 가져오기",
     "modelsFetched": "{{count}}개 모델 가져옴",
     "fetchModelsFailed": "모델 가져오기 실패",
+    "loginWithGithub": "GitHub으로 로그인",
     "oauthPrompt": "1. 터미널로 전환하여 'gemini'를 실행하세요\n2. 'Connect Antigravity'에서 아니요(2)를 선택하세요\n3. /auth를 입력하고 'Login with Google'을 선택하세요",
     "qoder": {
       "sections": {
@@ -570,8 +572,8 @@
       "delete": "삭제",
       "edit": "편집"
     },
-    "copilotPrompt": "1. 터미널로 전환하여 'gh auth login'을 실행하세요\n2. GitHub.com을 선택하고 지침을 따르세요\n3. 설치되지 않은 경우 'gh extension install github/gh-copilot'을 실행하세요",
-    "copilotTitle": "GitHub Copilot 인증 단계",
+    "copilotPrompt": "1. 터미널로 전환하여 'copilot login'을 실행하세요\n2. 프롬프트에 따라 계정을 인증하세요",
+    "copilotTitle": "Copilot 인증 단계",
     "fields": {
       "verbose": "상세 로그",
       "theme": "테마",
@@ -700,8 +702,10 @@
       "githubToken": "선택 사항: 인증 토큰 덮어쓰기",
       "tencentKey": "Tencent Cloud API 키",
       "confirmExecute": "실행 전 확인",
-      "modelProvider": "공급자 유형 (예: openai, anthropic). DeepSeek와 같은 사용자 정의 엔드포인트는 'openai'를 사용할 수 있습니다."
-    }
+      "modelProvider": "공급자 유형 (예: openai, anthropic). DeepSeek와 같은 사용자 정의 엔드포인트는 'openai'를 사용할 수 있습니다.",
+      "githubAuth": "Copilot CLI를 사용하여 계정을 인증합니다."
+    },
+    "switchAccount": "계정 전환"
   },
   "apps": {
     "title": "앱 스토어",
@@ -833,6 +837,10 @@
       "docker": {
         "name": "Docker",
         "desc": "애플리케이션 구축, 공유 및 실행을 가속화합니다."
+      },
+      "minio": {
+        "name": "MinIO",
+        "desc": "고성능, S3 호환 객체 스토리지."
       }
     }
   },
@@ -976,7 +984,15 @@
       "copyMd": "Markdown으로 복사",
       "clear": "버킷 비우기",
       "copied": "컨텍스트가 클립보드에 복사되었습니다"
-    }
+    },
+    "aiGenerated": "언어 모델에 의해 생성된 콘텐츠",
+    "helpButton": "도움말",
+    "helpModalTitle": "CLI 도구 빠른 가이드",
+    "copilotHelp": "**GitHub Copilot**: `copilot [command]` 또는 `?? [question]`을 사용하여 질문하세요.",
+    "geminiHelp": "**Google Gemini**: `gemini [prompt]`를 사용하여 대화하세요. `gemini models`로 모델을 나열하세요.",
+    "claudeHelp": "**Anthropic Claude**: `claude [prompt]`를 사용하여 대화하세요.",
+    "generalHelp": "`Shift + Tab`을 눌러 포커스를 전환하세요. `Ctrl + S`로 저장하세요.",
+    "oauthModelHint": "참고: OAuth를 통해 로그인한 경우 `/models` 명령을 사용하거나 Chat 컨텍스트 메뉴에서 `Change Model`을 선택하세요."
   },
   "common": {
     "ok": "확인",
@@ -996,7 +1012,8 @@
     "low": "낮음",
     "normal": "보통",
     "high": "높음",
-    "all": "모두"
+    "all": "모두",
+    "goToTerminal": "터미널로 이동"
   },
   "about": {
     "description": "OpenVizUI는 AI CLI 도구를 위한 강력하고 현대적인 시각화 인터페이스입니다. 스킬 관리에서 복잡한 구성에 이르기까지 AI 워크플로를 관리할 수 있는 통합되고 미려하며 효율적인 방법을 제공합니다.",
@@ -1005,6 +1022,20 @@
     "resourcesTitle": "리소스",
     "madeBy": "제작:",
     "byContributors": "OpenVizUI 기여자",
+    "update": {
+      "check": "업데이트 확인",
+      "checking": "확인 중...",
+      "available": "새 버전 사용 가능: {{version}}",
+      "latest": "최신 상태입니다!",
+      "error": "업데이트 확인 실패.",
+      "newVersion": "최신 버전: {{version}}",
+      "isLatest": "최신 버전",
+      "now": "지금 업데이트"
+    },
+    "version": {
+      "local": "로컬 버전",
+      "server": "서버 버전"
+    },
     "features": {
       "fast": {
         "title": "압도적인 속도",
@@ -1019,5 +1050,14 @@
         "desc": "주요 AI CLI 도구를 위한 통합 인터페이스."
       }
     }
+  },
+  "chat": {
+    "title": "터미널 채팅",
+    "newChat": "새 채팅",
+    "currentSession": "현재 세션",
+    "startTypingEmpty": "입력하여 셸과 상호 작용 시작...",
+    "startTypingTool": "{{tool}}와 상호 작용 시작...",
+    "placeholder": "메시지 또는 터미널 명령을 입력하십시오...",
+    "devNotice": "참고: 이 채팅 기능은 현재 개발 중이며 완전히 안정적이지 않을 수 있습니다."
   }
 }

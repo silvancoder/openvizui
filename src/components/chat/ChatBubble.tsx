@@ -17,12 +17,12 @@ const ChatBubble: React.FC<ChatBubbleProps> = ({ content, type }) => {
         <div style={{
             display: 'flex',
             flexDirection: isUser ? 'row-reverse' : 'row',
-            marginBottom: 16,
-            gap: 12,
+            marginBottom: 24,
+            gap: 16,
             alignItems: 'flex-start',
-            padding: '0 16px'
         }}>
             <Avatar 
+                size={36}
                 icon={isUser ? <UserOutlined /> : <RobotOutlined />} 
                 style={{ 
                     backgroundColor: isUser ? token.colorPrimary : token.colorSuccess,
@@ -30,19 +30,20 @@ const ChatBubble: React.FC<ChatBubbleProps> = ({ content, type }) => {
                 }} 
             />
             <div style={{
-                maxWidth: '85%',
-                padding: '8px 16px',
-                borderRadius: 12,
-                backgroundColor: isUser ? token.colorPrimaryBg : token.colorBgContainer,
-                border: `1px solid ${isUser ? token.colorPrimaryBorder : token.colorBorder}`,
+                maxWidth: '80%',
+                padding: '12px 16px',
+                borderRadius: isUser ? '16px 4px 16px 16px' : '4px 16px 16px 16px',
+                backgroundColor: isUser ? token.colorPrimary : token.colorBgContainer,
+                color: isUser ? '#fff' : token.colorText,
+                border: isUser ? 'none' : `1px solid ${token.colorBorderSecondary}`,
                 boxShadow: token.boxShadowTertiary,
                 overflowX: 'auto'
             }}>
                 <div style={{ 
                     whiteSpace: 'pre-wrap', 
                     fontFamily: 'Consolas, Monaco, "Courier New", monospace',
-                    fontSize: 13,
-                    lineHeight: 1.5
+                    fontSize: 14,
+                    lineHeight: 1.6
                 }}>
                    {content ? <Ansi>{content}</Ansi> : null} 
                 </div>

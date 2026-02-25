@@ -116,7 +116,7 @@ const ContextBucket: React.FC = () => {
                 />
             </div>
 
-            <Space direction="vertical" style={{ width: '100%' }}>
+            <Space orientation="vertical" style={{ width: '100%' }}>
                 <Button 
                     block 
                     size="small" 

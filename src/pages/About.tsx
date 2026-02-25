@@ -5,7 +5,8 @@
  * Licensed under the MIT License
  */
 
-import { Typography, Card, Space, Divider, Button, Row, Col, List, Layout } from 'antd';
+import { useState, useEffect } from 'react';
+import { Typography, Card, Space, Divider, Button, Row, Col, List, Layout, Tag, Badge, message } from 'antd';
 import { 
     GithubOutlined, 
     GlobalOutlined, 
@@ -13,21 +14,86 @@ import {
     InfoCircleOutlined,
     RocketOutlined,
     TeamOutlined,
-    LinkOutlined
+    LinkOutlined,
+    SyncOutlined,
+    CheckCircleOutlined,
+    ExclamationCircleOutlined
 } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 import Logo from '../components/Logo';
 import { invoke } from '@tauri-apps/api/core';
+import packageJson from '../../package.json';
 
 const { Title, Paragraph, Text } = Typography;
 const { Footer } = Layout;
 
 const About = () => {
     const { t } = useTranslation();
+    const currentVersion = packageJson.version;
+    const [remoteVersion, setRemoteVersion] = useState<string | null>(null);
+    const [checking, setChecking] = useState(false);
+    const [status, setStatus] = useState<'idle' | 'up-to-date' | 'available' | 'error'>('idle');
 
     const openUrl = (url: string) => {
         invoke('open_url', { url });
     };
+
+    const isNewer = (latest: string, current: string) => {
+        const l = latest.split('.').map(Number);
+        const c = current.split('.').map(Number);
+        for (let i = 0; i < 3; i++) {
+            if (l[i] > (c[i] || 0)) return true;
+            if (l[i] < (c[i] || 0)) return false;
+        }
+        return false;
+    };
+
+    const checkUpdate = async () => {
+        setChecking(true);
+        setStatus('idle');
+        try {
+            const response = await fetch('https://raw.githubusercontent.com/silvancoder/openvizui/master/package.json');
+            if (!response.ok) throw new Error('Failed to fetch version info');
+            const data = await response.json();
+            const latestVersion = data.version;
+            setRemoteVersion(latestVersion);
+
+            if (isNewer(latestVersion, currentVersion)) {
+                setStatus('available');
+                message.info(t('about.update.available', 'New version available: {{version}}', { version: latestVersion }));
+            } else {
+                setStatus('up-to-date');
+                message.success(t('about.update.latest', 'You are up to date!'));
+            }
+        } catch (error) {
+            console.error('Update check failed:', error);
+            setStatus('error');
+            message.error(t('about.update.error', 'Failed to check for updates.'));
+        } finally {
+            setChecking(false);
+        }
+    };
+
+    useEffect(() => {
+        // Automatically check on mount but silently
+        const silentCheck = async () => {
+            try {
+                const response = await fetch('https://raw.githubusercontent.com/silvancoder/openvizui/master/package.json');
+                if (response.ok) {
+                    const data = await response.json();
+                    setRemoteVersion(data.version);
+                    if (isNewer(data.version, currentVersion)) {
+                        setStatus('available');
+                    } else {
+                        setStatus('up-to-date');
+                    }
+                }
+            } catch (e) {
+                // Ignore silent errors
+            }
+        };
+        silentCheck();
+    }, [currentVersion]);
 
     const features = [
         { icon: <RocketOutlined />, title: t('about.features.fast.title', 'Blazing Fast'), desc: t('about.features.fast.desc', 'Optimized for performance with Rust and React.') },
@@ -43,13 +109,56 @@ const About = () => {
 
     return (
         <div style={{ maxWidth: 900, margin: '0 auto', padding: '40px 24px' }}>
-            <Card bordered={false} style={{ textAlign: 'center', background: 'transparent' }}>
+            <Card variant="borderless" style={{ textAlign: 'center', background: 'transparent' }}>
                 <div style={{ transform: 'scale(1.5)', marginBottom: 24 }}>
                     <Logo collapsed={false} theme="light" />
                 </div>
-                <Text type="secondary" style={{ fontSize: 16 }}>
-                    OpenVizUI
-                </Text>
+                <Space orientation="vertical" align="center" size={0}>
+                    <Text type="secondary" style={{ fontSize: 16 }}>
+                        OpenVizUI
+                    </Text>
+                    <Space size="large" orientation="horizontal" style={{ marginBottom: 16 }}>
+                        <Space>
+                            <Text type="secondary">{t('about.version.local', 'Local Version')}:</Text>
+                            <Tag color="blue" style={{ margin: 0 }}>v{currentVersion}</Tag>
+                        </Space>
+                        <Space>
+                            <Text type="secondary">{t('about.version.server', 'Server Version')}:</Text>
+                            <Tag color={status === 'available' ? 'gold' : 'blue'} style={{ margin: 0 }}>
+                                {remoteVersion ? `v${remoteVersion}` : (checking ? t('about.update.checking', 'Checking...') : '---')}
+                            </Tag>
+                        </Space>
+                    </Space>
+                    <Badge dot={status === 'available'} offset={[-5, 5]}>
+                        <Button 
+                            type={status === 'available' ? 'primary' : 'default'}
+                            size="middle" 
+                            icon={checking ? <SyncOutlined spin /> : <SyncOutlined />} 
+                            onClick={status === 'available' ? () => openUrl('https://github.com/silvancoder/openvizui') : checkUpdate}
+                            disabled={checking}
+                        >
+                            {status === 'available' 
+                                ? t('about.update.now', 'Update Now') 
+                                : (checking ? t('about.update.checking', 'Checking...') : t('about.update.check', 'Check Update'))
+                            }
+                        </Button>
+                    </Badge>
+
+                    {status === 'available' && remoteVersion && (
+                        <div style={{ marginTop: 8 }}>
+                            <Tag color="gold" icon={<ExclamationCircleOutlined />}>
+                                {t('about.update.newVersion', 'Latest version: {{version}}', { version: remoteVersion })}
+                            </Tag>
+                        </div>
+                    )}
+                    {status === 'up-to-date' && (
+                        <div style={{ marginTop: 8 }}>
+                            <Tag color="success" icon={<CheckCircleOutlined />}>
+                                {t('about.update.isLatest', 'Latest Version')}
+                            </Tag>
+                        </div>
+                    )}
+                </Space>
                 <div style={{ marginTop: 24 }}>
                     <Paragraph style={{ fontSize: 16 }}>
                         {t('about.description', 'OpenVizUI is a powerful, modern visualization interface for AI CLI tools. It provides a unified, beautiful, and efficient way to manage your AI workflows, from skills management to complex configurations.')}

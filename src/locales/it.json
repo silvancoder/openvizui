@@ -41,7 +41,8 @@
       "placeholder": "Seleziona strumento",
       "cancel": "Annulla",
       "confirm": "Aggiungi e Installa"
-    }
+    },
+    "chat": "Chat"
   },
   "aiSettings": {
     "title": "Impostazioni AI",
@@ -355,6 +356,7 @@
     "fetchModels": "Recupera Modelli",
     "modelsFetched": "Recuperati {{count}} modelli",
     "fetchModelsFailed": "Recupero modelli fallito",
+    "loginWithGithub": "Accedi con GitHub",
     "oauthPrompt": "1. Vai al terminale ed esegui 'gemini'\n2. Seleziona No(2) per 'Connect Antigravity'\n3. Digita /auth e seleziona 'Login with Google'",
     "qoder": {
       "sections": {
@@ -570,8 +572,8 @@
       "delete": "Elimina",
       "edit": "Modifica"
     },
-    "copilotPrompt": "1. Vai al terminale ed esegui 'gh auth login'\n2. Seleziona GitHub.com e segui le istruzioni\n3. Se non installato, esegui 'gh extension install github/gh-copilot'",
-    "copilotTitle": "Procedura Autenticazione GitHub Copilot",
+    "copilotPrompt": "1. Vai al terminale ed esegui 'copilot login'\n2. Segui le istruzioni per autenticare il tuo account",
+    "copilotTitle": "Passaggi di autenticazione Copilot",
     "fields": {
       "verbose": "Log Dettagliato",
       "theme": "Tema",
@@ -700,8 +702,10 @@
       "githubToken": "Opzionale: sovrascrivi token auth",
       "tencentKey": "La tua Chiave API Tencent Cloud",
       "confirmExecute": "Chiedi prima di eseguire comandi",
-      "modelProvider": "Tipo provider (es. openai, anthropic). Endpoint custom come DeepSeek possono usare 'openai'."
-    }
+      "modelProvider": "Tipo provider (es. openai, anthropic). Endpoint custom come DeepSeek possono usare 'openai'.",
+      "githubAuth": "Usa Copilot CLI per autenticare il tuo account."
+    },
+    "switchAccount": "Cambia account"
   },
   "apps": {
     "title": "App Store",
@@ -833,6 +837,10 @@
       "docker": {
         "name": "Docker",
         "desc": "Accelera il modo in cui costruisci, condividi ed esegui applicazioni."
+      },
+      "minio": {
+        "name": "MinIO",
+        "desc": "Storage di oggetti ad alte prestazioni, compatibile con S3."
       }
     }
   },
@@ -976,7 +984,15 @@
       "copyMd": "Copia come Markdown",
       "clear": "Svuota Bucket",
       "copied": "Contesto copiato negli appunti"
-    }
+    },
+    "aiGenerated": "Contenuto generato dal modello linguistico",
+    "helpButton": "Aiuto",
+    "helpModalTitle": "Guida Rapida agli Strumenti CLI",
+    "copilotHelp": "**GitHub Copilot**: Usa `copilot [command]` o `?? [question]` per fare domande.",
+    "geminiHelp": "**Google Gemini**: Usa `gemini [prompt]` per chattare. Usa `gemini models` per elencare i modelli.",
+    "claudeHelp": "**Anthropic Claude**: Usa `claude [prompt]` per chattare.",
+    "generalHelp": "Premi `Shift + Tab` per cambiare focus. Premi `Ctrl + S` per salvare.",
+    "oauthModelHint": "Nota: Se si è effettuato l'accesso tramite OAuth, utilizzare il comando `/models` o selezionare `Change Model` nel menu contestuale della chat."
   },
   "common": {
     "ok": "OK",
@@ -996,7 +1012,8 @@
     "low": "Basso",
     "normal": "Normale",
     "high": "Alto",
-    "all": "Tutti"
+    "all": "Tutti",
+    "goToTerminal": "Vai al terminale"
   },
   "about": {
     "description": "OpenVizUI è un'interfaccia di visualizzazione potente e moderna per strumenti AI CLI. Fornisce un modo unificato, estetico ed efficiente per gestire i tuoi flussi di lavoro AI, dalla gestione delle skills alle configurazioni complesse.",
@@ -1005,6 +1022,20 @@
     "resourcesTitle": "Risorse",
     "madeBy": "Creato con",
     "byContributors": "dai Contributori di OpenVizUI",
+    "update": {
+      "check": "Controlla aggiornamenti",
+      "checking": "Controllo...",
+      "available": "Nuova versione disponibile: {{version}}",
+      "latest": "Sei aggiornato!",
+      "error": "Impossibile controllare gli aggiornamenti.",
+      "newVersion": "Ultima versione: {{version}}",
+      "isLatest": "Ultima versione",
+      "now": "Aggiorna ora"
+    },
+    "version": {
+      "local": "Versione locale",
+      "server": "Versione del server"
+    },
     "features": {
       "fast": {
         "title": "Velocissimo",
@@ -1019,5 +1050,14 @@
         "desc": "Interfaccia unificata per i principali strumenti AI CLI."
       }
     }
+  },
+  "chat": {
+    "title": "Chat del Terminale",
+    "newChat": "Nuova Chat",
+    "currentSession": "Sessione Corrente",
+    "startTypingEmpty": "Inizia a digitare per interagire con la shell...",
+    "startTypingTool": "Inizia a interagire con {{tool}}...",
+    "placeholder": "Digita un messaggio o un comando per il terminale...",
+    "devNotice": "Nota: questa funzionalità di chat è attualmente in fase di sviluppo e potrebbe non essere completamente stabile."
   }
 }

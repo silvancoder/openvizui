@@ -131,6 +131,12 @@ OpenVizUI 是一个现代桌面应用程序，为 AI CLI 工具提供了统一�
 -   `src/`: React 前端源代码。
 -   `src-tauri/`: Rust 后端源代码和 Tauri 配置。
 -   `public/`: 静态资源。
+-   `CHANGELOG.md`: [项目变更的详细历史记录](../CHANGELOG.md)。
+
+## 更新日志
+
+有关详细的变更历史，请参阅 [CHANGELOG.md](../CHANGELOG.md)。
+
 
 ## 相关项目
 

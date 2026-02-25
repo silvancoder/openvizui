@@ -368,13 +368,13 @@ const VisualConfigEditor: React.FC<VisualConfigEditorProps> = ({ toolName, confi
     };
 
     if (!template) {
-        return <Alert message={t('aiSettings.errors.noTemplate', 'No visual template available for this tool.')} type="info" />;
+        return <Alert title={t('aiSettings.errors.noTemplate', 'No visual template available for this tool.')} type="info" />;
     }
 
     if (parseError) {
         return (
             <Alert
-                message={t('aiSettings.mcpConfig.parseError', 'Error Parsing Config')}
+                title={t('aiSettings.mcpConfig.parseError', 'Error Parsing Config')}
                 description={`${parseError}. ${t('aiSettings.warnings.fixInCode', 'Switch to Code view to fix syntax errors.')}`}
                 type="error"
                 showIcon
@@ -384,7 +384,7 @@ const VisualConfigEditor: React.FC<VisualConfigEditorProps> = ({ toolName, confi
 
     return (
         <div style={{ padding: 16, maxWidth: 800 }}>
-            <Alert message={t(template.description)} type="info" showIcon style={{ marginBottom: 24 }} />
+            <Alert title={t(template.description)} type="info" showIcon style={{ marginBottom: 24 }} />
 
             <Form
                 form={form}
@@ -393,7 +393,7 @@ const VisualConfigEditor: React.FC<VisualConfigEditorProps> = ({ toolName, confi
             >
                 {toolName === 'OpenCode' && (
                     <Alert
-                        message={t('aiSettings.mcpConfig.pluginsHint', 'Plugins directory: ~/.config/opencode/plugins')}
+                        title={t('aiSettings.mcpConfig.pluginsHint', 'Plugins directory: ~/.config/opencode/plugins')}
                         type="info"
                         showIcon
                         style={{ marginBottom: 16 }}

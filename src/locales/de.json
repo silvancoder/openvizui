@@ -41,7 +41,8 @@
       "placeholder": "Werkzeug auswählen",
       "cancel": "Abbrechen",
       "confirm": "Hinzufügen & Installieren"
-    }
+    },
+    "chat": "Chat"
   },
   "aiSettings": {
     "title": "KI-Einstellungen",
@@ -355,6 +356,7 @@
     "fetchModels": "Modelle abrufen",
     "modelsFetched": "{{count}} Modelle abgerufen",
     "fetchModelsFailed": "Abrufen der Modelle fehlgeschlagen",
+    "loginWithGithub": "Mit GitHub anmelden",
     "oauthPrompt": "1. Wechseln Sie zum Terminal und führen Sie 'gemini' aus\n2. Wählen Sie Nein (2) für 'Connect Antigravity'\n3. Geben Sie /auth ein und wählen Sie 'Login with Google'",
     "qoder": {
       "sections": {
@@ -570,8 +572,8 @@
       "delete": "Löschen",
       "edit": "Bearbeiten"
     },
-    "copilotPrompt": "1. Wechseln Sie zum Terminal und führen Sie 'gh auth login' aus\n2. Wählen Sie GitHub.com und folgen Sie den Anweisungen\n3. Falls nicht installiert, führen Sie 'gh extension install github/gh-copilot' aus",
-    "copilotTitle": "GitHub Copilot Auth Schritte",
+    "copilotPrompt": "1. Wechseln Sie zum Terminal und führen Sie 'copilot login' aus\n2. Befolgen Sie die Anweisungen, um Ihr Konto zu authentifizieren",
+    "copilotTitle": "Copilot-Authentifizierungsschritte",
     "fields": {
       "verbose": "Detailliertes Protokoll",
       "theme": "Design",
@@ -700,8 +702,10 @@
       "githubToken": "Optional: Auth-Token überschreiben",
       "tencentKey": "Ihr Tencent Cloud API-Schlüssel",
       "confirmExecute": "Vor Ausführung fragen",
-      "modelProvider": "Anbietertyp (z.B. openai, anthropic). Benutzerdefinierte Endpunkte wie DeepSeek können 'openai' verwenden."
-    }
+      "modelProvider": "Anbietertyp (z.B. openai, anthropic). Benutzerdefinierte Endpunkte wie DeepSeek können 'openai' verwenden.",
+      "githubAuth": "Verwenden Sie Copilot CLI, um Ihr Konto zu authentifizieren."
+    },
+    "switchAccount": "Konto wechseln"
   },
   "apps": {
     "title": "App Store",
@@ -833,6 +837,10 @@
       "docker": {
         "name": "Docker",
         "desc": "Beschleunigt das Erstellen, Teilen und Ausführen von Anwendungen."
+      },
+      "minio": {
+        "name": "MinIO",
+        "desc": "Hochleistungsfähiger, S3-kompatibler Objektspeicher."
       }
     }
   },
@@ -976,7 +984,15 @@
       "copyMd": "Als Markdown kopieren",
       "clear": "Bucket leeren",
       "copied": "Kontext in Zwischenablage kopiert"
-    }
+    },
+    "aiGenerated": "Vom Sprachmodell generierte Inhalte",
+    "helpButton": "Hilfe",
+    "helpModalTitle": "CLI-Tools-Kurzanleitung",
+    "copilotHelp": "**GitHub Copilot**: Verwenden Sie `copilot [command]` oder `?? [question]`, um Fragen zu stellen.",
+    "geminiHelp": "**Google Gemini**: Verwenden Sie `gemini [prompt]` zum Chatten. Verwenden Sie `gemini models`, um Modelle aufzulisten.",
+    "claudeHelp": "**Anthropic Claude**: Verwenden Sie `claude [prompt]` zum Chatten.",
+    "generalHelp": "Drücken Sie `Shift + Tab`, um den Fokus zu wechseln. Drücken Sie `Ctrl + S`, um zu speichern.",
+    "oauthModelHint": "Hinweis: Wenn Sie über OAuth angemeldet sind, verwenden Sie bitte den Befehl `/models` oder wählen Sie `Change Model` im Chat-Kontextmenü."
   },
   "common": {
     "ok": "OK",
@@ -996,7 +1012,8 @@
     "low": "Niedrig",
     "normal": "Normal",
     "high": "Hoch",
-    "all": "Alle"
+    "all": "Alle",
+    "goToTerminal": "Zum Terminal gehen"
   },
   "about": {
     "description": "OpenVizUI ist eine leistungsstarke und moderne Visualisierungsoberfläche für KI-CLI-Tools. Sie bietet eine einheitliche, ästhetische und effiziente Möglichkeit, Ihre KI-Workflows zu verwalten, von der Skill-Verwaltung bis hin zu komplexen Konfigurationen.",
@@ -1004,7 +1021,21 @@
     "whyTitle": "Hauptmerkmale",
     "resourcesTitle": "Ressourcen",
     "madeBy": "Erstellt mit",
-    "byContributors": "von OpenVizUI-Mitwirkenden",
+    "byContributors": "OpenVizUI-Mitwirkenden",
+    "update": {
+      "check": "Update prüfen",
+      "checking": "Prüfe...",
+      "available": "Neue Version verfügbar: {{version}}",
+      "latest": "Version ist aktuell!",
+      "error": "Fehler beim Prüfen auf Updates.",
+      "newVersion": "Neueste Version: {{version}}",
+      "isLatest": "Neueste Version",
+      "now": "Jetzt aktualisieren"
+    },
+    "version": {
+      "local": "Lokale Version",
+      "server": "Server-Version"
+    },
     "features": {
       "fast": {
         "title": "Blitzschnell",
@@ -1019,5 +1050,14 @@
         "desc": "Einheitliche Schnittstelle für führende KI-CLI-Tools."
       }
     }
+  },
+  "chat": {
+    "title": "Terminal-Chat",
+    "newChat": "Neuer Chat",
+    "currentSession": "Aktuelle Sitzung",
+    "startTypingEmpty": "Fangen Sie an zu tippen, um mit der Shell zu interagieren...",
+    "startTypingTool": "Interagiere jetzt mit {{tool}}...",
+    "placeholder": "Geben Sie eine Nachricht oder einen Befehl für das Terminal ein...",
+    "devNotice": "Hinweis: Diese Chat-Funktion befindet sich noch in der Entwicklung und ist möglicherweise noch nicht vollständig stabil."
   }
 }

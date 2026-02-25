@@ -13,19 +13,18 @@ import Settings from './pages/Settings';
 import Apps from './pages/Apps';
 import AISettings from './pages/AISettings';
 import About from './pages/About';
-//import Chat from './pages/Chat';
+import Chat from './pages/Chat';
 import { ConfigProvider, theme as antTheme, message } from 'antd';
 import { useAppStore } from './store/appStore';
 
 // Configure global message offset to avoid overlapping with custom title bar (height: 32px)
 message.config({
-    top: 50,
+    top: 40,
     maxCount: 3,
 });
 
 function App() {
     const { theme, primaryColor, fontFamily, textColor } = useAppStore();
-
     // Build theme tokens dynamically to avoid overriding defaults with undefined
     const themeTokens: any = {
         colorPrimary: primaryColor,
@@ -51,7 +50,7 @@ function App() {
                         <Route path="ai-settings" element={<AISettings />} />
                         <Route path="settings" element={<Settings />} />
                         <Route path="terminal" element={<Terminal />} />
-                        {/* <Route path="chat" element={<Chat />} /> */}
+                        <Route path="chat" element={<Chat />} />
                         <Route path="about" element={<About />} />
                     </Route>
                 </Routes>

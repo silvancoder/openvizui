@@ -131,6 +131,12 @@ OpenVizUIは、AI CLIツールのための統一された、美しく、効率�
 -   `src/`: React フロントエンドのソースコード。
 -   `src-tauri/`: Rust バックエンドのソースコードと Tauri 設定。
 -   `public/`: 静的アセット。
+-   `CHANGELOG.md`: [プロジェクト変更の詳細な履歴](../CHANGELOG.md)。
+
+## 変更履歴
+
+変更の詳細な履歴については、[CHANGELOG.md](../CHANGELOG.md) をご覧ください。
+
 
 ## Related Projects
 

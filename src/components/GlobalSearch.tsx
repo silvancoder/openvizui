@@ -61,7 +61,7 @@ const GlobalSearch: React.FC<GlobalSearchProps> = ({ onOpenFile }) => {
                 </Space>
             </Title>
             
-            <Space direction="vertical" style={{ width: '100%', marginBottom: 16 }}>
+            <Space orientation="vertical" style={{ width: '100%', marginBottom: 16 }}>
                 <Input
                     placeholder={t('search.placeholder', 'Search files...')}
                     prefix={<SearchOutlined style={{ color: 'rgba(0,0,0,.25)' }} />}
@@ -105,7 +105,7 @@ const GlobalSearch: React.FC<GlobalSearchProps> = ({ onOpenFile }) => {
                                         </Text>
                                     }
                                     description={
-                                        <Space direction="vertical" size={0} style={{ width: '100%' }}>
+                                        <Space orientation="vertical" size={0} style={{ width: '100%' }}>
                                             <Text type="secondary" style={{ fontSize: '11px' }} ellipsis>
                                                 {item.file.replace(currentDirectory || '', '')}
                                             </Text>

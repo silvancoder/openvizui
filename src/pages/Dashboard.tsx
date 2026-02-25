@@ -15,7 +15,6 @@ import { useEffect, useState } from 'react';
 import { useAppStore } from '../store/appStore';
 
 const { Title } = Typography;
-const { Option } = Select;
 
 interface ToolItem {
     id: string;
@@ -398,11 +397,8 @@ const Dashboard = () => {
                     placeholder={t('app.addToolModal.placeholder', 'Select a tool')}
                     onChange={setSelectedToolToAdd}
                     value={selectedToolToAdd}
-                >
-                    {availableToolsToAdd.map(t => (
-                        <Option key={t.id} value={t.id}>{t.name}</Option>
-                    ))}
-                </Select>
+                    options={availableToolsToAdd.map(t => ({ value: t.id, label: t.name }))}
+                />
             </Modal>
         </div>
     );

@@ -41,7 +41,8 @@
       "placeholder": "Seleccionar herramienta",
       "cancel": "Cancelar",
       "confirm": "Añadir e Instalar"
-    }
+    },
+    "chat": "Chat"
   },
   "aiSettings": {
     "title": "Configuración de IA",
@@ -355,6 +356,7 @@
     "fetchModels": "Obtener Modelos",
     "modelsFetched": "Se obtuvieron {{count}} modelos",
     "fetchModelsFailed": "Error obteniendo modelos",
+    "loginWithGithub": "Iniciar sesión con GitHub",
     "oauthPrompt": "1. Cambiar a la terminal y ejecutar 'gemini' \n2. Seleccione No (2) para 'Connect Antigravity' \n3. Escriba /auth y seleccione 'Login with Google'",
     "qoder": {
       "sections": {
@@ -570,8 +572,8 @@
       "delete": "Eliminar",
       "edit": "Editar"
     },
-    "copilotPrompt": "1. Cambiar a terminal y ejecutar 'gh auth login' \n2. Seleccione GitHub.com y siga instrucciones \n3. Si no está instalado, ejecute 'gh extension install github/gh-copilot'",
-    "copilotTitle": "Pasos Autenticación GitHub Copilot",
+    "copilotPrompt": "1. Cambiar a la terminal y ejecutar 'copilot login' \n2. Siga las instrucciones para autenticar su cuenta",
+    "copilotTitle": "Pasos para Autenticación Copilot",
     "fields": {
       "verbose": "Log Detallado",
       "theme": "Tema",
@@ -700,8 +702,10 @@
       "githubToken": "Opcional: sobrescribir token auth",
       "tencentKey": "Su clave API Tencent Cloud",
       "confirmExecute": "Preguntar antes de ejecutar comando",
-      "modelProvider": "Tipo proveedor (ej: openai, anthropic). Endpoints personalizados como DeepSeek pueden usar 'openai'."
-    }
+      "modelProvider": "Tipo proveedor (ej: openai, anthropic). Endpoints personalizados como DeepSeek pueden usar 'openai'.",
+      "githubAuth": "Usa Copilot CLI para autenticar tu cuenta."
+    },
+    "switchAccount": "Cambiar cuenta"
   },
   "apps": {
     "title": "App Store",
@@ -833,6 +837,10 @@
       "docker": {
         "name": "Docker",
         "desc": "Acelera la forma en que construyes, compartes y ejecutas aplicaciones."
+      },
+      "minio": {
+        "name": "MinIO",
+        "desc": "Almacenamiento de objetos de alto rendimiento, compatible con S3."
       }
     }
   },
@@ -976,7 +984,15 @@
       "copyMd": "Copiar como Markdown",
       "clear": "Vaciar Bucket",
       "copied": "Contexto copiado al portapapeles"
-    }
+    },
+    "aiGenerated": "Contenido generado por modelo de lenguaje",
+    "helpButton": "Ayuda",
+    "helpModalTitle": "Guía Rápida de Herramientas CLI",
+    "copilotHelp": "**GitHub Copilot**: Usa `copilot [command]` o `?? [question]` para preguntar.",
+    "geminiHelp": "**Google Gemini**: Usa `gemini [prompt]` para chatear. Usa `gemini models` para listar modelos.",
+    "claudeHelp": "**Anthropic Claude**: Usa `claude [prompt]` para chatear.",
+    "generalHelp": "Presiona `Shift + Tab` para cambiar el enfoque. Presiona `Ctrl + S` para guardar.",
+    "oauthModelHint": "Nota: Si inició sesión a través de OAuth, use el comando `/models` o seleccione `Change Model` en el menú contextual del chat."
   },
   "common": {
     "ok": "Aceptar",
@@ -996,7 +1012,8 @@
     "low": "Bajo",
     "normal": "Normal",
     "high": "Alto",
-    "all": "Todos"
+    "all": "Todos",
+    "goToTerminal": "Ir a la terminal"
   },
   "about": {
     "description": "OpenVizUI es una interfaz de visualización potente y moderna para herramientas AI CLI. Proporciona una forma unificada, estética y eficiente para gestionar tus flujos de trabajo de IA, desde la gestión de skills hasta configuraciones complejas.",
@@ -1004,7 +1021,21 @@
     "whyTitle": "Características Clave",
     "resourcesTitle": "Recursos",
     "madeBy": "Hecho con",
-    "byContributors": "por Contribuidores de OpenVizUI",
+    "byContributors": "Colaboradores de OpenVizUI",
+    "update": {
+      "check": "Buscar actualización",
+      "checking": "Buscando...",
+      "available": "Nueva versión disponible: {{version}}",
+      "latest": "¡Estás al día!",
+      "error": "Error al buscar actualizaciones.",
+      "newVersion": "Última versión: {{version}}",
+      "isLatest": "Última versión",
+      "now": "Actualizar ahora"
+    },
+    "version": {
+      "local": "Versión local",
+      "server": "Versión del servidor"
+    },
     "features": {
       "fast": {
         "title": "Velocidad del Rayo",
@@ -1019,5 +1050,14 @@
         "desc": "Interfaz unificada para las principales herramientas AI CLI."
       }
     }
+  },
+  "chat": {
+    "title": "Chat de Terminal",
+    "newChat": "Nuevo Chat",
+    "currentSession": "Sesión Actual",
+    "startTypingEmpty": "Empieza a escribir para interactuar con la shell...",
+    "startTypingTool": "Empieza a interactuar con {{tool}}...",
+    "placeholder": "Escribe un mensaje o un comando para el terminal...",
+    "devNotice": "Nota: Esta función de chat está actualmente en desarrollo y puede no ser completamente estable."
   }
 }

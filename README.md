@@ -131,8 +131,14 @@ The following scripts are available in `package.json`:
 -   `src/`: React frontend source code.
 -   `src-tauri/`: Rust backend source code and Tauri configuration.
 -   `public/`: Static assets.
+-   `CHANGELOG.md`: Detailed history of project changes.
+
+## Changelog
+
+For a detailed history of changes, please see [CHANGELOG.md](CHANGELOG.md).
 
 ## Related Projects
+
 
 -   [SteerDock - Another Docker GUI Management Platform](https://github.com/silvancoder/steerdock)
 

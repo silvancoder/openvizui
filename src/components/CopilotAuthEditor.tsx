@@ -20,7 +20,26 @@ const CopilotAuthEditor: React.FC = () => {
     const navigate = useNavigate();
     const { setActiveToolId, setPendingCommand } = useAppStore();
     const [loading, setLoading] = useState(false);
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [form] = Form.useForm();
+
+    const checkLoginStatus = async () => {
+        try {
+            const result = await invoke<string>('get_config_file', { path: '~/.copilot/config.json' });
+            if (result && result.trim() !== '') {
+                const parsed = JSON.parse(result);
+                if (parsed.logged_in_users && Array.isArray(parsed.logged_in_users) && parsed.logged_in_users.length > 0) {
+                    setIsLoggedIn(true);
+                } else {
+                    setIsLoggedIn(false);
+                }
+            } else {
+                setIsLoggedIn(false);
+            }
+        } catch (error) {
+            setIsLoggedIn(false);
+        }
+    };
 
     const loadConfig = async () => {
         setLoading(true);
@@ -43,6 +62,7 @@ const CopilotAuthEditor: React.FC = () => {
 
     useEffect(() => {
         loadConfig();
+        checkLoginStatus();
     }, []);
 
     const handleSave = async (values: any) => {
@@ -64,7 +84,7 @@ const CopilotAuthEditor: React.FC = () => {
             ),
             onOk: () => {
                 setActiveToolId('copilot');
-                setPendingCommand('gh auth login');
+                setPendingCommand('copilot login');
                 navigate('/terminal');
             },
             okText: t('common.goToTerminal', 'Go to Terminal'),
@@ -83,14 +103,14 @@ const CopilotAuthEditor: React.FC = () => {
             style={{ marginTop: 24, marginBottom: 24 }}
         >
             <Alert
-                message={t('aiSettings.mcpConfig.savePathTip', { path: CONFIG_PATH })}
+                title={t('aiSettings.mcpConfig.savePathTip', { path: CONFIG_PATH })}
                 type="info"
                 showIcon
                 style={{ marginBottom: 24 }}
             />
 
             <div style={{ marginBottom: 24, padding: '16px', background: '#f5f5f5', borderRadius: '8px' }}>
-                <Space direction="vertical" style={{ width: '100%' }}>
+                <Space orientation="vertical" style={{ width: '100%' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                         <div>
                             <span style={{ fontWeight: 'bold', fontSize: '16px' }}>{t('cliConfig.sections.auth', 'Authentication')}</span>
@@ -98,8 +118,8 @@ const CopilotAuthEditor: React.FC = () => {
                                 {t('cliConfig.descriptions.githubAuth', 'Use GitHub CLI to authenticate your account.')}
                             </p>
                         </div>
-                        <Button type="primary" icon={<GithubOutlined />} onClick={runGithubLogin}>
-                            {t('cliConfig.loginWithGithub', 'Login with GitHub')}
+                        <Button type={isLoggedIn ? "default" : "primary"} icon={<GithubOutlined />} onClick={runGithubLogin}>
+                            {isLoggedIn ? t('cliConfig.switchAccount', 'Switch Account') : t('cliConfig.loginWithGithub', 'Login with GitHub')}
                         </Button>
                     </div>
                 </Space>

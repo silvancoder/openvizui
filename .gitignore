@@ -26,3 +26,6 @@ psd
 .agent/
 coverage/
 src/locales/i18n-translate.js
+
+config files
+install.txt

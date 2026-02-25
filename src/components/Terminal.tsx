@@ -14,7 +14,8 @@ import { Button, Tooltip, Space, theme as antdTheme, Select, Input, Dropdown, Mo
 import {
     ClearOutlined,
     ReloadOutlined,
-    BranchesOutlined
+    BranchesOutlined,
+    QuestionCircleOutlined
 } from '@ant-design/icons';
 import '@xterm/xterm/css/xterm.css';
 import { ptyOpen, ptyWrite, ptyResize, ptyClose, ptyExists } from '../lib/tauri';
@@ -282,6 +283,8 @@ const TerminalUI = ({ sessionId, initialCommand }: TerminalProps) => {
         commandTemplate: ''
     });
 
+    const [isHelpModalOpen, setIsHelpModalOpen] = useState(false);
+
     return (
         <div
             style={{
@@ -426,7 +429,16 @@ const TerminalUI = ({ sessionId, initialCommand }: TerminalProps) => {
                     </div>
                 </Space>
 
-                <Space>
+                <Space style={{ alignItems: 'center' }}>
+                    <Button
+                        type="text"
+                        size="small"
+                        icon={<QuestionCircleOutlined />}
+                        onClick={() => setIsHelpModalOpen(true)}
+                        style={{ color: token.colorTextSecondary, fontSize: 12, marginRight: 8 }}
+                    >
+                        {t('terminal.aiGenerated', '内容由AI语言模型生成')}
+                    </Button>
                     <Tooltip title={t('app.terminal.clear') || "Clear"}>
                         <Button
                             type="text"
@@ -489,6 +501,32 @@ const TerminalUI = ({ sessionId, initialCommand }: TerminalProps) => {
                     }}
                     autoFocus
                 />
+            </Modal>
+
+            <Modal
+                title={t('terminal.helpModalTitle', 'CLI Tools Quick Guide')}
+                open={isHelpModalOpen}
+                onCancel={() => setIsHelpModalOpen(false)}
+                footer={[
+                    <Button key="close" type="primary" onClick={() => setIsHelpModalOpen(false)}>
+                        {t('common.close', 'Close')}
+                    </Button>
+                ]}
+            >
+                <div style={{ padding: '8px 0', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                    <div>
+                        <div dangerouslySetInnerHTML={{ __html: t('terminal.copilotHelp', '<b>GitHub Copilot</b>: Use <code>copilot [command]</code> or <code>?? [question]</code> to ask anything.').replace(/\*\*(.*?)\*\*/g, '<b>$1</b>').replace(/`([^`]+)`/g, '<code style="background-color:rgba(0,0,0,0.06);padding:2px 4px;border-radius:4px;">$1</code>') }} />
+                    </div>
+                    <div>
+                        <div dangerouslySetInnerHTML={{ __html: t('terminal.geminiHelp', '<b>Google Gemini</b>: Use <code>gemini [prompt]</code> to chat with Gemini. Use <code>gemini models</code> to list models.').replace(/\*\*(.*?)\*\*/g, '<b>$1</b>').replace(/`([^`]+)`/g, '<code style="background-color:rgba(0,0,0,0.06);padding:2px 4px;border-radius:4px;">$1</code>') }} />
+                    </div>
+                    <div>
+                        <div dangerouslySetInnerHTML={{ __html: t('terminal.claudeHelp', '<b>Anthropic Claude</b>: Use <code>claude [prompt]</code> to chat.').replace(/\*\*(.*?)\*\*/g, '<b>$1</b>').replace(/`([^`]+)`/g, '<code style="background-color:rgba(0,0,0,0.06);padding:2px 4px;border-radius:4px;">$1</code>') }} />
+                    </div>
+                    <div style={{ marginTop: '8px', paddingTop: '16px', borderTop: '1px solid #f0f0f0', color: token.colorTextSecondary, fontSize: '13px' }}>
+                        <div dangerouslySetInnerHTML={{ __html: t('terminal.generalHelp', 'Press <kbd>Shift + Tab</kbd> to switch focus between the input area and the chat history. Press <kbd>Ctrl + S</kbd> to save.').replace(/`([^`]+)`/g, '<kbd style="background-color:#fafafa;border:1px solid #d9d9d9;border-radius:3px;box-shadow:0 1px 0 rgba(0,0,0,0.2);color:#262626;display:inline-block;font-size:11px;line-height:1.4;margin:0 2px;padding:1px 5px;">$1</kbd>') }} />
+                    </div>
+                </div>
             </Modal>
         </div>
     );
