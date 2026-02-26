@@ -49,7 +49,7 @@ const TerminalPage = () => {
         }
         setTerminals(newPanes);
         setActiveTerminalId(newActiveKey);
-        
+
         // Clean up PTY session
         await ptyClose(targetKey as string);
     };

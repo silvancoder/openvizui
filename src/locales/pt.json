@@ -1,1089 +1,1089 @@
 {
-  "app": {
-    "title": "OpenVizUI",
-    "dashboard": "Dashboard",
-    "settings": "Configurações",
-    "terminal": {
-      "label": "Terminal",
-      "clear": "Limpar Terminal",
-      "restart": "Reiniciar Sessão"
+    "app": {
+      "title": "OpenVizUI",
+      "dashboard": "Dashboard",
+      "settings": "Configurações",
+      "terminal": {
+        "label": "Terminal",
+        "clear": "Limpar Terminal",
+        "restart": "Reiniciar Sessão"
+      },
+      "install": "Instalar",
+      "docs": "Documentação",
+      "installed": "Instalado",
+      "uninstall": "Desinstalar",
+      "launch": "Iniciar",
+      "update": "Atualizar",
+      "config": "Configurar",
+      "refresh": "Atualizar",
+      "addTool": "Adicionar Ferramenta",
+      "apps": "App Store",
+      "aiSettings": "Configurações de IA",
+      "about": "Sobre",
+      "system": "Sistema",
+      "messages": {
+        "checking": "Verificando {{name}}...",
+        "alreadyInstalled": "{{name}} já está instalado. Adicionando à bancada.",
+        "installing": "Instalando {{name}}...",
+        "installed": "Instalado e adicionado {{name}}",
+        "installFailed": "Falha ao adicionar {{name}}: {{error}}",
+        "uninstalling": "Desinstalando {{name}}...",
+        "uninstalled": "Desinstalado e removido da bancada",
+        "uninstallFailed": "Falha ao desinstalar {{name}}",
+        "updating": "Atualizando {{name}}...",
+        "updated": "{{name}} atualizado com sucesso",
+        "updateFailed": "Falha ao atualizar {{name}}: {{error}}"
+      },
+      "noActiveTools": "Nenhuma ferramenta ativa. Clique em 'Adicionar ferramenta' para começar.",
+      "addToolModal": {
+        "title": "Adicionar ferramenta CLI",
+        "desc": "Selecione uma ferramenta para adicionar à sua bancada. Se não estiver instalada, verificaremos e instalaremos para você.",
+        "placeholder": "Selecionar ferramenta",
+        "cancel": "Cancelar",
+        "confirm": "Adicionar e Instalar"
+      },
+      "chat": "Bate-papo"
     },
-    "install": "Instalar",
-    "docs": "Documentação",
-    "installed": "Instalado",
-    "uninstall": "Desinstalar",
-    "launch": "Iniciar",
-    "update": "Atualizar",
-    "config": "Configurar",
-    "refresh": "Atualizar",
-    "addTool": "Adicionar Ferramenta",
-    "apps": "App Store",
-    "aiSettings": "Configurações de IA",
-    "about": "Sobre",
-    "system": "Sistema",
-    "messages": {
-      "checking": "Verificando {{name}}...",
-      "alreadyInstalled": "{{name}} já está instalado. Adicionando à bancada.",
-      "installing": "Instalando {{name}}...",
-      "installed": "Instalado e adicionado {{name}}",
-      "installFailed": "Falha ao adicionar {{name}}: {{error}}",
-      "uninstalling": "Desinstalando {{name}}...",
-      "uninstalled": "Desinstalado e removido da bancada",
-      "uninstallFailed": "Falha ao desinstalar {{name}}",
-      "updating": "Atualizando {{name}}...",
-      "updated": "{{name}} atualizado com sucesso",
-      "updateFailed": "Falha ao atualizar {{name}}: {{error}}"
-    },
-    "noActiveTools": "Nenhuma ferramenta ativa. Clique em 'Adicionar ferramenta' para começar.",
-    "addToolModal": {
-      "title": "Adicionar ferramenta CLI",
-      "desc": "Selecione uma ferramenta para adicionar à sua bancada. Se não estiver instalada, verificaremos e instalaremos para você.",
-      "placeholder": "Selecionar ferramenta",
-      "cancel": "Cancelar",
-      "confirm": "Adicionar e Instalar"
-    },
-    "chat": "Bate-papo"
-  },
-  "aiSettings": {
-    "title": "Configurações de IA",
-    "tabs": {
-      "skills": "Gestão de Skills",
-      "cliConfig": "Configuração da CLI",
-      "mcpConfig": "Configuração MCP",
-      "plugins": "Gestão de Plugins",
-      "mcpMonitor": "Monitor MCP",
-      "skillMonitor": "Monitor de Skills",
-      "more": "Mais Configurações",
-      "comingSoon": "Mais configurações de IA em breve..."
-    },
-    "moreConfigs": {
-      "export": {
-        "title": "Gestão de Configuração",
-        "desc": "Faça backup ou migre todas as configurações das ferramentas AI CLI.",
-        "exportBtn": "Exportar Tudo (JSON/TOML)",
-        "importBtn": "Importar Configuração",
-        "success": "Configuração exportada com sucesso!",
-        "importSuccess": "Configuração importada com sucesso! Recarregando..."
+    "aiSettings": {
+      "title": "Configurações de IA",
+      "tabs": {
+        "skills": "Gestão de Skills",
+        "cliConfig": "Configuração da CLI",
+        "mcpConfig": "Configuração MCP",
+        "plugins": "Gestão de Plugins",
+        "mcpMonitor": "Monitor MCP",
+        "skillMonitor": "Monitor de Skills",
+        "more": "Mais Configurações",
+        "comingSoon": "Mais configurações de IA em breve..."
       },
-      "saved": "Configurações atualizadas",
-      "docs": {
-        "title": "Recursos Oficiais",
-        "desc": "Acesse documentação e guias para as ferramentas CLI configuradas.",
-        "visit": "Documentação Oficial"
+      "moreConfigs": {
+        "export": {
+          "title": "Gestão de Configuração",
+          "desc": "Faça backup ou migre todas as configurações das ferramentas AI CLI.",
+          "exportBtn": "Exportar Tudo (JSON/TOML)",
+          "importBtn": "Importar Configuração",
+          "success": "Configuração exportada com sucesso!",
+          "importSuccess": "Configuração importada com sucesso! Recarregando..."
+        },
+        "saved": "Configurações atualizadas",
+        "docs": {
+          "title": "Recursos Oficiais",
+          "desc": "Acesse documentação e guias para as ferramentas CLI configuradas.",
+          "visit": "Documentação Oficial"
+        },
+        "diagnostics": {
+          "title": "Diagnóstico do Sistema",
+          "desc": "Verifique o ambiente do sistema e caminhos das ferramentas para solução de problemas.",
+          "runBtn": "Executar Diagnóstico",
+          "copyBtn": "Copiar Relatório",
+          "reportTitle": "Relatório de Diagnóstico do Sistema",
+          "failed": "Diagnóstico falhou: {{error}}"
+        },
+        "instructions": {
+          "title": "Instruções Globais do Sistema",
+          "desc": "Defina o prompt/papel principal usado em todas as ferramentas de IA.",
+          "placeholder": "Ex: Você é um desenvolvedor TypeScript experiente. Responda de forma concisa.",
+          "saveBtn": "Atualizar Instruções"
+        },
+        "localAI": {
+          "title": "Ponte de IA Local",
+          "desc": "Conecte-se rapidamente a provedores locais como Ollama ou LM Studio.",
+          "provider": "Tipo de Provedor",
+          "baseUrl": "URL Base",
+          "checkBtn": "Testar Conexão",
+          "checkSuccess": "Conexão com IA Local bem-sucedida!",
+          "checkStatusError": "Conectado, mas o provedor retornou erro: {{status}}",
+          "checkError": "Falha na conexão. Verifique se o provedor está em execução.",
+          "fetchModels": "Buscar Modelos"
+        }
       },
-      "diagnostics": {
-        "title": "Diagnóstico do Sistema",
-        "desc": "Verifique o ambiente do sistema e caminhos das ferramentas para solução de problemas.",
-        "runBtn": "Executar Diagnóstico",
-        "copyBtn": "Copiar Relatório",
-        "reportTitle": "Relatório de Diagnóstico do Sistema",
-        "failed": "Diagnóstico falhou: {{error}}"
+      "skillMonitor": {
+        "title": "Centro de Monitoramento de Skills",
+        "noSkills": "Nenhuma skill instalada neste diretório",
+        "table": {
+          "name": "Nome da Skill",
+          "description": "Descrição",
+          "actions": "Ações"
+        },
+        "actions": {
+          "view": "Ver",
+          "folder": "Pasta",
+          "confirmDelete": "Confirmar Exclusão",
+          "deleteDesc": "Tem certeza que deseja desinstalar e remover esta skill: "
+        },
+        "status": {
+          "deleted": "Skill excluída com sucesso",
+          "deleteFailed": "Falha ao excluir a skill"
+        },
+        "errors": {
+          "noMetadata": "Arquivo de metadados não encontrado (SKILL.md, AGENTS.md, README.md, package.json)"
+        }
       },
-      "instructions": {
-        "title": "Instruções Globais do Sistema",
-        "desc": "Defina o prompt/papel principal usado em todas as ferramentas de IA.",
-        "placeholder": "Ex: Você é um desenvolvedor TypeScript experiente. Responda de forma concisa.",
-        "saveBtn": "Atualizar Instruções"
+      "mcpMonitor": {
+        "title": "Monitor de Servidores MCP",
+        "refresh": "Atualizar Lista",
+        "toolsCount": "{{count}} ferramentas",
+        "table": {
+          "name": "Servidor MCP",
+          "command": "Comando",
+          "status": "Status",
+          "tools": "Ferramentas Disponíveis",
+          "actions": "Ações"
+        },
+        "status": {
+          "testing": "Testando",
+          "online": "Online",
+          "error": "Erro",
+          "unknown": "Desconhecido"
+        },
+        "actions": {
+          "test": "Test Status",
+          "tools": "View Tools"
+        },
+        "serverOnline": "{{serverName}} está online com {{toolCount}} ferramentas",
+        "serverFailed": "{{serverName}} falhou: {{error}}",
+        "noTools": "Nenhuma ferramenta encontrada ou ainda não inspecionada.",
+        "noDescription": "Nenhuma descrição fornecida",
+        "close": "Fechar",
+        "config": "Configuração de {{name}}",
+        "toolsFrom": "Ferramentas de {{serverName}}",
+        "about": {
+          "title": "About MCP Monitoring",
+          "desc": "Este monitor verifica seu perfil de ferramentas de IA e valida se os servidores MCP (modo stdio) estão funcionando corretamente. O teste inicia o serviço e consulta as ferramentas disponíveis."
+        }
       },
-      "localAI": {
-        "title": "Ponte de IA Local",
-        "desc": "Conecte-se rapidamente a provedores locais como Ollama ou LM Studio.",
-        "provider": "Tipo de Provedor",
-        "baseUrl": "URL Base",
-        "checkBtn": "Testar Conexão",
-        "checkSuccess": "Conexão com IA Local bem-sucedida!",
-        "checkStatusError": "Conectado, mas o provedor retornou erro: {{status}}",
-        "checkError": "Falha na conexão. Verifique se o provedor está em execução.",
-        "fetchModels": "Buscar Modelos"
-      }
-    },
-    "skillMonitor": {
-      "title": "Centro de Monitoramento de Skills",
-      "noSkills": "Nenhuma skill instalada neste diretório",
-      "table": {
-        "name": "Nome da Skill",
-        "description": "Descrição",
-        "actions": "Ações"
-      },
-      "actions": {
-        "view": "Ver",
-        "folder": "Pasta",
-        "confirmDelete": "Confirmar Exclusão",
-        "deleteDesc": "Tem certeza que deseja desinstalar e remover esta skill: "
-      },
+      "installedTitle": "Skills Instaladas",
+      "refresh": "Atualizar",
+      "noMcps": "Nenhuma skill instalada ainda",
+      "uninstallConfirmTitle": "Confirmar Desinstalação",
+      "uninstallConfirmDesc": "Tem certeza que deseja remover esta skill?",
+      "uninstall": "Desinstalar",
+      "quickInstallTitle": "Instalação Rápida",
+      "installViaUrl": "Instalar via Comando ou URL",
+      "installHint": "Digite 'npx skills add <url> --skill <name>' ou URL HTTPS do GitHub.",
+      "install": "Instalar",
+      "popularTitle": "Skills Populares",
       "status": {
-        "deleted": "Skill excluída com sucesso",
-        "deleteFailed": "Falha ao excluir a skill"
+        "installing": "Instalando skill...",
+        "installSuccess": "Skill instalada com sucesso!",
+        "uninstallSuccess": "Skill desinstalada",
+        "modelsFetched": "{{count}} modelos encontrados com sucesso"
       },
       "errors": {
-        "noMetadata": "Arquivo de metadados não encontrado (SKILL.md, AGENTS.md, README.md, package.json)"
+        "loadFailed": "Falha ao carregar skill: ",
+        "installFailed": "Falha na instalação: ",
+        "uninstallFailed": "Falha na desinstalação: ",
+        "fetchFailed": "Falha na busca: "
+      },
+      "warnings": {
+        "enterUrl": "Por favor, insira uma URL válida do GitHub",
+        "noBaseUrl": "Por favor, insira a URL Base primeiro",
+        "noApiKey": "Por favor, configure a chave da API do Codex primeiro"
+      },
+      "mcpConfig": {
+        "tab": "Configuração MCP",
+        "configured": "MCPs Configurados",
+        "tool": "Ferramentas CLI",
+        "save": "Salvar Configuração",
+        "reload": "Recarregar",
+        "configPath": "Caminho da Configuração",
+        "quickAdd": "Adicionar MCP Rápido",
+        "edit": "Editar Configuração",
+        "locateHint": "Localizar {{key}} na configuração.",
+        "quickAddWarning": "Adição rápida suporta apenas perfis JSON no momento.",
+        "quickAddWarningYAML": "Adição rápida não suporta YAML no momento.",
+        "uninstallWarning": "Desinstalação suporta apenas arquivos JSON no momento.",
+        "uninstallWarningYAML": "Desinstalação em YAML não é suportada no momento.",
+        "addedAndSaved": "{{key}} adicionado e salvo na configuração.",
+        "loadFailed": "Falha ao carregar configuração: ",
+        "saved": "Configuração salva: ",
+        "saveFailed": "Falha ao salvar configuração: ",
+        "exists": "já existe na configuração.",
+        "uninstalled": "{{key}} desinstalado com sucesso e configuração salva.",
+        "uninstallFailed": "Falha ao desinstalar MCP.",
+        "added": "{{key}} adicionado à configuração. Por favor, revise e salve.",
+        "parseError": "Falha ao analisar JSON. Corrija o erro de sintaxe primeiro.",
+        "links": {
+          "awesome": "Awesome MCP",
+          "official": "MCP Oficial",
+          "cursor": "Cursor Catalog",
+          "chinese": "MCP Chinês"
+        },
+        "selectProvider": "Selecione ou digite o nome do provedor",
+        "selectProviderFirst": "Selecione um provedor primeiro",
+        "modelsFetched": "{{count}} modelos buscados",
+        "fetchModelsFailed": "Falha ao buscar modelos",
+        "fetchModels": "Buscar Modelos",
+        "pluginsHint": "Diretório de plugins: ~/.config/opencode/plugins",
+        "savePathTip": "Configurações salvas em {{path}}",
+        "quickAdds": {
+          "filesystem": {
+            "desc": "Permite que a IA leia e escreva arquivos no sistema local com segurança."
+          },
+          "context7": {
+            "desc": "Upstash Context7 Cache para gerenciamento eficiente de longos contextos."
+          },
+          "playwright": {
+            "desc": "Automatiza navegadores com Playwright para crawling e testes web."
+          },
+          "browserTools": {
+            "desc": "Oferece recursos de interação com navegador como clicar, rolar e capturas de tela."
+          },
+          "gitmcp": {
+            "desc": "Executa operações Git e busca de código diretamente em repositórios GitHub."
+          },
+          "everything": {
+            "desc": "Servidor de referência que demonstra todos os modos de interação do protocolo MCP."
+          },
+          "firecrawl": {
+            "desc": "Converte conteúdo web em Markdown ou JSON amigável para IA."
+          },
+          "mysql": {
+            "desc": "Conecta e consulta bancos de dados MySQL com suporte a descoberta de esquema e leitura."
+          }
+        }
+      },
+      "popularPacks": {
+        "findSkills": {
+          "name": "Encontrar Skills",
+          "desc": "Ferramentas para busca e descoberta de skills disponíveis."
+        },
+        "vercelBestPractices": {
+          "name": "Vercel React - Melhores Práticas",
+          "desc": "Melhores práticas oficiais da Vercel para desenvolvimento React."
+        },
+        "webDesign": {
+          "name": "Guia de Web Design",
+          "desc": "Padrões modernos e diretrizes para web design."
+        },
+        "remotion": {
+          "name": "Remotion - Melhores Práticas",
+          "desc": "Melhores práticas para criação de vídeos com React."
+        },
+        "frontendDesign": {
+          "name": "Design Frontend",
+          "desc": "Padrões de design de frontend e técnicas de implementação."
+        },
+        "composition": {
+          "name": "Vercel Composition Patterns",
+          "desc": "Padrões de composição de componentes da Vercel."
+        },
+        "agentBrowser": {
+          "name": "Navegador do Agente",
+          "desc": "Habilita capacidades de navegador para o agente."
+        },
+        "skillCreator": {
+          "name": "Criador de Skills",
+          "desc": "Ferramentas para ajudar a criar novas skills."
+        }
+      },
+      "plugins": {
+        "title": "Gerenciamento de Plugins",
+        "desc": "Plugins de IA e ferramentas de fluxo de trabalho selecionados. Clique para adicionar ao Claude ou às configurações de ferramentas correspondentes.",
+        "install": "Adicionar",
+        "installed": "Adicionado",
+        "manualInstall": "Instalação Manual",
+        "viewDocs": "Ver Docs",
+        "categories": {
+          "all": "Todos os Plugins",
+          "installed": "Instalados"
+        },
+        "recommendedFor": "Recomendado para {{tool}}",
+        "empty": {
+          "installed": "Nenhum plugin instalado ainda",
+          "available": "Nenhum plugin disponível"
+        },
+        "modal": {
+          "title": "Instalar Plugin Manualmente",
+          "name": "Nome do Plugin",
+          "namePlaceholder": "ex: Meu Plugin Personalizado",
+          "desc": "Descrição Simples",
+          "descPlaceholder": "Descreva o que este plugin faz...",
+          "url": "URL / Comando de Instalação",
+          "urlPlaceholder": "URL do GitHub ou comando npx",
+          "docsUrl": "URL da Documentação (Opcional)",
+          "docsUrlPlaceholder": "ex: https://github.com/...",
+          "type": "Tipo de Plugin",
+          "recommendedTool": "Ferramenta Recomendada",
+          "addBtn": "Adicionar Plugin",
+          "editTitle": "Editar Plugin"
+        },
+        "list": {
+          "composio": {
+            "name": "Awesome Claude Plugins (ComposioHQ)",
+            "desc": "Registro de plugins curado + roteador de ferramentas que transforma o Claude em um orquestrador de fluxo de trabalho em vários serviços."
+          },
+          "mem": {
+            "name": "Claude-Mem",
+            "desc": "Adiciona memória de longo prazo, permitindo que o Claude mantenha o contexto e as preferências entre as sessões."
+          },
+          "superpowers": {
+            "name": "Superpowers",
+            "desc": "Planejamento estruturado do ciclo de vida + estrutura de skills para brainstorming, TDD, depuração e revisão de código."
+          },
+          "localReview": {
+            "name": "Local-Review",
+            "desc": "Revisão de código de diff local paralela (multi-agente) para detectar problemas antes de confirmar."
+          },
+          "plannotator": {
+            "name": "Plannotator",
+            "desc": "Torna o modo de planejamento mais claro com planos anotados estruturados que são revisáveis e compartilháveis."
+          },
+          "ralphWiggum": {
+            "name": "Ralph Wiggum Plugin",
+            "desc": "Testes visuais para verificar a aparência do aplicativo (especialmente Swift) por meio de simuladores Xcode."
+          },
+          "shipyard": {
+            "name": "Shipyard",
+            "desc": "Ciclo de vida no estilo Superpowers + validação de IaC e auditorias de segurança para fluxos de trabalho mais de 'produção'."
+          },
+          "devBrowser": {
+            "name": "Dev-Browser Plugin",
+            "desc": "Alternativa de navegação/teste leve e rápida com menor sobrecarga de contexto do que fluxos no estilo Playwright."
+          },
+          "lsp": {
+            "name": "TypeScript & Rust LSP Plugins",
+            "desc": "Executa verificações de tipo reais via LSP, exibindo erros de tipo/lint no fluxo de trabalho do Claude."
+          },
+          "peerReview": {
+            "name": "Agent-Peer-Review",
+            "desc": "Permite que o Claude e o Codex revisem o trabalho um do outro, com escalonamento para ferramentas de pesquisa na web, se necessário."
+          }
+        }
       }
     },
-    "mcpMonitor": {
-      "title": "Monitor de Servidores MCP",
-      "refresh": "Atualizar Lista",
-      "toolsCount": "{{count}} ferramentas",
-      "table": {
-        "name": "Servidor MCP",
-        "command": "Comando",
-        "status": "Status",
-        "tools": "Ferramentas Disponíveis",
-        "actions": "Ações"
-      },
-      "status": {
-        "testing": "Testando",
-        "online": "Online",
-        "error": "Erro",
-        "unknown": "Desconhecido"
-      },
-      "actions": {
-        "test": "Test Status",
-        "tools": "View Tools"
-      },
-      "serverOnline": "{{serverName}} está online com {{toolCount}} ferramentas",
-      "serverFailed": "{{serverName}} falhou: {{error}}",
-      "noTools": "Nenhuma ferramenta encontrada ou ainda não inspecionada.",
-      "noDescription": "Nenhuma descrição fornecida",
-      "close": "Fechar",
-      "config": "Configuração de {{name}}",
-      "toolsFrom": "Ferramentas de {{serverName}}",
-      "about": {
-        "title": "About MCP Monitoring",
-        "desc": "Este monitor verifica seu perfil de ferramentas de IA e valida se os servidores MCP (modo stdio) estão funcionando corretamente. O teste inicia o serviço e consulta as ferramentas disponíveis."
-      }
-    },
-    "installedTitle": "Skills Instaladas",
-    "refresh": "Atualizar",
-    "noMcps": "Nenhuma skill instalada ainda",
-    "uninstallConfirmTitle": "Confirmar Desinstalação",
-    "uninstallConfirmDesc": "Tem certeza que deseja remover esta skill?",
-    "uninstall": "Desinstalar",
-    "quickInstallTitle": "Instalação Rápida",
-    "installViaUrl": "Instalar via Comando ou URL",
-    "installHint": "Digite 'npx skills add <url> --skill <name>' ou URL HTTPS do GitHub.",
-    "install": "Instalar",
-    "popularTitle": "Skills Populares",
-    "status": {
-      "installing": "Instalando skill...",
-      "installSuccess": "Skill instalada com sucesso!",
-      "uninstallSuccess": "Skill desinstalada",
-      "modelsFetched": "{{count}} modelos encontrados com sucesso"
-    },
-    "errors": {
-      "loadFailed": "Falha ao carregar skill: ",
-      "installFailed": "Falha na instalação: ",
-      "uninstallFailed": "Falha na desinstalação: ",
-      "fetchFailed": "Falha na busca: "
-    },
-    "warnings": {
-      "enterUrl": "Por favor, insira uma URL válida do GitHub",
-      "noBaseUrl": "Por favor, insira a URL Base primeiro",
-      "noApiKey": "Por favor, configure a chave da API do Codex primeiro"
-    },
-    "mcpConfig": {
-      "tab": "Configuração MCP",
-      "configured": "MCPs Configurados",
-      "tool": "Ferramentas CLI",
-      "save": "Salvar Configuração",
-      "reload": "Recarregar",
-      "configPath": "Caminho da Configuração",
-      "quickAdd": "Adicionar MCP Rápido",
-      "edit": "Editar Configuração",
-      "locateHint": "Localizar {{key}} na configuração.",
-      "quickAddWarning": "Adição rápida suporta apenas perfis JSON no momento.",
-      "quickAddWarningYAML": "Adição rápida não suporta YAML no momento.",
-      "uninstallWarning": "Desinstalação suporta apenas arquivos JSON no momento.",
-      "uninstallWarningYAML": "Desinstalação em YAML não é suportada no momento.",
-      "addedAndSaved": "{{key}} adicionado e salvo na configuração.",
-      "loadFailed": "Falha ao carregar configuração: ",
-      "saved": "Configuração salva: ",
-      "saveFailed": "Falha ao salvar configuração: ",
-      "exists": "já existe na configuração.",
-      "uninstalled": "{{key}} desinstalado com sucesso e configuração salva.",
-      "uninstallFailed": "Falha ao desinstalar MCP.",
-      "added": "{{key}} adicionado à configuração. Por favor, revise e salve.",
-      "parseError": "Falha ao analisar JSON. Corrija o erro de sintaxe primeiro.",
-      "links": {
-        "awesome": "Awesome MCP",
-        "official": "MCP Oficial",
-        "cursor": "Cursor Catalog",
-        "chinese": "MCP Chinês"
-      },
-      "selectProvider": "Selecione ou digite o nome do provedor",
-      "selectProviderFirst": "Selecione um provedor primeiro",
+    "cliConfig": {
+      "fetchModels": "Buscar Modelos",
       "modelsFetched": "{{count}} modelos buscados",
       "fetchModelsFailed": "Falha ao buscar modelos",
-      "fetchModels": "Buscar Modelos",
-      "pluginsHint": "Diretório de plugins: ~/.config/opencode/plugins",
-      "savePathTip": "Configurações salvas em {{path}}",
-      "quickAdds": {
-        "filesystem": {
-          "desc": "Permite que a IA leia e escreva arquivos no sistema local com segurança."
+      "loginWithGithub": "Entrar com GitHub",
+      "oauthPrompt": "1. Mude para o terminal e execute 'gemini'\n2. Escolha Não (2) para 'Connect Antigravity'\n3. Digite /auth e selecione 'Login with Google'",
+      "qoder": {
+        "sections": {
+          "apiKeys": "Provedores de API",
+          "appearance": "Aparência e Tema",
+          "formatting": "Formatação",
+          "behavior": "Comportamento",
+          "minimap": "Minimapa",
+          "highlighting": "Destaque",
+          "aiModels": "Modelos de IA",
+          "parameters": "Parâmetros",
+          "usage": "Limites de Uso",
+          "analysis": "Análise",
+          "network": "Rede"
         },
-        "context7": {
-          "desc": "Upstash Context7 Cache para gerenciamento eficiente de longos contextos."
-        },
-        "playwright": {
-          "desc": "Automatiza navegadores com Playwright para crawling e testes web."
-        },
-        "browserTools": {
-          "desc": "Oferece recursos de interação com navegador como clicar, rolar e capturas de tela."
-        },
-        "gitmcp": {
-          "desc": "Executa operações Git e busca de código diretamente em repositórios GitHub."
-        },
-        "everything": {
-          "desc": "Servidor de referência que demonstra todos os modos de interação do protocolo MCP."
-        },
-        "firecrawl": {
-          "desc": "Converte conteúdo web em Markdown ou JSON amigável para IA."
-        },
-        "mysql": {
-          "desc": "Conecta e consulta bancos de dados MySQL com suporte a descoberta de esquema e leitura."
+        "fields": {
+          "endpoint": "Endpoint",
+          "timeout": "Tempo limite (ms)",
+          "maxRetries": "Tentativas máximas",
+          "organization": "ID da Organização",
+          "themeMode": "Modo do Tema",
+          "lightTheme": "Tema Claro",
+          "darkTheme": "Tema Escuro",
+          "contrast": "Contraste",
+          "fontFamily": "Família da Fonte",
+          "fontSize": "Tamanho da Fonte",
+          "lineHeight": "Altura da Linha",
+          "ligatures": "Ligaduras da Fonte",
+          "cursorStyle": "Estilo do Cursor",
+          "blink": "Piscar do Cursor",
+          "smoothCaret": "Cursor Suave",
+          "tabSize": "Tamanho da Tabulação",
+          "insertSpaces": "Inserir Espaços",
+          "trimWhitespace": "Remover Espaços no Final",
+          "finalNewline": "Nova Linha no Final",
+          "wordWrap": "Quebra de Linha",
+          "wordWrapColumn": "Coluna de Quebra",
+          "autoSave": "Salvamento Automático",
+          "autoSaveDelay": "Atraso do Salvamento Automático",
+          "formatOnSave": "Formatar ao Salvar",
+          "formatOnPaste": "Formatar ao Colar",
+          "formatOnType": "Formatar ao Digitar",
+          "semanticHighlighting": "Destaque Semântico",
+          "bracketMatching": "Correspondência de Chaves",
+          "colorDecorators": "Decoradores de Cor",
+          "indentGuides": "Guias de Indentação",
+          "lineNumbers": "Números de Linha",
+          "activeLineHighlight": "Destaque da Linha Ativa",
+          "modifiedTabsHighlight": "Destaque de Abas Modificadas",
+          "primaryModel": "Modelo Principal",
+          "fallbackModel": "Modelo de Fallback",
+          "autoModelSelection": "Seleção Automática de Modelo",
+          "codeCompletion": "Completar Código",
+          "codeReview": "Revisão de Código",
+          "archDesign": "Design de Arquitetura",
+          "documentation": "Documentação",
+          "dailyRequests": "Limite Diário de Requisições",
+          "hourlyRequests": "Limite Horário de Requisições",
+          "dailyCost": "Limite Diário de Custo ($)",
+          "monthlyCost": "Limite Mensal de Custo ($)",
+          "alertThreshold": "Limiar de Alerta",
+          "autoThrottle": "Aceleração Automática",
+          "analysisDepth": "Profundidade da Análise",
+          "maxFileSize": "Tamanho Máximo do Arquivo",
+          "maxFiles": "Número Máximo de Arquivos",
+          "includeDeps": "Incluir Dependências",
+          "analyzeExternal": "Analisar Bibliotecas Externas",
+          "semanticAnalysis": "Análise Semântica",
+          "crossRef": "Referências Cruzadas",
+          "addProvider": "Adicionar Provedor",
+          "providerName": "Nome do Provedor (ID)",
+          "fetchModels": "Buscar Modelos",
+          "maxOutputTokens": "Max Output Tokens",
+          "maxContextTokens": "Max Context Tokens",
+          "temperature": "Temperatura",
+          "topP": "Top P",
+          "presencePenalty": "Penalidade de Presença",
+          "modelsFetched": "{{count}} modelos buscados com sucesso",
+          "showSlider": "Mostrar Controle Deslizante",
+          "side": "Lado",
+          "scale": "Escala",
+          "preferences": "Preferências",
+          "stopSequences": "Sequências de Parada",
+          "stopSequencesPlaceholder": "Pressione Enter para adicionar",
+          "frequencyPenalty": "Penalidade de Frequência",
+          "host": "Host",
+          "port": "Porta",
+          "username": "Usuário",
+          "password": "Senha",
+          "line": "Linha",
+          "block": "Bloco",
+          "underline": "Sublinhado",
+          "bounded": "Delimitado",
+          "afterDelay": "Após Atraso",
+          "onFocusChange": "Ao Mudar Foco",
+          "always": "Sempre",
+          "mouseover": "Ao Passar Mouse",
+          "left": "Esquerda",
+          "right": "Direita",
+          "basic": "Básico",
+          "standard": "Padrão",
+          "comprehensive": "Abrangente",
+          "small": "Pequeno",
+          "large": "Grande"
         }
-      }
-    },
-    "popularPacks": {
-      "findSkills": {
-        "name": "Encontrar Skills",
-        "desc": "Ferramentas para busca e descoberta de skills disponíveis."
       },
-      "vercelBestPractices": {
-        "name": "Vercel React - Melhores Práticas",
-        "desc": "Melhores práticas oficiais da Vercel para desenvolvimento React."
-      },
-      "webDesign": {
-        "name": "Guia de Web Design",
-        "desc": "Padrões modernos e diretrizes para web design."
-      },
-      "remotion": {
-        "name": "Remotion - Melhores Práticas",
-        "desc": "Melhores práticas para criação de vídeos com React."
-      },
-      "frontendDesign": {
-        "name": "Design Frontend",
-        "desc": "Padrões de design de frontend e técnicas de implementação."
-      },
-      "composition": {
-        "name": "Vercel Composition Patterns",
-        "desc": "Padrões de composição de componentes da Vercel."
-      },
-      "agentBrowser": {
-        "name": "Navegador do Agente",
-        "desc": "Habilita capacidades de navegador para o agente."
-      },
-      "skillCreator": {
-        "name": "Criador de Skills",
-        "desc": "Ferramentas para ajudar a criar novas skills."
-      }
-    },
-    "plugins": {
-      "title": "Gerenciamento de Plugins",
-      "desc": "Plugins de IA e ferramentas de fluxo de trabalho selecionados. Clique para adicionar ao Claude ou às configurações de ferramentas correspondentes.",
-      "install": "Adicionar",
-      "installed": "Adicionado",
-      "manualInstall": "Instalação Manual",
-      "viewDocs": "Ver Docs",
-      "categories": {
-        "all": "Todos os Plugins",
-        "installed": "Instalados"
-      },
-      "recommendedFor": "Recomendado para {{tool}}",
-      "empty": {
-        "installed": "Nenhum plugin instalado ainda",
-        "available": "Nenhum plugin disponível"
-      },
-      "modal": {
-        "title": "Instalar Plugin Manualmente",
-        "name": "Nome do Plugin",
-        "namePlaceholder": "ex: Meu Plugin Personalizado",
-        "desc": "Descrição Simples",
-        "descPlaceholder": "Descreva o que este plugin faz...",
-        "url": "URL / Comando de Instalação",
-        "urlPlaceholder": "URL do GitHub ou comando npx",
-        "docsUrl": "URL da Documentação (Opcional)",
-        "docsUrlPlaceholder": "ex: https://github.com/...",
-        "type": "Tipo de Plugin",
-        "recommendedTool": "Ferramenta Recomendada",
-        "addBtn": "Adicionar Plugin",
-        "editTitle": "Editar Plugin"
-      },
-      "list": {
-        "composio": {
-          "name": "Awesome Claude Plugins (ComposioHQ)",
-          "desc": "Registro de plugins curado + roteador de ferramentas que transforma o Claude em um orquestrador de fluxo de trabalho em vários serviços."
+      "codebuddy": {
+        "sections": {
+          "env": "Variáveis de Ambiente",
+          "general": "Configurações Gerais",
+          "advanced": "Configuração Avançada",
+          "plugins": "Plugins e Marketplace",
+          "network": "Rede e Sistema"
         },
-        "mem": {
-          "name": "Claude-Mem",
-          "desc": "Adiciona memória de longo prazo, permitindo que o Claude mantenha o contexto e as preferências entre as sessões."
-        },
-        "superpowers": {
-          "name": "Superpowers",
-          "desc": "Planejamento estruturado do ciclo de vida + estrutura de skills para brainstorming, TDD, depuração e revisão de código."
-        },
-        "localReview": {
-          "name": "Local-Review",
-          "desc": "Revisão de código de diff local paralela (multi-agente) para detectar problemas antes de confirmar."
-        },
-        "plannotator": {
-          "name": "Plannotator",
-          "desc": "Torna o modo de planejamento mais claro com planos anotados estruturados que são revisáveis e compartilháveis."
-        },
-        "ralphWiggum": {
-          "name": "Ralph Wiggum Plugin",
-          "desc": "Testes visuais para verificar a aparência do aplicativo (especialmente Swift) por meio de simuladores Xcode."
-        },
-        "shipyard": {
-          "name": "Shipyard",
-          "desc": "Ciclo de vida no estilo Superpowers + validação de IaC e auditorias de segurança para fluxos de trabalho mais de 'produção'."
-        },
-        "devBrowser": {
-          "name": "Dev-Browser Plugin",
-          "desc": "Alternativa de navegação/teste leve e rápida com menor sobrecarga de contexto do que fluxos no estilo Playwright."
-        },
-        "lsp": {
-          "name": "TypeScript & Rust LSP Plugins",
-          "desc": "Executa verificações de tipo reais via LSP, exibindo erros de tipo/lint no fluxo de trabalho do Claude."
-        },
-        "peerReview": {
-          "name": "Agent-Peer-Review",
-          "desc": "Permite que o Claude e o Codex revisem o trabalho um do outro, com escalonamento para ferramentas de pesquisa na web, se necessário."
+        "fields": {
+          "apiKey": "Chave API (CODEBUDDY_API_KEY)",
+          "baseUrl": "URL Base (CODEBUDDY_BASE_URL)",
+          "internetEnv": "Ambiente de Internet",
+          "authToken": "Token de Autenticação (CODEBUDDY_AUTH_TOKEN)",
+          "model": "Modelo Recomendado",
+          "cleanupDays": "Ciclo de Limpeza (Dias)",
+          "alwaysThinking": "Modo 'Thinking' Sempre Ativo",
+          "showTokens": "Mostrar Contador de Tokens",
+          "promptSuggestion": "Sugestões de Prompt",
+          "autoCompact": "Compactação Automática",
+          "envRouteMode": "Modo de Roteamento de Ambiente",
+          "internal": "Interno",
+          "ioa": "Conta iOA",
+          "production": "Produção",
+          "staging": "Staging",
+          "plan": "Modo Planejamento (Plan)",
+          "act": "Modo Ação (Act)",
+          "statusLineCommand": "Comando da Linha de Status",
+          "permissions": "Modo de Permissão Padrão",
+          "marketplaces": "Marketplace de Plugins",
+          "memory": "Memória",
+          "endpoint": "Endpoint do Servidor",
+          "sandbox": "Habilitar Sandbox Bash",
+          "plugins": "Plugins Ativados",
+          "language": "Idioma de Exibição",
+          "autoUpdates": "Atualizações Automáticas",
+          "fetchModels": "Buscar Modelos",
+          "modelsFetched": "{{count}} modelos buscados com sucesso"
         }
-      }
-    }
-  },
-  "cliConfig": {
-    "fetchModels": "Buscar Modelos",
-    "modelsFetched": "{{count}} modelos buscados",
-    "fetchModelsFailed": "Falha ao buscar modelos",
-    "loginWithGithub": "Entrar com GitHub",
-    "oauthPrompt": "1. Mude para o terminal e execute 'gemini'\n2. Escolha Não (2) para 'Connect Antigravity'\n3. Digite /auth e selecione 'Login with Google'",
-    "qoder": {
-      "sections": {
-        "apiKeys": "Provedores de API",
-        "appearance": "Aparência e Tema",
-        "formatting": "Formatação",
-        "behavior": "Comportamento",
-        "minimap": "Minimapa",
-        "highlighting": "Destaque",
-        "aiModels": "Modelos de IA",
-        "parameters": "Parâmetros",
-        "usage": "Limites de Uso",
-        "analysis": "Análise",
-        "network": "Rede"
       },
+      "opencode": {
+        "sections": {
+          "auth": "Autenticação",
+          "general": "Configurações Gerais",
+          "server": "Configuração do Servidor",
+          "permissions": "Controle de Permissões",
+          "advanced": "Opções Avançadas"
+        },
+        "fields": {
+          "theme": "Tema",
+          "address": "Endereço do Endpoint",
+          "fetchFrom": "Fonte de Modelos",
+          "readModels": "Ler Modelos",
+          "model": "Modelo Principal",
+          "smallModel": "Modelo Pequeno",
+          "autoupdate": "Atualização Automática",
+          "share": "Modo de Compartilhamento",
+          "defaultAgent": "Agente Padrão",
+          "serverPort": "Porta do Servidor",
+          "serverHostname": "Hostname",
+          "serverMdns": "Habilitar mDNS",
+          "serverMdnsDomain": "Domínio mDNS",
+          "serverCors": "Origens CORS",
+          "toolsWrite": "Permitir Escrita de Arquivos",
+          "toolsBash": "Permitir Execução de Comandos",
+          "compactionAuto": "Compactação Automática de Contexto",
+          "compactionPrune": "Podar Contexto (Prune)",
+          "plugins": "Plugins Ativados",
+          "instructions": "Instruções do Modelo",
+          "permEdit": "Editar Arquivo (edit)",
+          "permBash": "Executar Comando (bash)",
+          "permRead": "Ler Arquivo (read)",
+          "permGrep": "Busca Regex (grep)",
+          "permGlob": "Correspondência de Padrão (glob)",
+          "permList": "Listar Diretórios (list)",
+          "permSkill": "Carregar Skill (skill)",
+          "permTodoWrite": "Gerenciar Tarefas (todowrite)",
+          "permTodoRead": "Ler Tarefas (todoread)",
+          "permWebFetch": "Buscar Web (webfetch)",
+          "permQuestion": "Perguntar ao Usuário (question)"
+        }
+      },
+      "codex": {
+        "sections": {
+          "auth": "Autenticação",
+          "general": "Configurações Gerais",
+          "provider": "Provedor de Modelo"
+        },
+        "fields": {
+          "model": "Nome do Modelo",
+          "reasoningEffort": "Esforço de Raciocínio",
+          "preferredAuth": "Método de Auth Preferido",
+          "modelProvider": "Tipo de Provedor",
+          "baseUrl": "URL Base da API",
+          "providerName": "Nome do Provedor",
+          "wireApi": "Wire API (ex: response)",
+          "timeout": "Tempo limite (s)",
+          "retryAttempts": "Tentativas de Reenvio"
+        }
+      },
+      "oauthTitle": "Passos para OAuth Gemini",
+      "common": {
+        "enabled": "Habilitado",
+        "disabled": "Desabilitado",
+        "settings": "Configurações",
+        "save": "Salvar",
+        "cancel": "Cancelar",
+        "delete": "Excluir",
+        "edit": "Editar"
+      },
+      "copilotPrompt": "1. Mude para o terminal e execute 'copilot login'\n2. Siga as instruções para autenticar sua conta",
+      "copilotTitle": "Passos de Autenticação Copilot",
       "fields": {
-        "endpoint": "Endpoint",
-        "timeout": "Tempo limite (ms)",
-        "maxRetries": "Tentativas máximas",
-        "organization": "ID da Organização",
-        "themeMode": "Modo do Tema",
-        "lightTheme": "Tema Claro",
-        "darkTheme": "Tema Escuro",
-        "contrast": "Contraste",
-        "fontFamily": "Família da Fonte",
-        "fontSize": "Tamanho da Fonte",
-        "lineHeight": "Altura da Linha",
-        "ligatures": "Ligaduras da Fonte",
-        "cursorStyle": "Estilo do Cursor",
-        "blink": "Piscar do Cursor",
-        "smoothCaret": "Cursor Suave",
-        "tabSize": "Tamanho da Tabulação",
-        "insertSpaces": "Inserir Espaços",
-        "trimWhitespace": "Remover Espaços no Final",
-        "finalNewline": "Nova Linha no Final",
-        "wordWrap": "Quebra de Linha",
-        "wordWrapColumn": "Coluna de Quebra",
-        "autoSave": "Salvamento Automático",
-        "autoSaveDelay": "Atraso do Salvamento Automático",
-        "formatOnSave": "Formatar ao Salvar",
-        "formatOnPaste": "Formatar ao Colar",
-        "formatOnType": "Formatar ao Digitar",
-        "semanticHighlighting": "Destaque Semântico",
-        "bracketMatching": "Correspondência de Chaves",
-        "colorDecorators": "Decoradores de Cor",
-        "indentGuides": "Guias de Indentação",
-        "lineNumbers": "Números de Linha",
-        "activeLineHighlight": "Destaque da Linha Ativa",
-        "modifiedTabsHighlight": "Destaque de Abas Modificadas",
-        "primaryModel": "Modelo Principal",
-        "fallbackModel": "Modelo de Fallback",
-        "autoModelSelection": "Seleção Automática de Modelo",
-        "codeCompletion": "Completar Código",
-        "codeReview": "Revisão de Código",
-        "archDesign": "Design de Arquitetura",
-        "documentation": "Documentação",
-        "dailyRequests": "Limite Diário de Requisições",
-        "hourlyRequests": "Limite Horário de Requisições",
-        "dailyCost": "Limite Diário de Custo ($)",
-        "monthlyCost": "Limite Mensal de Custo ($)",
-        "alertThreshold": "Limiar de Alerta",
-        "autoThrottle": "Aceleração Automática",
-        "analysisDepth": "Profundidade da Análise",
-        "maxFileSize": "Tamanho Máximo do Arquivo",
-        "maxFiles": "Número Máximo de Arquivos",
-        "includeDeps": "Incluir Dependências",
-        "analyzeExternal": "Analisar Bibliotecas Externas",
-        "semanticAnalysis": "Análise Semântica",
-        "crossRef": "Referências Cruzadas",
-        "addProvider": "Adicionar Provedor",
-        "providerName": "Nome do Provedor (ID)",
-        "fetchModels": "Buscar Modelos",
-        "maxOutputTokens": "Max Output Tokens",
+        "verbose": "Log Detalhado",
+        "theme": "Tema",
+        "preferredModel": "Modelo Preferido",
+        "editor": "Editor",
+        "autoUpdate": "Atualização Automática",
         "maxContextTokens": "Max Context Tokens",
+        "maxOutputTokens": "Max Output Tokens",
+        "model": "Modelo",
+        "modelProvider": "Provedor de Modelo",
+        "reasoningEffort": "Esforço de Raciocínio",
+        "disableResponseStorage": "Desabilitar Armazenamento de Resposta",
+        "preferredAuthMethod": "Método de Auth Preferido",
         "temperature": "Temperatura",
         "topP": "Top P",
-        "presencePenalty": "Penalidade de Presença",
-        "modelsFetched": "{{count}} modelos buscados com sucesso",
-        "showSlider": "Mostrar Controle Deslizante",
-        "side": "Lado",
-        "scale": "Escala",
-        "preferences": "Preferências",
-        "stopSequences": "Sequências de Parada",
-        "stopSequencesPlaceholder": "Pressione Enter para adicionar",
-        "frequencyPenalty": "Penalidade de Frequência",
-        "host": "Host",
-        "port": "Porta",
-        "username": "Usuário",
-        "password": "Senha",
-        "line": "Linha",
-        "block": "Bloco",
-        "underline": "Sublinhado",
-        "bounded": "Delimitado",
-        "afterDelay": "Após Atraso",
-        "onFocusChange": "Ao Mudar Foco",
-        "always": "Sempre",
-        "mouseover": "Ao Passar Mouse",
-        "left": "Esquerda",
-        "right": "Direita",
-        "basic": "Básico",
-        "standard": "Padrão",
-        "comprehensive": "Abrangente",
-        "small": "Pequeno",
-        "large": "Grande"
-      }
-    },
-    "codebuddy": {
-      "sections": {
-        "env": "Variáveis de Ambiente",
-        "general": "Configurações Gerais",
-        "advanced": "Configuração Avançada",
-        "plugins": "Plugins e Marketplace",
-        "network": "Rede e Sistema"
-      },
-      "fields": {
-        "apiKey": "Chave API (CODEBUDDY_API_KEY)",
-        "baseUrl": "URL Base (CODEBUDDY_BASE_URL)",
-        "internetEnv": "Ambiente de Internet",
-        "authToken": "Token de Autenticação (CODEBUDDY_AUTH_TOKEN)",
-        "model": "Modelo Recomendado",
-        "cleanupDays": "Ciclo de Limpeza (Dias)",
-        "alwaysThinking": "Modo 'Thinking' Sempre Ativo",
-        "showTokens": "Mostrar Contador de Tokens",
-        "promptSuggestion": "Sugestões de Prompt",
-        "autoCompact": "Compactação Automática",
-        "envRouteMode": "Modo de Roteamento de Ambiente",
-        "internal": "Interno",
-        "ioa": "Conta iOA",
-        "production": "Produção",
-        "staging": "Staging",
-        "plan": "Modo Planejamento (Plan)",
-        "act": "Modo Ação (Act)",
-        "statusLineCommand": "Comando da Linha de Status",
-        "permissions": "Modo de Permissão Padrão",
-        "marketplaces": "Marketplace de Plugins",
-        "memory": "Memória",
-        "endpoint": "Endpoint do Servidor",
-        "sandbox": "Habilitar Sandbox Bash",
-        "plugins": "Plugins Ativados",
-        "language": "Idioma de Exibição",
-        "autoUpdates": "Atualizações Automáticas",
-        "fetchModels": "Buscar Modelos",
-        "modelsFetched": "{{count}} modelos buscados com sucesso"
-      }
-    },
-    "opencode": {
-      "sections": {
-        "auth": "Autenticação",
-        "general": "Configurações Gerais",
-        "server": "Configuração do Servidor",
-        "permissions": "Controle de Permissões",
-        "advanced": "Opções Avançadas"
-      },
-      "fields": {
-        "theme": "Tema",
-        "address": "Endereço do Endpoint",
-        "fetchFrom": "Fonte de Modelos",
-        "readModels": "Ler Modelos",
-        "model": "Modelo Principal",
-        "smallModel": "Modelo Pequeno",
-        "autoupdate": "Atualização Automática",
-        "share": "Modo de Compartilhamento",
-        "defaultAgent": "Agente Padrão",
-        "serverPort": "Porta do Servidor",
-        "serverHostname": "Hostname",
-        "serverMdns": "Habilitar mDNS",
-        "serverMdnsDomain": "Domínio mDNS",
-        "serverCors": "Origens CORS",
-        "toolsWrite": "Permitir Escrita de Arquivos",
-        "toolsBash": "Permitir Execução de Comandos",
-        "compactionAuto": "Compactação Automática de Contexto",
-        "compactionPrune": "Podar Contexto (Prune)",
-        "plugins": "Plugins Ativados",
-        "instructions": "Instruções do Modelo",
-        "permEdit": "Editar Arquivo (edit)",
-        "permBash": "Executar Comando (bash)",
-        "permRead": "Ler Arquivo (read)",
-        "permGrep": "Busca Regex (grep)",
-        "permGlob": "Correspondência de Padrão (glob)",
-        "permList": "Listar Diretórios (list)",
-        "permSkill": "Carregar Skill (skill)",
-        "permTodoWrite": "Gerenciar Tarefas (todowrite)",
-        "permTodoRead": "Ler Tarefas (todoread)",
-        "permWebFetch": "Buscar Web (webfetch)",
-        "permQuestion": "Perguntar ao Usuário (question)"
-      }
-    },
-    "codex": {
-      "sections": {
-        "auth": "Autenticação",
-        "general": "Configurações Gerais",
-        "provider": "Provedor de Modelo"
-      },
-      "fields": {
-        "model": "Nome do Modelo",
-        "reasoningEffort": "Esforço de Raciocínio",
-        "preferredAuth": "Método de Auth Preferido",
-        "modelProvider": "Tipo de Provedor",
-        "baseUrl": "URL Base da API",
-        "providerName": "Nome do Provedor",
-        "wireApi": "Wire API (ex: response)",
-        "timeout": "Tempo limite (s)",
-        "retryAttempts": "Tentativas de Reenvio"
-      }
-    },
-    "oauthTitle": "Passos para OAuth Gemini",
-    "common": {
-      "enabled": "Habilitado",
-      "disabled": "Desabilitado",
-      "settings": "Configurações",
-      "save": "Salvar",
-      "cancel": "Cancelar",
-      "delete": "Excluir",
-      "edit": "Editar"
-    },
-    "copilotPrompt": "1. Mude para o terminal e execute 'copilot login'\n2. Siga as instruções para autenticar sua conta",
-    "copilotTitle": "Passos de Autenticação Copilot",
-    "fields": {
-      "verbose": "Log Detalhado",
-      "theme": "Tema",
-      "preferredModel": "Modelo Preferido",
-      "editor": "Editor",
-      "autoUpdate": "Atualização Automática",
-      "maxContextTokens": "Max Context Tokens",
-      "maxOutputTokens": "Max Output Tokens",
-      "model": "Modelo",
-      "modelProvider": "Provedor de Modelo",
-      "reasoningEffort": "Esforço de Raciocínio",
-      "disableResponseStorage": "Desabilitar Armazenamento de Resposta",
-      "preferredAuthMethod": "Método de Auth Preferido",
-      "temperature": "Temperatura",
-      "topP": "Top P",
-      "topK": "Top K",
-      "safetySettings": "Configurações de Segurança",
-      "defaultModel": "Modelo Padrão",
-      "language": "Idioma",
-      "enableMcp": "Habilitar MCP",
-      "telemetry": "Telemetria",
-      "defaultPermission": "Permissões Padrão",
-      "apiKey": "Chave API",
-      "editorIntegration": "Integração com Editor",
-      "debugMode": "Modo de Depuração",
-      "confirmExecute": "Confirmar Execução",
-      "githubToken": "Token GitHub",
-      "autoUpdater": "Atualizador Automático",
-      "providerName": "Provedor de Serviço",
-      "baseUrl": "URL Base",
-      "authType": "Tipo de Auth",
-      "defaultAgent": "Agente Padrão",
-      "instructions": "Instruções",
-      "disabledProviders": "Provedores Desativados",
-      "server": {
-        "port": "Porta",
-        "hostname": "Hostname",
-        "mdns": "Descoberta mDNS",
-        "cors": "Origens CORS"
-      },
-      "tui": {
-        "scrollSpeed": "Velocidade de Rolagem",
-        "diffStyle": "Estilo de Diff"
-      },
-      "tools": {
-        "write": "Permitir escrita de arquivos",
-        "bash": "Permitir execução de comandos"
-      },
-      "permission": {
-        "edit": "Permissões de Edição",
-        "bash": "Permissões de Execução"
-      },
-      "compaction": {
-        "auto": "Compactação Automática",
-        "prune": "Podar (Prune)"
-      },
-      "provider": {
-        "timeout": "Tempo limite (ms)",
+        "topK": "Top K",
+        "safetySettings": "Configurações de Segurança",
+        "defaultModel": "Modelo Padrão",
+        "language": "Idioma",
+        "enableMcp": "Habilitar MCP",
+        "telemetry": "Telemetria",
+        "defaultPermission": "Permissões Padrão",
+        "apiKey": "Chave API",
+        "editorIntegration": "Integração com Editor",
+        "debugMode": "Modo de Depuração",
+        "confirmExecute": "Confirmar Execução",
+        "githubToken": "Token GitHub",
+        "autoUpdater": "Atualizador Automático",
+        "providerName": "Provedor de Serviço",
         "baseUrl": "URL Base",
-        "name": "Nome do Provedor"
+        "authType": "Tipo de Auth",
+        "defaultAgent": "Agente Padrão",
+        "instructions": "Instruções",
+        "disabledProviders": "Provedores Desativados",
+        "server": {
+          "port": "Porta",
+          "hostname": "Hostname",
+          "mdns": "Descoberta mDNS",
+          "cors": "Origens CORS"
+        },
+        "tui": {
+          "scrollSpeed": "Velocidade de Rolagem",
+          "diffStyle": "Estilo de Diff"
+        },
+        "tools": {
+          "write": "Permitir escrita de arquivos",
+          "bash": "Permitir execução de comandos"
+        },
+        "permission": {
+          "edit": "Permissões de Edição",
+          "bash": "Permissões de Execução"
+        },
+        "compaction": {
+          "auto": "Compactação Automática",
+          "prune": "Podar (Prune)"
+        },
+        "provider": {
+          "timeout": "Tempo limite (ms)",
+          "baseUrl": "URL Base",
+          "name": "Nome do Provedor"
+        },
+        "configuredProviders": "Provedores Configurados",
+        "allProviders": "Todos os Provedores",
+        "cleanupDays": "Dias de Limpeza",
+        "thinkingMode": "Modo Thinking",
+        "showDuration": "Mostrar Duração",
+        "updateChannel": "Canal de Atualização",
+        "plansDir": "Diretório de Planos",
+        "spinnerTips": "Dicas de Carregamento",
+        "progressBar": "Barra de Progresso no Terminal",
+        "allowList": "Lista de Permissões (Allowlist)",
+        "denyList": "Lista de Bloqueios (Denylist)",
+        "allowedDirs": "Diretórios Permitidos Adicionais",
+        "autoAllowBash": "Auto Permitir Bash em Sandbox",
+        "excludedCmds": "Comandos Excluídos",
+        "allowLocalBind": "Permitir Bind Local",
+        "unixSockets": "Permitir Unix Sockets",
+        "apiKeyRequired": "Por favor, insira a chave API primeiro",
+        "apiKeyPlaceholder": "Insira sua Chave API Gemini",
+        "oauthLogin": "Login OAuth",
+        "loginWithGoogle": "Entrar com Google",
+        "candidateCount": "Número de Candidatos",
+        "outputFormat": "Formato de Saída",
+        "syntaxHighlighting": "Destaque de Sintaxe",
+        "showLineNumbers": "Mostrar Números de Linha",
+        "harassment": "Assédio",
+        "hateSpeech": "Discurso de Ódio",
+        "sexuallyExplicit": "Sexualmente Explícito",
+        "dangerousContent": "Conteúdo Perigoso",
+        "respectGitIgnore": "Respeitar .gitignore",
+        "recursiveSearch": "Busca Recursiva",
+        "autoAcceptTools": "Aceitar Ferramentas Automaticamente",
+        "enableSandbox": "Habilitar Sandbox",
+        "toolDiscoveryCommand": "Comando de Descoberta de Ferramentas",
+        "toolCallCommand": "Comando de Chamada de Ferramenta",
+        "checkpointsEnabled": "Checkpoints Habilitados",
+        "telemetryEnabled": "Telemetria Habilitada",
+        "otlpEndpoint": "Endpoint OTLP",
+        "maxSessionTurns": "Máximo de Turnos da Sessão",
+        "compressionThreshold": "Limiar de Compressão",
+        "fileFiltering": "Filtragem de Arquivos",
+        "toolsAndSandbox": "Ferramentas & Sandbox",
+        "debugAndTelemetry": "Depuração & Telemetria",
+        "sessionManagement": "Gerenciamento de Sessão"
       },
-      "configuredProviders": "Provedores Configurados",
-      "allProviders": "Todos os Provedores",
-      "cleanupDays": "Dias de Limpeza",
-      "thinkingMode": "Modo Thinking",
-      "showDuration": "Mostrar Duração",
-      "updateChannel": "Canal de Atualização",
-      "plansDir": "Diretório de Planos",
-      "spinnerTips": "Dicas de Carregamento",
-      "progressBar": "Barra de Progresso no Terminal",
-      "allowList": "Lista de Permissões (Allowlist)",
-      "denyList": "Lista de Bloqueios (Denylist)",
-      "allowedDirs": "Diretórios Permitidos Adicionais",
-      "autoAllowBash": "Auto Permitir Bash em Sandbox",
-      "excludedCmds": "Comandos Excluídos",
-      "allowLocalBind": "Permitir Bind Local",
-      "unixSockets": "Permitir Unix Sockets",
-      "apiKeyRequired": "Por favor, insira a chave API primeiro",
-      "apiKeyPlaceholder": "Insira sua Chave API Gemini",
-      "oauthLogin": "Login OAuth",
-      "loginWithGoogle": "Entrar com Google",
-      "candidateCount": "Número de Candidatos",
-      "outputFormat": "Formato de Saída",
-      "syntaxHighlighting": "Destaque de Sintaxe",
-      "showLineNumbers": "Mostrar Números de Linha",
-      "harassment": "Assédio",
-      "hateSpeech": "Discurso de Ódio",
-      "sexuallyExplicit": "Sexualmente Explícito",
-      "dangerousContent": "Conteúdo Perigoso",
-      "respectGitIgnore": "Respeitar .gitignore",
-      "recursiveSearch": "Busca Recursiva",
-      "autoAcceptTools": "Aceitar Ferramentas Automaticamente",
-      "enableSandbox": "Habilitar Sandbox",
-      "toolDiscoveryCommand": "Comando de Descoberta de Ferramentas",
-      "toolCallCommand": "Comando de Chamada de Ferramenta",
-      "checkpointsEnabled": "Checkpoints Habilitados",
-      "telemetryEnabled": "Telemetria Habilitada",
-      "otlpEndpoint": "Endpoint OTLP",
-      "maxSessionTurns": "Máximo de Turnos da Sessão",
-      "compressionThreshold": "Limiar de Compressão",
-      "fileFiltering": "Filtragem de Arquivos",
-      "toolsAndSandbox": "Ferramentas & Sandbox",
-      "debugAndTelemetry": "Depuração & Telemetria",
-      "sessionManagement": "Gerenciamento de Sessão"
+      "sections": {
+        "basic": "Básico",
+        "permissions": "Permissões",
+        "sandbox": "Sandbox",
+        "env": "Ambiente",
+        "network": "Rede",
+        "controls": "Controles",
+        "limits": "Limites",
+        "auth": "Auth",
+        "advanced": "Avançado",
+        "generation": "Geração",
+        "safety": "Segurança",
+        "features": "Recursos"
+      },
+      "descriptions": {
+        "verbose": "Ativar log detalhado",
+        "editor": "Comando para abrir editor (ex: 'code')",
+        "limitContext": "Limitar tamanho do contexto",
+        "randomness": "Controlar aleatoriedade",
+        "safety": "Configuração de segurança como JSON (complexo)",
+        "githubToken": "Opcional: Sobrescrever token de auth",
+        "tencentKey": "Sua chave API Tencent Cloud",
+        "confirmExecute": "Perguntar antes de executar",
+        "modelProvider": "Tipo de provedor (ex: openai, anthropic). Endpoints personalizados como DeepSeek podem usar 'openai'.",
+        "githubAuth": "Use o Copilot CLI para autenticar sua conta."
+      },
+      "switchAccount": "Mudar de Conta"
     },
-    "sections": {
-      "basic": "Básico",
-      "permissions": "Permissões",
-      "sandbox": "Sandbox",
-      "env": "Ambiente",
-      "network": "Rede",
-      "controls": "Controles",
-      "limits": "Limites",
-      "auth": "Auth",
-      "advanced": "Avançado",
-      "generation": "Geração",
-      "safety": "Segurança",
-      "features": "Recursos"
+    "apps": {
+      "title": "App Store",
+      "subtitle": "Descubra e instale ferramentas de desenvolvedor, linguagens e serviços.",
+      "searchPlaceholder": "Buscar apps...",
+      "categories": {
+        "languages": "Linguagens",
+        "web": "Serviços Web",
+        "database": "Banco de Dados",
+        "cache_queue": "Cache & Fila",
+        "tools": "Ferramentas & Contêineres",
+        "config_tools": "Ferramentas de Config"
+      },
+      "downloadModal": {
+        "title": "Baixando {{name}}",
+        "waiting": "Aguarde, download em andamento...",
+        "extracting": "Extraindo arquivo, aguarde...",
+        "savePath": "Salvando em /download",
+        "success": "{{name}} baixado e extraído com sucesso!",
+        "failed": "Falha na operação: {{error}}"
+      },
+      "messages": {
+        "alreadyInstalled": "{{name}} já está instalado.",
+        "actuallyAlreadyInstalled": "{{name}} está realmente instalado: {{version}}",
+        "notConfigured": "{{name}} não configurado para download.",
+        "gitMissing": "Git não instalado. Redirecionando para App Store..."
+      },
+      "items": {
+        "python": {
+          "name": "Python",
+          "desc": "Uma linguagem de programação de alto nível e uso geral."
+        },
+        "go": {
+          "name": "Go",
+          "desc": "Linguagem de programação open source apoiada pelo Google."
+        },
+        "java": {
+          "name": "Java",
+          "desc": "Linguagem de programação orientada a objetos baseada em classes."
+        },
+        "bun": {
+          "name": "Bun",
+          "desc": "Runtime JavaScript all-in-one ultrarrápido, bundler, test runner e gerenciador de pacotes."
+        },
+        "rust": {
+          "name": "Rust",
+          "desc": "Uma linguagem que capacita todos a construir software confiável e eficiente."
+        },
+        "php": {
+          "name": "PHP",
+          "desc": "Linguagem de script popular especialmente adequada para desenvolvimento web."
+        },
+        "erlang": {
+          "name": "Erlang",
+          "desc": "Linguagem de programação para construir sistemas em tempo real escaláveis."
+        },
+        "perl": {
+          "name": "Perl",
+          "desc": "Linguagem de programação rica em recursos com mais de 30 anos de história."
+        },
+        "ruby": {
+          "name": "Ruby",
+          "desc": "Uma linguagem open source dinâmica com foco na simplicidade e produtividade."
+        },
+        "apache": {
+          "name": "Apache",
+          "desc": "O software de servidor web mais usado no mundo."
+        },
+        "caddy": {
+          "name": "Caddy",
+          "desc": "O servidor definitivo com HTTPS automático."
+        },
+        "tomcat": {
+          "name": "Tomcat",
+          "desc": "Implementação open source de Jakarta Servlet, Jakarta Server Pages, etc."
+        },
+        "nginx": {
+          "name": "Nginx",
+          "desc": "Load Balancer de alto desempenho, servidor web e proxy reverso."
+        },
+        "consul": {
+          "name": "Consul",
+          "desc": "Automatiza a configuração de rede, descobre serviços e protege conexões."
+        },
+        "mariadb": {
+          "name": "MariaDB",
+          "desc": "Um dos servidores de banco de dados mais populares. Feito pelos desenvolvedores originais do MySQL."
+        },
+        "mongodb": {
+          "name": "MongoDB",
+          "desc": "Plataforma de dados de aplicativos para a era da nuvem."
+        },
+        "mysql": {
+          "name": "MySQL",
+          "desc": "O banco de dados open source mais popular do mundo."
+        },
+        "postgresql": {
+          "name": "PostgreSQL",
+          "desc": "O banco de dados relacional open source mais avançado do mundo."
+        },
+        "redis": {
+          "name": "Redis",
+          "desc": "O armazenamento de dados em memória usado por milhões de desenvolvedores."
+        },
+        "memcached": {
+          "name": "Memcached",
+          "desc": "Sistema de cache de objetos de memória distribuída de alto desempenho."
+        },
+        "rabbitmq": {
+          "name": "RabbitMQ",
+          "desc": "Um dos brokers de mensagens open source mais populares."
+        },
+        "etcd": {
+          "name": "Etcd",
+          "desc": "Armazenamento de chave-valor distribuído e fortemente consistente."
+        },
+        "nodejs": {
+          "name": "NodeJS",
+          "desc": "Runtime JavaScript construído sobre o motor V8 do Chrome."
+        },
+        "git": {
+          "name": "Git",
+          "desc": "Sistema de controle de versão distribuído gratuito e open source."
+        },
+        "podman": {
+          "name": "Podman",
+          "desc": "Uma ferramenta para gerenciar contêineres e pods OCI."
+        },
+        "docker": {
+          "name": "Docker",
+          "desc": "Acelera como você constrói, compartilha e executa aplicativos."
+        },
+        "minio": {
+          "name": "MinIO",
+          "desc": "Armazenamento de objetos de alta performance, compatível com S3."
+        }
+      }
     },
-    "descriptions": {
-      "verbose": "Ativar log detalhado",
-      "editor": "Comando para abrir editor (ex: 'code')",
-      "limitContext": "Limitar tamanho do contexto",
-      "randomness": "Controlar aleatoriedade",
-      "safety": "Configuração de segurança como JSON (complexo)",
-      "githubToken": "Opcional: Sobrescrever token de auth",
-      "tencentKey": "Sua chave API Tencent Cloud",
-      "confirmExecute": "Perguntar antes de executar",
-      "modelProvider": "Tipo de provedor (ex: openai, anthropic). Endpoints personalizados como DeepSeek podem usar 'openai'.",
-      "githubAuth": "Use o Copilot CLI para autenticar sua conta."
+    "tools": {
+      "claude": "Claude Code",
+      "google": "Gemini",
+      "opencode": "OpenCode",
+      "qoder": "Qoder",
+      "codebuddy": "CodeBuddy",
+      "copilot": "GitHub Copilot",
+      "codex": "OpenAI Codex"
     },
-    "switchAccount": "Mudar de Conta"
-  },
-  "apps": {
-    "title": "App Store",
-    "subtitle": "Descubra e instale ferramentas de desenvolvedor, linguagens e serviços.",
-    "searchPlaceholder": "Buscar apps...",
-    "categories": {
-      "languages": "Linguagens",
-      "web": "Serviços Web",
-      "database": "Banco de Dados",
-      "cache_queue": "Cache & Fila",
-      "tools": "Ferramentas & Contêineres",
-      "config_tools": "Ferramentas de Config"
+    "settings": {
+      "theme": "Tema",
+      "language": "Idioma",
+      "systemAppearance": "Aparência do Sistema",
+      "proxySettings": "Configurações de Proxy",
+      "systemFont": "Fonte do Sistema",
+      "primaryColor": "Cor Primária",
+      "textColor": "Cor do Texto (Sobrescrever)",
+      "textColorDesc": "Se definido, esta cor será usada no modo claro. O modo escuro usa alto contraste padrão para legibilidade.",
+      "windowOpacity": "Opacidade da Janela",
+      "proxyType": "Tipo de Proxy",
+      "proxyAddress": "Endereço do Proxy",
+      "noProxy": "Sem Proxy",
+      "saveConfig": "Salvar Configuração",
+      "appearancePresets": "Predefinições de Aparência",
+      "applyPreset": "Aplicar",
+      "preset1": "Padrão (Rosa)",
+      "preset2": "Azul Oceano",
+      "preset3": "Verde Floresta",
+      "preset4": "Ember Roxo",
+      "preset5": "Amarelo Pôr do Sol",
+      "preset6": "Vermelho Vulcão",
+      "preset7": "Ouro Cyber",
+      "preset8": "Cinza Geek",
+      "customFontPlaceholder": "Digite o nome da fonte...",
+      "addFont": "Adicionar Fonte",
+      "selectIde": "Selecionar Executável IDE",
+      "terminal": "Terminal",
+      "terminalFont": "Fonte do Terminal",
+      "fontFamily": "Família da Fonte",
+      "fontSize": "Tamanho da Fonte",
+      "cursorStyle": "Estilo do Cursor",
+      "terminalShell": "Shell do Terminal",
+      "terminalColors": "Cores do Terminal",
+      "terminalBackground": "Fundo",
+      "terminalForeground": "Primeiro Plano",
+      "terminalPresets": "Predefinições de Terminal",
+      "proxyWarning": "Nota: Proxy é uma configuração global. Todas as requisições passarão por ele.",
+      "idePath": "Caminho da IDE",
+      "idePathDesc": "Caminho absoluto para o executável da IDE (ex: VS Code ou Cursor) para abrir arquivos.",
+      "idePathOpen": "Definir Caminho",
+      "environment": "Ambiente",
+      "environmentCheck": "Verificação de Ambiente",
+      "notInstalled": "Não Instalado",
+      "envNote": "Certifique-se de que essas ferramentas estejam no PATH do sistema ou do usuário para serem detectadas."
     },
-    "downloadModal": {
-      "title": "Baixando {{name}}",
-      "waiting": "Aguarde, download em andamento...",
-      "extracting": "Extraindo arquivo, aguarde...",
-      "savePath": "Salvando em /download",
-      "success": "{{name}} baixado e extraído com sucesso!",
-      "failed": "Falha na operação: {{error}}"
+    "search": {
+      "title": "Buscar",
+      "placeholder": "Buscar arquivos...",
+      "content": "Conteúdo correspondente",
+      "noResults": "Nenhum resultado encontrado"
     },
-    "messages": {
-      "alreadyInstalled": "{{name}} já está instalado.",
-      "actuallyAlreadyInstalled": "{{name}} está realmente instalado: {{version}}",
-      "notConfigured": "{{name}} não configurado para download.",
-      "gitMissing": "Git não instalado. Redirecionando para App Store..."
+    "diff": {
+      "title": "Diff de Arquivo",
+      "loadError": "Falha ao carregar diff"
     },
-    "items": {
-      "python": {
-        "name": "Python",
-        "desc": "Uma linguagem de programação de alto nível e uso geral."
+    "terminal": {
+      "dirError": "Falha na seleção de diretório",
+      "selectTool": "Selecione uma ferramenta primeiro",
+      "cliTool": "Ferramenta CLI",
+      "model": "Modelo",
+      "selectModel": "Selecionar Modelo",
+      "tabs": {
+        "files": "Arquivos",
+        "search": "Buscar",
+        "shortcuts": "Atalhos",
+        "new": "Terminal {{number}}"
       },
-      "go": {
-        "name": "Go",
-        "desc": "Linguagem de programação open source apoiada pelo Google."
-      },
-      "java": {
-        "name": "Java",
-        "desc": "Linguagem de programação orientada a objetos baseada em classes."
-      },
-      "bun": {
-        "name": "Bun",
-        "desc": "Runtime JavaScript all-in-one ultrarrápido, bundler, test runner e gerenciador de pacotes."
-      },
-      "rust": {
-        "name": "Rust",
-        "desc": "Uma linguagem que capacita todos a construir software confiável e eficiente."
-      },
-      "php": {
-        "name": "PHP",
-        "desc": "Linguagem de script popular especialmente adequada para desenvolvimento web."
-      },
-      "erlang": {
-        "name": "Erlang",
-        "desc": "Linguagem de programação para construir sistemas em tempo real escaláveis."
-      },
-      "perl": {
-        "name": "Perl",
-        "desc": "Linguagem de programação rica em recursos com mais de 30 anos de história."
-      },
-      "ruby": {
-        "name": "Ruby",
-        "desc": "Uma linguagem open source dinâmica com foco na simplicidade e produtividade."
-      },
-      "apache": {
-        "name": "Apache",
-        "desc": "O software de servidor web mais usado no mundo."
-      },
-      "caddy": {
-        "name": "Caddy",
-        "desc": "O servidor definitivo com HTTPS automático."
-      },
-      "tomcat": {
-        "name": "Tomcat",
-        "desc": "Implementação open source de Jakarta Servlet, Jakarta Server Pages, etc."
-      },
-      "nginx": {
-        "name": "Nginx",
-        "desc": "Load Balancer de alto desempenho, servidor web e proxy reverso."
-      },
-      "consul": {
-        "name": "Consul",
-        "desc": "Automatiza a configuração de rede, descobre serviços e protege conexões."
-      },
-      "mariadb": {
-        "name": "MariaDB",
-        "desc": "Um dos servidores de banco de dados mais populares. Feito pelos desenvolvedores originais do MySQL."
-      },
-      "mongodb": {
-        "name": "MongoDB",
-        "desc": "Plataforma de dados de aplicativos para a era da nuvem."
-      },
-      "mysql": {
-        "name": "MySQL",
-        "desc": "O banco de dados open source mais popular do mundo."
-      },
-      "postgresql": {
-        "name": "PostgreSQL",
-        "desc": "O banco de dados relacional open source mais avançado do mundo."
-      },
-      "redis": {
-        "name": "Redis",
-        "desc": "O armazenamento de dados em memória usado por milhões de desenvolvedores."
-      },
-      "memcached": {
-        "name": "Memcached",
-        "desc": "Sistema de cache de objetos de memória distribuída de alto desempenho."
-      },
-      "rabbitmq": {
-        "name": "RabbitMQ",
-        "desc": "Um dos brokers de mensagens open source mais populares."
-      },
-      "etcd": {
-        "name": "Etcd",
-        "desc": "Armazenamento de chave-valor distribuído e fortemente consistente."
-      },
-      "nodejs": {
-        "name": "NodeJS",
-        "desc": "Runtime JavaScript construído sobre o motor V8 do Chrome."
+      "noDirectory": "Nenhum diretório selecionado",
+      "workingDir": "Diretório de Trabalho",
+      "chat": {
+        "placeholder": "Digite uma mensagem... (Shift+Enter para nova linha)",
+        "send": "Enviar"
       },
       "git": {
-        "name": "Git",
-        "desc": "Sistema de controle de versão distribuído gratuito e open source."
+        "menu": "Operações Git",
+        "setUser": "Definir Nome de Usuário",
+        "setEmail": "Definir Email de Usuário",
+        "init": "Inicializar Repositório",
+        "addRemote": "Adicionar Remote Origin",
+        "add": "Adicionar Tudo (git add .)",
+        "commit": "Commit",
+        "push": "Push (origin master)",
+        "modal": {
+          "userName": "Configurar Nome de Usuário Git",
+          "userEmail": "Configurar Email de Usuário Git",
+          "remote": "Adicionar Remote Origin",
+          "commit": "Git Commit",
+          "labelName": "Nome",
+          "labelEmail": "Email",
+          "labelUrl": "URL do Repo",
+          "labelMessage": "Mensagem do Commit"
+        }
       },
-      "podman": {
-        "name": "Podman",
-        "desc": "Uma ferramenta para gerenciar contêineres e pods OCI."
+      "resumed": "Sessão retomada...",
+      "fileTree": {
+        "title": "Explorador de Arquivos",
+        "change": "Alterar",
+        "context": {
+          "addToChat": "Adicionar ao Chat",
+          "open": "Abrir",
+          "modify": "Modificar",
+          "diff": "Diff",
+          "openInIde": "Abrir na IDE",
+          "delete": "Excluir",
+          "rename": "Renomear",
+          "insertedToChat": "Caminho inserido na entrada do chat",
+          "insertedToTerminal": "Caminho inserido no terminal"
+        },
+        "modal": {
+          "editing": "Editar Arquivo",
+          "save": "Salvar"
+        }
       },
-      "docker": {
-        "name": "Docker",
-        "desc": "Acelera como você constrói, compartilha e executa aplicativos."
-      },
-      "minio": {
-        "name": "MinIO",
-        "desc": "Armazenamento de objetos de alta performance, compatível com S3."
-      }
-    }
-  },
-  "tools": {
-    "claude": "Claude Code",
-    "google": "Gemini",
-    "opencode": "OpenCode",
-    "qoder": "Qoder",
-    "codebuddy": "CodeBuddy",
-    "copilot": "GitHub Copilot",
-    "codex": "OpenAI Codex"
-  },
-  "settings": {
-    "theme": "Tema",
-    "language": "Idioma",
-    "systemAppearance": "Aparência do Sistema",
-    "proxySettings": "Configurações de Proxy",
-    "systemFont": "Fonte do Sistema",
-    "primaryColor": "Cor Primária",
-    "textColor": "Cor do Texto (Sobrescrever)",
-    "textColorDesc": "Se definido, esta cor será usada no modo claro. O modo escuro usa alto contraste padrão para legibilidade.",
-    "windowOpacity": "Opacidade da Janela",
-    "proxyType": "Tipo de Proxy",
-    "proxyAddress": "Endereço do Proxy",
-    "noProxy": "Sem Proxy",
-    "saveConfig": "Salvar Configuração",
-    "appearancePresets": "Predefinições de Aparência",
-    "applyPreset": "Aplicar",
-    "preset1": "Padrão (Rosa)",
-    "preset2": "Azul Oceano",
-    "preset3": "Verde Floresta",
-    "preset4": "Ember Roxo",
-    "preset5": "Amarelo Pôr do Sol",
-    "preset6": "Vermelho Vulcão",
-    "preset7": "Ouro Cyber",
-    "preset8": "Cinza Geek",
-    "customFontPlaceholder": "Digite o nome da fonte...",
-    "addFont": "Adicionar Fonte",
-    "selectIde": "Selecionar Executável IDE",
-    "terminal": "Terminal",
-    "terminalFont": "Fonte do Terminal",
-    "fontFamily": "Família da Fonte",
-    "fontSize": "Tamanho da Fonte",
-    "cursorStyle": "Estilo do Cursor",
-    "terminalShell": "Shell do Terminal",
-    "terminalColors": "Cores do Terminal",
-    "terminalBackground": "Fundo",
-    "terminalForeground": "Primeiro Plano",
-    "terminalPresets": "Predefinições de Terminal",
-    "proxyWarning": "Nota: Proxy é uma configuração global. Todas as requisições passarão por ele.",
-    "idePath": "Caminho da IDE",
-    "idePathDesc": "Caminho absoluto para o executável da IDE (ex: VS Code ou Cursor) para abrir arquivos.",
-    "idePathOpen": "Definir Caminho",
-    "environment": "Ambiente",
-    "environmentCheck": "Verificação de Ambiente",
-    "notInstalled": "Não Instalado",
-    "envNote": "Certifique-se de que essas ferramentas estejam no PATH do sistema ou do usuário para serem detectadas."
-  },
-  "search": {
-    "title": "Buscar",
-    "placeholder": "Buscar arquivos...",
-    "content": "Conteúdo correspondente",
-    "noResults": "Nenhum resultado encontrado"
-  },
-  "diff": {
-    "title": "Diff de Arquivo",
-    "loadError": "Falha ao carregar diff"
-  },
-  "terminal": {
-    "dirError": "Falha na seleção de diretório",
-    "selectTool": "Selecione uma ferramenta primeiro",
-    "cliTool": "Ferramenta CLI",
-    "model": "Modelo",
-    "selectModel": "Selecionar Modelo",
-    "tabs": {
-      "files": "Arquivos",
-      "search": "Buscar",
-      "shortcuts": "Atalhos",
-      "new": "Terminal {{number}}"
-    },
-    "noDirectory": "Nenhum diretório selecionado",
-    "workingDir": "Diretório de Trabalho",
-    "chat": {
-      "placeholder": "Digite uma mensagem... (Shift+Enter para nova linha)",
-      "send": "Enviar"
-    },
-    "git": {
-      "menu": "Operações Git",
-      "setUser": "Definir Nome de Usuário",
-      "setEmail": "Definir Email de Usuário",
-      "init": "Inicializar Repositório",
-      "addRemote": "Adicionar Remote Origin",
-      "add": "Adicionar Tudo (git add .)",
-      "commit": "Commit",
-      "push": "Push (origin master)",
-      "modal": {
-        "userName": "Configurar Nome de Usuário Git",
-        "userEmail": "Configurar Email de Usuário Git",
-        "remote": "Adicionar Remote Origin",
-        "commit": "Git Commit",
-        "labelName": "Nome",
-        "labelEmail": "Email",
-        "labelUrl": "URL do Repo",
-        "labelMessage": "Mensagem do Commit"
-      }
-    },
-    "resumed": "Sessão retomada...",
-    "fileTree": {
-      "title": "Explorador de Arquivos",
-      "change": "Alterar",
-      "context": {
-        "addToChat": "Adicionar ao Chat",
-        "open": "Abrir",
-        "modify": "Modificar",
-        "diff": "Diff",
-        "openInIde": "Abrir na IDE",
+      "commandPresets": {
+        "title": "Comandos Rápidos",
+        "add": "Adicionar Comando",
+        "edit": "Editar Comando",
         "delete": "Excluir",
-        "rename": "Renomear",
-        "insertedToChat": "Caminho inserido na entrada do chat",
-        "insertedToTerminal": "Caminho inserido no terminal"
+        "name": "Nome",
+        "command": "Comando",
+        "placeholderName": "Ex: Explicar código",
+        "placeholderCommand": "Ex: /explain",
+        "empty": "Sem comandos",
+        "run": "Executar"
       },
-      "modal": {
-        "editing": "Editar Arquivo",
-        "save": "Salvar"
-      }
+      "contextBuilder": {
+        "title": "Bucket de Contexto",
+        "empty": "Nenhum arquivo selecionado",
+        "copyXml": "Copiar como XML",
+        "copyMd": "Copiar como Markdown",
+        "clear": "Esvaziar Bucket",
+        "copied": "Contexto copiado para a área de transferência"
+      },
+      "aiGenerated": "Conteúdo gerado por modelo de linguagem",
+      "helpButton": "Ajuda",
+      "helpModalTitle": "Guia Rápido de Ferramentas CLI",
+      "copilotHelp": "**GitHub Copilot**: Use `copilot [command]` ou `?? [question]` para fazer perguntas.",
+      "geminiHelp": "**Google Gemini**: Use `gemini [prompt]` para conversar. Use `gemini models` para listar modelos.",
+      "claudeHelp": "**Anthropic Claude**: Use `claude [prompt]` para conversar.",
+      "generalHelp": "Pressione `Shift + Tab` para mudar o foco. Pressione `Ctrl + S` para salvar.",
+      "oauthModelHint": "Observação: Se estiver conectado via OAuth, use o comando `/models` ou selecione `Change Model` no menu de contexto do bate-papo."
     },
-    "commandPresets": {
-      "title": "Comandos Rápidos",
-      "add": "Adicionar Comando",
-      "edit": "Editar Comando",
+    "common": {
+      "ok": "OK",
+      "cancel": "Cancelar",
+      "confirm": "Confirmar",
+      "save": "Salvar",
       "delete": "Excluir",
-      "name": "Nome",
-      "command": "Comando",
-      "placeholderName": "Ex: Explicar código",
-      "placeholderCommand": "Ex: /explain",
-      "empty": "Sem comandos",
-      "run": "Executar"
+      "text": "Texto",
+      "json": "JSON",
+      "enabled": "Ativado",
+      "settings": "Configurações",
+      "auto": "Automático",
+      "off": "Desligado",
+      "on": "Ligado",
+      "light": "Claro",
+      "dark": "Escuro",
+      "low": "Baixo",
+      "normal": "Normal",
+      "high": "Alto",
+      "all": "Todos",
+      "goToTerminal": "Ir para o terminal",
+      "yes": "Sim",
+      "no": "Não",
+      "add": "Add",
+      "deleteConfirm": "Are you sure you want to delete this provider?"
     },
-    "contextBuilder": {
-      "title": "Bucket de Contexto",
-      "empty": "Nenhum arquivo selecionado",
-      "copyXml": "Copiar como XML",
-      "copyMd": "Copiar como Markdown",
-      "clear": "Esvaziar Bucket",
-      "copied": "Contexto copiado para a área de transferência"
-    },
-    "aiGenerated": "Conteúdo gerado por modelo de linguagem",
-    "helpButton": "Ajuda",
-    "helpModalTitle": "Guia Rápido de Ferramentas CLI",
-    "copilotHelp": "**GitHub Copilot**: Use `copilot [command]` ou `?? [question]` para fazer perguntas.",
-    "geminiHelp": "**Google Gemini**: Use `gemini [prompt]` para conversar. Use `gemini models` para listar modelos.",
-    "claudeHelp": "**Anthropic Claude**: Use `claude [prompt]` para conversar.",
-    "generalHelp": "Pressione `Shift + Tab` para mudar o foco. Pressione `Ctrl + S` para salvar.",
-    "oauthModelHint": "Observação: Se estiver conectado via OAuth, use o comando `/models` ou selecione `Change Model` no menu de contexto do bate-papo."
-  },
-  "common": {
-    "ok": "OK",
-    "cancel": "Cancelar",
-    "confirm": "Confirmar",
-    "save": "Salvar",
-    "delete": "Excluir",
-    "text": "Texto",
-    "json": "JSON",
-    "enabled": "Ativado",
-    "settings": "Configurações",
-    "auto": "Automático",
-    "off": "Desligado",
-    "on": "Ligado",
-    "light": "Claro",
-    "dark": "Escuro",
-    "low": "Baixo",
-    "normal": "Normal",
-    "high": "Alto",
-    "all": "Todos",
-    "goToTerminal": "Ir para o terminal",
-    "yes": "Sim",
-    "no": "Não",
-    "add": "Add",
-    "deleteConfirm": "Are you sure you want to delete this provider?"
-  },
-  "about": {
-    "description": "OpenVizUI é uma interface de visualização moderna e poderosa para ferramentas AI CLI. Ele fornece uma maneira unificada, estética e eficiente de gerenciar seus fluxos de trabalho de IA, desde o gerenciamento de skills até configurações complexas.",
-    "visitWebsite": "Visitar Site",
-    "whyTitle": "Principais Recursos",
-    "resourcesTitle": "Recursos",
-    "madeBy": "Feito com",
-    "byContributors": "por Contribuidores OpenVizUI",
-    "update": {
-      "check": "Verificar atualização",
-      "checking": "Verificando...",
-      "available": "Nova versão disponível: {{version}}",
-      "latest": "Você está atualizado!",
-      "error": "Falha ao verificar atualizações.",
-      "newVersion": "Versão mais recente: {{version}}",
-      "isLatest": "Versão più recente",
-      "now": "Atualizar agora"
-    },
-    "version": {
-      "local": "Versão local",
-      "server": "Versão do servidor"
-    },
-    "features": {
-      "fast": {
-        "title": "Extremamente Rápido",
-        "desc": "Otimizado para desempenho com Rust e React."
+    "about": {
+      "description": "OpenVizUI é uma interface de visualização moderna e poderosa para ferramentas AI CLI. Ele fornece uma maneira unificada, estética e eficiente de gerenciar seus fluxos de trabalho de IA, desde o gerenciamento de skills até configurações complexas.",
+      "visitWebsite": "Visitar Site",
+      "whyTitle": "Principais Recursos",
+      "resourcesTitle": "Recursos",
+      "madeBy": "Feito com",
+      "byContributors": "por Contribuidores OpenVizUI",
+      "update": {
+        "check": "Verificar atualização",
+        "checking": "Verificando...",
+        "available": "Nova versão disponível: {{version}}",
+        "latest": "Você está atualizado!",
+        "error": "Falha ao verificar atualizações.",
+        "newVersion": "Versão mais recente: {{version}}",
+        "isLatest": "Versão più recente",
+        "now": "Atualizar agora"
       },
-      "community": {
-        "title": "Impulsionado pela Comunidade",
-        "desc": "Código aberto e desenvolvimento colaborativo."
+      "version": {
+        "local": "Versão local",
+        "server": "Versão do servidor"
       },
-      "tools": {
-        "title": "Multi-ferramenta de IA",
-        "desc": "Interface unificada para as principais ferramentas AI CLI."
+      "features": {
+        "fast": {
+          "title": "Extremamente Rápido",
+          "desc": "Otimizado para desempenho com Rust e React."
+        },
+        "community": {
+          "title": "Impulsionado pela Comunidade",
+          "desc": "Código aberto e desenvolvimento colaborativo."
+        },
+        "tools": {
+          "title": "Multi-ferramenta de IA",
+          "desc": "Interface unificada para as principais ferramentas AI CLI."
+        }
       }
+    },
+    "chat": {
+      "title": "Chat do Terminal",
+      "newChat": "Novo chat",
+      "currentSession": "Sessão Atual",
+      "startTypingEmpty": "Comece a digitar para interagir com o shell...",
+      "startTypingTool": "Comece a interagir com {{tool}}...",
+      "placeholder": "Digite uma mensagem ou um comando para o terminal...",
+      "configNotice": "Nota: As funcionalidades de Chat e Terminal requerem configuração separada.",
+      "newChatTitle": "Novo Chat",
+      "deleteConfirm": "Tem certeza de que deseja excluir esta sessão?",
+      "settings": "Configurações LLM",
+      "serviceProvider": "Provedor de serviços",
+      "settingsModalTitle": "Configuração LLM",
+      "apiKey": "Chave API",
+      "baseUrl": "URL Base",
+      "model": "Nome do Modelo",
+      "selectProviderToConfigure": "Please select or add a provider to configure.",
+      "enterProviderName": "Enter Provider Name:",
+      "addProvider": "Configurar provedor",
+      "fetchModels": "Fetch",
+      "fetchSuccess": "Fetched {{count}} models",
+      "fetchError": "Failed to fetch models",
+      "fetchErrorNoConfig": "Please fill in Base URL and API Key first",
+      "modelTooltip": "Select or type a model ID",
+      "noApiKeyWarning": "⚠️ Please set your LLM API Key and Base URL by clicking the Settings icon in the top right.",
+      "apiError": "\n\n**Error:** API request failed. \n\n```json\n{{error}}\n```",
+      "networkError": "\n\n**Network Error:** {{error}}",
+      "modelPlaceholder": "gpt-4o-mini, deepseek-chat..."
     }
-  },
-  "chat": {
-    "title": "Chat do Terminal",
-    "newChat": "Novo chat",
-    "currentSession": "Sessão Atual",
-    "startTypingEmpty": "Comece a digitar para interagir com o shell...",
-    "startTypingTool": "Comece a interagir com {{tool}}...",
-    "placeholder": "Digite uma mensagem ou um comando para o terminal...",
-    "configNotice": "Nota: As funcionalidades de Chat e Terminal requerem configuração separada.",
-    "newChatTitle": "Novo Chat",
-    "deleteConfirm": "Tem certeza de que deseja excluir esta sessão?",
-    "settings": "Configurações LLM",
-    "serviceProvider": "Provedor de serviços",
-    "settingsModalTitle": "Configuração LLM",
-    "apiKey": "Chave API",
-    "baseUrl": "URL Base",
-    "model": "Nome do Modelo",
-    "selectProviderToConfigure": "Please select or add a provider to configure.",
-    "enterProviderName": "Enter Provider Name:",
-    "addProvider": "Configurar provedor",
-    "fetchModels": "Fetch",
-    "fetchSuccess": "Fetched {{count}} models",
-    "fetchError": "Failed to fetch models",
-    "fetchErrorNoConfig": "Please fill in Base URL and API Key first",
-    "modelTooltip": "Select or type a model ID",
-    "noApiKeyWarning": "⚠️ Please set your LLM API Key and Base URL by clicking the Settings icon in the top right.",
-    "apiError": "\n\n**Error:** API request failed. \n\n```json\n{{error}}\n```",
-    "networkError": "\n\n**Network Error:** {{error}}",
-    "modelPlaceholder": "gpt-4o-mini, deepseek-chat..."
-  }
 }

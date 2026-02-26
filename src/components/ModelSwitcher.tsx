@@ -6,7 +6,7 @@
  */
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { Select, Button, message, Tooltip, Space, theme } from 'antd';
+import { Select, Button, message, Tooltip, Space } from 'antd';
 import { CloudDownloadOutlined } from '@ant-design/icons';
 import { invoke } from '@tauri-apps/api/core';
 import { useTranslation } from 'react-i18next';
@@ -108,7 +108,6 @@ interface ModelSwitcherProps {
 
 const ModelSwitcher: React.FC<ModelSwitcherProps> = ({ toolId }) => {
     const { t } = useTranslation();
-    const { token } = theme.useToken();
     const [loading, setLoading] = useState(false);
     const [fetching, setFetching] = useState(false);
     const [models, setModels] = useState<string[]>([]);
@@ -127,7 +126,7 @@ const ModelSwitcher: React.FC<ModelSwitcherProps> = ({ toolId }) => {
                 setConfig(parsed);
                 const model = getNestedValue(parsed, metadata.modelPath);
                 setCurrentModel(model || null);
-                
+
                 // For Claude, handle synced model field
                 if (toolId === 'claude' && parsed.env?.ANTHROPIC_MODEL) {
                     setCurrentModel(parsed.env.ANTHROPIC_MODEL);
@@ -146,7 +145,7 @@ const ModelSwitcher: React.FC<ModelSwitcherProps> = ({ toolId }) => {
 
     const fetchModels = async () => {
         if (!metadata || !config) return;
-        
+
         let apiKey = metadata.apiKeyPath ? getNestedValue(config, metadata.apiKeyPath) : null;
         let endpoint = metadata.endpointPath ? getNestedValue(config, metadata.endpointPath) : metadata.defaultEndpoint;
         let inferredApiType = null;
@@ -180,7 +179,7 @@ const ModelSwitcher: React.FC<ModelSwitcherProps> = ({ toolId }) => {
                     if (targetProvider) {
                         apiKey = targetProvider.key;
                         endpoint = targetProvider.address;
-                        
+
                         // Infer apiType from provider name
                         if (providerName) {
                             const lower = providerName.toLowerCase();
@@ -213,9 +212,9 @@ const ModelSwitcher: React.FC<ModelSwitcherProps> = ({ toolId }) => {
         setFetching(true);
         try {
             let fetchedList: string[] = [];
-            
+
             if (useCliRef.use) {
-                 fetchedList = await invoke<string[]>('get_models', { provider: useCliRef.provider });
+                fetchedList = await invoke<string[]>('get_models', { provider: useCliRef.provider });
             } else {
                 if (!apiKey) {
                     message.warning(t('cliConfig.fields.apiKeyRequired', 'Please configure API Key in Settings first'));
@@ -229,7 +228,7 @@ const ModelSwitcher: React.FC<ModelSwitcherProps> = ({ toolId }) => {
                     apiType: inferredApiType || metadata.apiType || 'openai'
                 });
             }
-            
+
             setModels(fetchedList);
             message.success(t('aiSettings.mcpConfig.modelsFetched', 'Fetched {{count}} models', { count: fetchedList.length }));
         } catch (error) {
@@ -246,7 +245,7 @@ const ModelSwitcher: React.FC<ModelSwitcherProps> = ({ toolId }) => {
         try {
             const updatedConfig = { ...config };
             setNestedValue(updatedConfig, metadata.modelPath, value);
-            
+
             // Special sync for Claude
             if (toolId === 'claude') {
                 if (!updatedConfig.env) updatedConfig.env = {};
@@ -255,7 +254,7 @@ const ModelSwitcher: React.FC<ModelSwitcherProps> = ({ toolId }) => {
 
             const content = metadata.configType === 'toml' ? TOML.stringify(updatedConfig) : JSON.stringify(updatedConfig, null, 2);
             await invoke('save_config_file', { path: metadata.configPath, content });
-            
+
             setCurrentModel(value);
             setConfig(updatedConfig);
             message.success(t('aiSettings.mcpConfig.saved', 'Model updated and saved'));
@@ -284,9 +283,9 @@ const ModelSwitcher: React.FC<ModelSwitcherProps> = ({ toolId }) => {
                     options={models.length > 0 ? models.map(m => ({ label: m, value: m })) : (currentModel ? [{ label: currentModel, value: currentModel }] : [])}
                 />
                 <Tooltip title={t('aiSettings.moreConfigs.localAI.fetchModels')}>
-                    <Button 
-                        icon={<CloudDownloadOutlined />} 
-                        onClick={fetchModels} 
+                    <Button
+                        icon={<CloudDownloadOutlined />}
+                        onClick={fetchModels}
                         loading={fetching}
                     />
                 </Tooltip>

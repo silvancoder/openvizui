@@ -26,7 +26,7 @@ const CodebuddyAuthEditor: React.FC = () => {
             const content = await invoke<string>('get_config_file', { path: SETTINGS_PATH });
             if (content) {
                 const parsed = JSON.parse(content);
-                
+
                 // Convert Records to Arrays for Form.List
                 const pluginsList = Object.entries(parsed.enabledPlugins || {}).map(([id, enabled]) => ({ id, enabled }));
                 const marketplacesList = Object.entries(parsed.extraKnownMarketplaces || {}).map(([id, config]) => ({ id, ...(config as any) }));
@@ -54,7 +54,7 @@ const CodebuddyAuthEditor: React.FC = () => {
     const handleSave = async (values: any) => {
         try {
             const { plugins_list, marketplaces_list, ...rest } = values;
-            
+
             // Map arrays back to objects
             const enabledPlugins: Record<string, boolean> = {};
             (plugins_list || []).forEach((item: any) => {
@@ -111,7 +111,7 @@ const CodebuddyAuthEditor: React.FC = () => {
         }
     };
 
-    const modelOptions = fetchedModels.length > 0 
+    const modelOptions = fetchedModels.length > 0
         ? fetchedModels.map(m => ({ label: m, value: m }))
         : [
             { label: 'gpt-4o', value: 'gpt-4o' },
@@ -313,7 +313,7 @@ const CodebuddyAuthEditor: React.FC = () => {
                             { label: t('cliConfig.codebuddy.fields.act'), value: 'act' },
                         ]} />
                     </Form.Item>
-                    
+
                     <Divider plain>System & Scripts</Divider>
                     <Row gutter={16}>
                         <Col span={12}>
@@ -328,7 +328,7 @@ const CodebuddyAuthEditor: React.FC = () => {
                         </Col>
                     </Row>
                     <Form.Item name={['sandbox', 'enabled']} label={t('cliConfig.codebuddy.fields.sandbox')} valuePropName="checked">
-                         <Switch />
+                        <Switch />
                     </Form.Item>
                 </div>
             )

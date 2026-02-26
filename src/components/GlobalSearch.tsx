@@ -60,7 +60,7 @@ const GlobalSearch: React.FC<GlobalSearchProps> = ({ onOpenFile }) => {
                     {t('search.title')}
                 </Space>
             </Title>
-            
+
             <Space orientation="vertical" style={{ width: '100%', marginBottom: 16 }}>
                 <Input
                     placeholder={t('search.placeholder', 'Search files...')}
@@ -69,8 +69,8 @@ const GlobalSearch: React.FC<GlobalSearchProps> = ({ onOpenFile }) => {
                     onChange={(e) => setQuery(e.target.value)}
                     allowClear
                 />
-                <Checkbox 
-                    checked={contentSearch} 
+                <Checkbox
+                    checked={contentSearch}
                     onChange={(e) => setContentSearch(e.target.checked)}
                 >
                     {t('search.content', 'Match Content')}
@@ -87,10 +87,10 @@ const GlobalSearch: React.FC<GlobalSearchProps> = ({ onOpenFile }) => {
                         size="small"
                         dataSource={results}
                         renderItem={(item) => (
-                            <List.Item 
-                                style={{ 
-                                    cursor: 'pointer', 
-                                    padding: '8px', 
+                            <List.Item
+                                style={{
+                                    cursor: 'pointer',
+                                    padding: '8px',
                                     borderRadius: '4px',
                                     transition: 'background 0.2s'
                                 }}
@@ -124,8 +124,8 @@ const GlobalSearch: React.FC<GlobalSearchProps> = ({ onOpenFile }) => {
                     <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={t('search.noResults', 'No results found')} />
                 ) : null}
             </div>
-            
-             <style>{`
+
+            <style>{`
                 .search-result-item:hover {
                     background-color: rgba(0, 0, 0, 0.04);
                 }

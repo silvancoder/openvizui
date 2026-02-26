@@ -129,22 +129,22 @@ const GeminiAuthEditor: React.FC = () => {
 
     const runOAuthLogin = async () => {
         try {
-             Modal.info({
-                 title: t('cliConfig.oauthTitle', 'Gemini OAuth Steps'),
-                 content: (
-                     <div>
-                         <p style={{ whiteSpace: 'pre-wrap' }}>{t('cliConfig.oauthPrompt')}</p>
-                     </div>
-                 ),
-                 onOk: () => {
-                     // Use internal terminal instead of external window
-                     setActiveToolId('google');
-                     setPendingCommand('gemini /auth');
-                     // Navigate to terminal page
-                     navigate('/terminal');
-                 },
-                 okText: t('common.goToTerminal', 'Go to Terminal'),
-             });
+            Modal.info({
+                title: t('cliConfig.oauthTitle', 'Gemini OAuth Steps'),
+                content: (
+                    <div>
+                        <p style={{ whiteSpace: 'pre-wrap' }}>{t('cliConfig.oauthPrompt')}</p>
+                    </div>
+                ),
+                onOk: () => {
+                    // Use internal terminal instead of external window
+                    setActiveToolId('google');
+                    setPendingCommand('gemini /auth');
+                    // Navigate to terminal page
+                    navigate('/terminal');
+                },
+                okText: t('common.goToTerminal', 'Go to Terminal'),
+            });
         } catch (error) {
             message.error('Failed to launch Gemini CLI for login: ' + error);
         }
@@ -177,7 +177,7 @@ const GeminiAuthEditor: React.FC = () => {
                             {isLoggedIn ? t('cliConfig.switchAccount', 'Switch Account') : t('cliConfig.fields.loginWithGoogle', 'Login with Google')}
                         </Button>
                     </Form.Item>
-                    
+
                     <Divider plain>{t('cliConfig.fields.model', 'Model')}</Divider>
                     <Row gutter={8}>
                         <Col flex="auto">

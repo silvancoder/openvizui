@@ -7,10 +7,10 @@
 
 import React, { useState, useEffect } from 'react';
 import { Card, Table, Button, Space, Typography, Tooltip, Modal, Empty, Tabs, message } from 'antd';
-import { 
-    BookOutlined, 
-    ReloadOutlined, 
-    FolderOpenOutlined, 
+import {
+    BookOutlined,
+    ReloadOutlined,
+    FolderOpenOutlined,
     ReadOutlined,
     SafetyOutlined,
     DeleteOutlined
@@ -119,9 +119,9 @@ const SkillMonitor: React.FC = () => {
         if (content) {
             setViewContent({ name: `${skill.name} (${fileName})`, content });
         } else {
-            Modal.error({ 
-                title: t('common.error', 'Error'), 
-                content: t('aiSettings.skillMonitor.errors.noMetadata', 'No metadata file found to display') 
+            Modal.error({
+                title: t('common.error', 'Error'),
+                content: t('aiSettings.skillMonitor.errors.noMetadata', 'No metadata file found to display')
             });
         }
     };
@@ -166,26 +166,26 @@ const SkillMonitor: React.FC = () => {
             key: 'actions',
             render: (_: any, record: SkillInfo) => (
                 <Space>
-                    <Button 
-                        size="small" 
-                        icon={<ReadOutlined />} 
+                    <Button
+                        size="small"
+                        icon={<ReadOutlined />}
                         onClick={() => handleViewSkill(record)}
                     >
                         {t('aiSettings.skillMonitor.actions.view', 'View')}
                     </Button>
                     <Tooltip title={record.path}>
-                        <Button 
-                            size="small" 
-                            icon={<FolderOpenOutlined />} 
+                        <Button
+                            size="small"
+                            icon={<FolderOpenOutlined />}
                             onClick={() => invoke('open_folder', { path: record.path })}
                         >
                             {t('aiSettings.skillMonitor.actions.folder', 'Folder')}
                         </Button>
                     </Tooltip>
-                    <Button 
-                        size="small" 
+                    <Button
+                        size="small"
                         danger
-                        icon={<DeleteOutlined />} 
+                        icon={<DeleteOutlined />}
                         onClick={() => handleDeleteSkill(record)}
                     />
                 </Space>
@@ -194,7 +194,7 @@ const SkillMonitor: React.FC = () => {
     ];
 
     return (
-        <Card 
+        <Card
             title={
                 <Space>
                     <SafetyOutlined />
@@ -212,7 +212,7 @@ const SkillMonitor: React.FC = () => {
                     key: tool.key,
                     label: tool.name,
                     children: (
-                        <Table 
+                        <Table
                             loading={loading}
                             dataSource={skills}
                             columns={columns}

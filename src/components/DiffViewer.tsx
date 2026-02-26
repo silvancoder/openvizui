@@ -64,7 +64,7 @@ const DiffViewer: React.FC<DiffViewerProps> = ({ open, onClose, filePath }) => {
                 body: { height: '70vh', padding: 0 }
             }}
         >
-             <div style={{ height: '100%' }}>
+            <div style={{ height: '100%' }}>
                 <Editor
                     height="100%"
                     language="diff"

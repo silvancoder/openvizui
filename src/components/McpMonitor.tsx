@@ -7,9 +7,9 @@
 
 import React, { useState, useEffect } from 'react';
 import { Card, Table, Tag, Button, Space, Tooltip, message, Modal, List, Typography, Badge, Tabs } from 'antd';
-import { 
-    ReloadOutlined, 
-    SearchOutlined, 
+import {
+    ReloadOutlined,
+    SearchOutlined,
     SyncOutlined,
     ToolOutlined,
     InfoCircleOutlined
@@ -124,7 +124,7 @@ const McpMonitor: React.FC = () => {
         const id = `${server.toolName}-${server.key}`;
         setInspectingKey(id);
         setStatusMap(prev => ({ ...prev, [id]: 'testing' }));
-        
+
         try {
             const tools = await invoke<McpToolInfo[]>('inspect_mcp_server', {
                 command: server.command,
@@ -146,7 +146,7 @@ const McpMonitor: React.FC = () => {
     const showTools = (server: McpServerConfig) => {
         const id = `${server.toolName}-${server.key}`;
         const tools = toolsMap[id] || [];
-        
+
         Modal.info({
             title: t('aiSettings.mcpMonitor.toolsFrom', { serverName: server.key }),
             width: 600,
@@ -222,17 +222,17 @@ const McpMonitor: React.FC = () => {
                 const id = `${record.toolName}-${record.key}`;
                 return (
                     <Space>
-                        <Button 
-                            size="small" 
-                            icon={statusMap[id] === 'testing' ? <SyncOutlined spin /> : <SearchOutlined />} 
+                        <Button
+                            size="small"
+                            icon={statusMap[id] === 'testing' ? <SyncOutlined spin /> : <SearchOutlined />}
                             onClick={() => inspectServer(record)}
                             loading={inspectingKey === id}
                         >
                             {t('aiSettings.mcpMonitor.actions.test', 'Test')}
                         </Button>
-                        <Button 
-                            size="small" 
-                            icon={<ToolOutlined />} 
+                        <Button
+                            size="small"
+                            icon={<ToolOutlined />}
                             onClick={() => showTools(record)}
                             disabled={!toolsMap[id]}
                         >
@@ -246,12 +246,12 @@ const McpMonitor: React.FC = () => {
 
     const [activeTab, setActiveTab] = useState('all');
 
-    const filteredServers = activeTab === 'all' 
-        ? servers 
+    const filteredServers = activeTab === 'all'
+        ? servers
         : servers.filter(s => s.toolName.toLowerCase() === activeTab.toLowerCase());
 
     return (
-        <Card 
+        <Card
             title={
                 <Space>
                     <SyncOutlined />
@@ -259,17 +259,17 @@ const McpMonitor: React.FC = () => {
                 </Space>
             }
             extra={
-                <Button 
-                    icon={<ReloadOutlined />} 
-                    onClick={loadAllServers} 
+                <Button
+                    icon={<ReloadOutlined />}
+                    onClick={loadAllServers}
                     loading={loading}
                 >
                     {t('aiSettings.mcpMonitor.refresh', 'Refresh List')}
                 </Button>
             }
         >
-            <Tabs 
-                activeKey={activeTab} 
+            <Tabs
+                activeKey={activeTab}
                 onChange={setActiveTab}
                 items={[
                     { key: 'all', label: t('common.all', 'All') },
@@ -277,15 +277,15 @@ const McpMonitor: React.FC = () => {
                 ]}
                 style={{ marginBottom: 16 }}
             />
-            <Table 
-                columns={columns} 
-                dataSource={filteredServers} 
+            <Table
+                columns={columns}
+                dataSource={filteredServers}
                 rowKey={(record) => `${record.toolName}-${record.key}`}
                 pagination={false}
                 loading={loading}
                 size="middle"
             />
-            
+
             <div style={{ marginTop: 24 }}>
                 <Card size="small" style={{ background: '#fafafa' }}>
                     <Space align="start">

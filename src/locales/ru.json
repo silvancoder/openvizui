@@ -1,1089 +1,1089 @@
 {
-  "app": {
-    "title": "OpenVizUI",
-    "dashboard": "Дашборд",
-    "settings": "Настройки",
-    "terminal": {
-      "label": "Терминал",
-      "clear": "Очистить терминал",
-      "restart": "Перезапустить сессию"
+    "app": {
+      "title": "OpenVizUI",
+      "dashboard": "Дашборд",
+      "settings": "Настройки",
+      "terminal": {
+        "label": "Терминал",
+        "clear": "Очистить терминал",
+        "restart": "Перезапустить сессию"
+      },
+      "install": "Установить",
+      "docs": "Документация",
+      "installed": "Установлено",
+      "uninstall": "Удалить",
+      "launch": "Запустить",
+      "update": "Обновить",
+      "config": "Конфигурация",
+      "refresh": "Обновить",
+      "addTool": "Добавить инструмент",
+      "apps": "Магазин приложений",
+      "aiSettings": "Настройки ИИ",
+      "about": "О программе",
+      "system": "Система",
+      "messages": {
+        "checking": "Проверка {{name}}...",
+        "alreadyInstalled": "{{name}} уже установлен. Добавление в рабочую среду.",
+        "installing": "Установка {{name}}...",
+        "installed": "Установлено и добавлено {{name}}",
+        "installFailed": "Не удалось добавить {{name}}: {{error}}",
+        "uninstalling": "Удаление {{name}}...",
+        "uninstalled": "Удалено и убрано из рабочей среды",
+        "uninstallFailed": "Не удалось удалить {{name}}",
+        "updating": "Обновление {{name}}...",
+        "updated": "{{name}} успешно обновлен",
+        "updateFailed": "Не удалось обновить {{name}}: {{error}}"
+      },
+      "noActiveTools": "Нет активных инструментов. Нажмите «Добавить инструмент», чтобы начать.",
+      "addToolModal": {
+        "title": "Добавить инструмент CLI",
+        "desc": "Выберите инструмент для добавления в рабочую среду. Если он не установлен, мы проверим и установим его для вас.",
+        "placeholder": "Выберите инструмент",
+        "cancel": "Отмена",
+        "confirm": "Добавить и установить"
+      },
+      "chat": "Чат"
     },
-    "install": "Установить",
-    "docs": "Документация",
-    "installed": "Установлено",
-    "uninstall": "Удалить",
-    "launch": "Запустить",
-    "update": "Обновить",
-    "config": "Конфигурация",
-    "refresh": "Обновить",
-    "addTool": "Добавить инструмент",
-    "apps": "Магазин приложений",
-    "aiSettings": "Настройки ИИ",
-    "about": "О программе",
-    "system": "Система",
-    "messages": {
-      "checking": "Проверка {{name}}...",
-      "alreadyInstalled": "{{name}} уже установлен. Добавление в рабочую среду.",
-      "installing": "Установка {{name}}...",
-      "installed": "Установлено и добавлено {{name}}",
-      "installFailed": "Не удалось добавить {{name}}: {{error}}",
-      "uninstalling": "Удаление {{name}}...",
-      "uninstalled": "Удалено и убрано из рабочей среды",
-      "uninstallFailed": "Не удалось удалить {{name}}",
-      "updating": "Обновление {{name}}...",
-      "updated": "{{name}} успешно обновлен",
-      "updateFailed": "Не удалось обновить {{name}}: {{error}}"
-    },
-    "noActiveTools": "Нет активных инструментов. Нажмите «Добавить инструмент», чтобы начать.",
-    "addToolModal": {
-      "title": "Добавить инструмент CLI",
-      "desc": "Выберите инструмент для добавления в рабочую среду. Если он не установлен, мы проверим и установим его для вас.",
-      "placeholder": "Выберите инструмент",
-      "cancel": "Отмена",
-      "confirm": "Добавить и установить"
-    },
-    "chat": "Чат"
-  },
-  "aiSettings": {
-    "title": "Настройки ИИ",
-    "tabs": {
-      "skills": "Управление навыками",
-      "cliConfig": "Конфигурация CLI",
-      "mcpConfig": "Конфигурация MCP",
-      "plugins": "Управление плагинами",
-      "mcpMonitor": "Монитор MCP",
-      "skillMonitor": "Монитор навыков",
-      "more": "Дополнительно",
-      "comingSoon": "Больше настроек ИИ скоро..."
-    },
-    "moreConfigs": {
-      "export": {
-        "title": "Управление конфигурацией",
-        "desc": "Резервное копирование или перенос всех конфигураций инструментов AI CLI.",
-        "exportBtn": "Экспортировать всё (JSON/TOML)",
-        "importBtn": "Импорт конфигурации",
-        "success": "Конфигурация успешно экспортирована!",
-        "importSuccess": "Конфигурация успешно импортирована! Перезагрузка..."
+    "aiSettings": {
+      "title": "Настройки ИИ",
+      "tabs": {
+        "skills": "Управление навыками",
+        "cliConfig": "Конфигурация CLI",
+        "mcpConfig": "Конфигурация MCP",
+        "plugins": "Управление плагинами",
+        "mcpMonitor": "Монитор MCP",
+        "skillMonitor": "Монитор навыков",
+        "more": "Дополнительно",
+        "comingSoon": "Больше настроек ИИ скоро..."
       },
-      "saved": "Настройки обновлены",
-      "docs": {
-        "title": "Официальные ресурсы",
-        "desc": "Доступ к документации и руководствам для настроенных инструментов CLI.",
-        "visit": "Официальная документация"
+      "moreConfigs": {
+        "export": {
+          "title": "Управление конфигурацией",
+          "desc": "Резервное копирование или перенос всех конфигураций инструментов AI CLI.",
+          "exportBtn": "Экспортировать всё (JSON/TOML)",
+          "importBtn": "Импорт конфигурации",
+          "success": "Конфигурация успешно экспортирована!",
+          "importSuccess": "Конфигурация успешно импортирована! Перезагрузка..."
+        },
+        "saved": "Настройки обновлены",
+        "docs": {
+          "title": "Официальные ресурсы",
+          "desc": "Доступ к документации и руководствам для настроенных инструментов CLI.",
+          "visit": "Официальная документация"
+        },
+        "diagnostics": {
+          "title": "Диагностика системы",
+          "desc": "Проверка системного окружения и путей к инструментам для устранения неполадок.",
+          "runBtn": "Запустить диагностику",
+          "copyBtn": "Копировать отчет",
+          "reportTitle": "Отчет о диагностике системы",
+          "failed": "Диагностика не удалась: {{error}}"
+        },
+        "instructions": {
+          "title": "Глобальные системные инструкции",
+          "desc": "Установите основной промпт/роль, используемую во всех инструментах ИИ.",
+          "placeholder": "Например: Вы опытный разработчик TypeScript. Отвечайте кратко.",
+          "saveBtn": "Обновить инструкции"
+        },
+        "localAI": {
+          "title": "Локальный ИИ мост",
+          "desc": "Быстрое подключение к локальным провайдерам, таким как Ollama или LM Studio.",
+          "provider": "Тип провайдера",
+          "baseUrl": "Базовый URL",
+          "checkBtn": "Проверить соединение",
+          "checkSuccess": "Успешное подключение к локальному ИИ!",
+          "checkStatusError": "Подключено, но провайдер вернул ошибку: {{status}}",
+          "checkError": "Не удалось подключиться. Пожалуйста, убедитесь, что провайдер запущен.",
+          "fetchModels": "Получить список моделей"
+        }
       },
-      "diagnostics": {
-        "title": "Диагностика системы",
-        "desc": "Проверка системного окружения и путей к инструментам для устранения неполадок.",
-        "runBtn": "Запустить диагностику",
-        "copyBtn": "Копировать отчет",
-        "reportTitle": "Отчет о диагностике системы",
-        "failed": "Диагностика не удалась: {{error}}"
+      "skillMonitor": {
+        "title": "Центр мониторинга навыков",
+        "noSkills": "В этой директории нет установленных навыков",
+        "table": {
+          "name": "Название навыка",
+          "description": "Описание",
+          "actions": "Действия"
+        },
+        "actions": {
+          "view": "Просмотр",
+          "folder": "Папка",
+          "confirmDelete": "Подтвердить удаление",
+          "deleteDesc": "Вы уверены, что хотите удалить этот навык: "
+        },
+        "status": {
+          "deleted": "Навык успешно удален",
+          "deleteFailed": "Не удалось удалить навык"
+        },
+        "errors": {
+          "noMetadata": "Файл метаданных не найден (SKILL.md, AGENTS.md, README.md, package.json)"
+        }
       },
-      "instructions": {
-        "title": "Глобальные системные инструкции",
-        "desc": "Установите основной промпт/роль, используемую во всех инструментах ИИ.",
-        "placeholder": "Например: Вы опытный разработчик TypeScript. Отвечайте кратко.",
-        "saveBtn": "Обновить инструкции"
+      "mcpMonitor": {
+        "title": "Монитор серверов MCP",
+        "refresh": "Обновить список",
+        "toolsCount": "{{count}} инструментов",
+        "table": {
+          "name": "Сервер MCP",
+          "command": "Команда",
+          "status": "Статус",
+          "tools": "Доступные инструменты",
+          "actions": "Действия"
+        },
+        "status": {
+          "testing": "Тестирование",
+          "online": "Онлайн",
+          "error": "Ошибка",
+          "unknown": "Неизвестно"
+        },
+        "actions": {
+          "test": "Test Status",
+          "tools": "View Tools"
+        },
+        "serverOnline": "{{serverName}} в сети, инструментов: {{toolCount}}",
+        "serverFailed": "Ошибка {{serverName}}: {{error}}",
+        "noTools": "Инструменты не найдены или проверка еще не выполнена.",
+        "noDescription": "Описание отсутствует",
+        "close": "Закрыть",
+        "config": "Конфигурация {{name}}",
+        "toolsFrom": "Инструменты из {{serverName}}",
+        "about": {
+          "title": "About MCP Monitoring",
+          "desc": "Этот монитор сканирует ваш профиль инструментов ИИ и проверяет, правильно ли работают серверы MCP (режим stdio). Тест запускает службу и запрашивает доступные инструменты."
+        }
       },
-      "localAI": {
-        "title": "Локальный ИИ мост",
-        "desc": "Быстрое подключение к локальным провайдерам, таким как Ollama или LM Studio.",
-        "provider": "Тип провайдера",
-        "baseUrl": "Базовый URL",
-        "checkBtn": "Проверить соединение",
-        "checkSuccess": "Успешное подключение к локальному ИИ!",
-        "checkStatusError": "Подключено, но провайдер вернул ошибку: {{status}}",
-        "checkError": "Не удалось подключиться. Пожалуйста, убедитесь, что провайдер запущен.",
-        "fetchModels": "Получить список моделей"
-      }
-    },
-    "skillMonitor": {
-      "title": "Центр мониторинга навыков",
-      "noSkills": "В этой директории нет установленных навыков",
-      "table": {
-        "name": "Название навыка",
-        "description": "Описание",
-        "actions": "Действия"
-      },
-      "actions": {
-        "view": "Просмотр",
-        "folder": "Папка",
-        "confirmDelete": "Подтвердить удаление",
-        "deleteDesc": "Вы уверены, что хотите удалить этот навык: "
-      },
+      "installedTitle": "Установленные навыки",
+      "refresh": "Обновить",
+      "noMcps": "Навыки пока не установлены",
+      "uninstallConfirmTitle": "Подтверждение удаления",
+      "uninstallConfirmDesc": "Вы уверены, что хотите удалить этот навык?",
+      "uninstall": "Удалить",
+      "quickInstallTitle": "Быстрая установка",
+      "installViaUrl": "Установка через команду или URL",
+      "installHint": "Введите 'npx skills add <url> --skill <name>' или HTTPS URL GitHub.",
+      "install": "Установить",
+      "popularTitle": "Популярные навыки",
       "status": {
-        "deleted": "Навык успешно удален",
-        "deleteFailed": "Не удалось удалить навык"
+        "installing": "Установка навыка...",
+        "installSuccess": "Навык успешно установлен!",
+        "uninstallSuccess": "Навык удален",
+        "modelsFetched": "Успешно получено моделей: {{count}}"
       },
       "errors": {
-        "noMetadata": "Файл метаданных не найден (SKILL.md, AGENTS.md, README.md, package.json)"
+        "loadFailed": "Не удалось загрузить навык: ",
+        "installFailed": "Ошибка установки: ",
+        "uninstallFailed": "Ошибка удаления: ",
+        "fetchFailed": "Ошибка получения: "
+      },
+      "warnings": {
+        "enterUrl": "Пожалуйста, введите корректный URL GitHub",
+        "noBaseUrl": "Пожалуйста, сначала введите базовый URL",
+        "noApiKey": "Пожалуйста, сначала настройте API ключ Codex"
+      },
+      "mcpConfig": {
+        "tab": "Конфигурация MCP",
+        "configured": "Настроенные MCP",
+        "tool": "Инструменты CLI",
+        "save": "Сохранить конфигурацию",
+        "reload": "Перезагрузить",
+        "configPath": "Путь конфигурации",
+        "quickAdd": "Быстрое добавление MCP",
+        "edit": "Редактировать конфигурацию",
+        "locateHint": "Найти {{key}} в конфигурации.",
+        "quickAddWarning": "Быстрое добавление поддерживает только JSON профили.",
+        "quickAddWarningYAML": "Быстрое добавление пока не поддерживает YAML.",
+        "uninstallWarning": "Удаление поддерживается только для JSON файлов.",
+        "uninstallWarningYAML": "Удаление из YAML пока не поддерживается.",
+        "addedAndSaved": "{{key}} добавлен и сохранен в конфигурации.",
+        "loadFailed": "Не удалось загрузить конфигурацию: ",
+        "saved": "Конфигурация сохранена: ",
+        "saveFailed": "Не удалось сохранить конфигурацию: ",
+        "exists": "уже существует в конфигурации.",
+        "uninstalled": "{{key}} успешно удален и конфигурация сохранена.",
+        "uninstallFailed": "Не удалось удалить MCP.",
+        "added": "{{key}} добавлен в конфигурацию. Пожалуйста, проверьте и сохраните.",
+        "parseError": "Ошибка парсинга JSON. Пожалуйста, исправьте синтаксическую ошибку.",
+        "links": {
+          "awesome": "Awesome MCP",
+          "official": "Официальный MCP",
+          "cursor": "Каталог Cursor",
+          "chinese": "MCP на китайском"
+        },
+        "selectProvider": "Выберите или введите название провайдера",
+        "selectProviderFirst": "Пожалуйста, выберите провайдера",
+        "modelsFetched": "Получено моделей: {{count}}",
+        "fetchModelsFailed": "Не удалось получить модели",
+        "fetchModels": "Получить модели",
+        "pluginsHint": "Директория плагинов: ~/.config/opencode/plugins",
+        "savePathTip": "Настройки сохранены в {{path}}",
+        "quickAdds": {
+          "filesystem": {
+            "desc": "Позволяет ИИ безопасно читать и записывать файлы в локальной файловой системе."
+          },
+          "context7": {
+            "desc": "Upstash Context7 Cache - эффективное управление длинным контекстом."
+          },
+          "playwright": {
+            "desc": "Автоматизация браузера с Playwright для веб-скрейпинга и тестирования."
+          },
+          "browserTools": {
+            "desc": "Предоставляет возможности взаимодействия с браузером: клики, прокрутка, скриншоты."
+          },
+          "gitmcp": {
+            "desc": "Выполнение Git операций и поиск кода напрямую в репозиториях GitHub."
+          },
+          "everything": {
+            "desc": "Эталонный сервер, демонстрирующий все режимы взаимодействия протокола MCP."
+          },
+          "firecrawl": {
+            "desc": "Преобразует веб-контент в удобный для ИИ Markdown или JSON."
+          },
+          "mysql": {
+            "desc": "Подключение и запросы к базам данных MySQL. Поддержка обнаружения схем и запросов только для чтения."
+          }
+        }
+      },
+      "popularPacks": {
+        "findSkills": {
+          "name": "Поиск навыков",
+          "desc": "Инструменты для поиска и обнаружения доступных навыков."
+        },
+        "vercelBestPractices": {
+          "name": "Vercel React Best Practices",
+          "desc": "Официальные рекомендации Vercel для разработки на React."
+        },
+        "webDesign": {
+          "name": "Руководство по веб-дизайну",
+          "desc": "Современные стандарты и рекомендации по веб-дизайну."
+        },
+        "remotion": {
+          "name": "Remotion Best Practices",
+          "desc": "Лучшие практики для создания видео с использованием React."
+        },
+        "frontendDesign": {
+          "name": "Frontend Design",
+          "desc": "Паттерны фронтенд-дизайна и техники реализации."
+        },
+        "composition": {
+          "name": "Vercel Composition Patterns",
+          "desc": "Паттерны композиции компонентов Vercel."
+        },
+        "agentBrowser": {
+          "name": "Агент-браузер",
+          "desc": "Включает возможности браузера для агента."
+        },
+        "skillCreator": {
+          "name": "Создатель навыков",
+          "desc": "Инструменты для помощи в создании новых навыков."
+        }
+      },
+      "plugins": {
+        "title": "Управление плагинами",
+        "desc": "Курируемые ИИ-плагины и инструменты для рабочих процессов. Нажмите, чтобы добавить в Claude или соответствующие конфигурации инструментов.",
+        "install": "Добавить",
+        "installed": "Добавлено",
+        "manualInstall": "Ручная установка",
+        "viewDocs": "Документация",
+        "categories": {
+          "all": "Все плагины",
+          "installed": "Установленные"
+        },
+        "recommendedFor": "Рекомендуется для {{tool}}",
+        "empty": {
+          "installed": "Плагины пока не установлены",
+          "available": "Нет доступных плагинов"
+        },
+        "modal": {
+          "title": "Установить плагин вручную",
+          "name": "Название плагина",
+          "namePlaceholder": "напр., Мой кастомный плагин",
+          "desc": "Краткое описание",
+          "descPlaceholder": "Опишите, что делает этот плагин...",
+          "url": "URL / Команда установки",
+          "urlPlaceholder": "GitHub URL или npx команда",
+          "docsUrl": "URL документации (опционально)",
+          "docsUrlPlaceholder": "напр., https://github.com/...",
+          "type": "Тип плагина",
+          "recommendedTool": "Рекомендуемый инструмент",
+          "addBtn": "Добавить плагин",
+          "editTitle": "Редактировать плагин"
+        },
+        "list": {
+          "composio": {
+            "name": "Awesome Claude Plugins (ComposioHQ)",
+            "desc": "Курируемый реестр плагинов + роутер инструментов, превращающий Claude в оркестратор рабочих процессов в различных сервисах."
+          },
+          "mem": {
+            "name": "Claude-Mem",
+            "desc": "Добавляет долгосрочную память, позволяя Claude сохранять контекст и предпочтения между сессиями."
+          },
+          "superpowers": {
+            "name": "Superpowers",
+            "desc": "Структурированное планирование жизненного цикла + фреймворк навыков для мозгового штурма, TDD, отладки и ревью кода."
+          },
+          "localReview": {
+            "name": "Local-Review",
+            "desc": "Параллельное локальное ревью кода (мульти-агент) для обнаружения проблем до коммита."
+          },
+          "plannotator": {
+            "name": "Plannotator",
+            "desc": "Делает режим планирования более четким с помощью структурированных аннотированных планов, которые можно рецензировать и передавать другим."
+          },
+          "ralphWiggum": {
+            "name": "Ralph Wiggum Plugin",
+            "desc": "Визуальные тесты для проверки внешнего вида приложения (особенно для Swift) с помощью симуляторов Xcode."
+          },
+          "shipyard": {
+            "name": "Shipyard",
+            "desc": "Жизненный цикл в стиле Superpowers + валидация IaC и аудит безопасности для рабочих процессов, ориентированных на продакшн."
+          },
+          "devBrowser": {
+            "name": "Dev-Browser Plugin",
+            "desc": "Легкая и быстрая альтернатива для просмотра/тестирования с меньшими затратами контекста, чем в потоках стиля Playwright."
+          },
+          "lsp": {
+            "name": "TypeScript & Rust LSP Plugins",
+            "desc": "Выполняет реальные проверки типов через LSP, отображая ошибки типов/линта в рабочем процессе Claude."
+          },
+          "peerReview": {
+            "name": "Agent-Peer-Review",
+            "desc": "Позволяет Claude и Codex проверять работу друг друга с переходом к инструментам веб-поиска при необходимости."
+          }
+        }
       }
     },
-    "mcpMonitor": {
-      "title": "Монитор серверов MCP",
-      "refresh": "Обновить список",
-      "toolsCount": "{{count}} инструментов",
-      "table": {
-        "name": "Сервер MCP",
-        "command": "Команда",
-        "status": "Статус",
-        "tools": "Доступные инструменты",
-        "actions": "Действия"
-      },
-      "status": {
-        "testing": "Тестирование",
-        "online": "Онлайн",
-        "error": "Ошибка",
-        "unknown": "Неизвестно"
-      },
-      "actions": {
-        "test": "Test Status",
-        "tools": "View Tools"
-      },
-      "serverOnline": "{{serverName}} в сети, инструментов: {{toolCount}}",
-      "serverFailed": "Ошибка {{serverName}}: {{error}}",
-      "noTools": "Инструменты не найдены или проверка еще не выполнена.",
-      "noDescription": "Описание отсутствует",
-      "close": "Закрыть",
-      "config": "Конфигурация {{name}}",
-      "toolsFrom": "Инструменты из {{serverName}}",
-      "about": {
-        "title": "About MCP Monitoring",
-        "desc": "Этот монитор сканирует ваш профиль инструментов ИИ и проверяет, правильно ли работают серверы MCP (режим stdio). Тест запускает службу и запрашивает доступные инструменты."
-      }
-    },
-    "installedTitle": "Установленные навыки",
-    "refresh": "Обновить",
-    "noMcps": "Навыки пока не установлены",
-    "uninstallConfirmTitle": "Подтверждение удаления",
-    "uninstallConfirmDesc": "Вы уверены, что хотите удалить этот навык?",
-    "uninstall": "Удалить",
-    "quickInstallTitle": "Быстрая установка",
-    "installViaUrl": "Установка через команду или URL",
-    "installHint": "Введите 'npx skills add <url> --skill <name>' или HTTPS URL GitHub.",
-    "install": "Установить",
-    "popularTitle": "Популярные навыки",
-    "status": {
-      "installing": "Установка навыка...",
-      "installSuccess": "Навык успешно установлен!",
-      "uninstallSuccess": "Навык удален",
-      "modelsFetched": "Успешно получено моделей: {{count}}"
-    },
-    "errors": {
-      "loadFailed": "Не удалось загрузить навык: ",
-      "installFailed": "Ошибка установки: ",
-      "uninstallFailed": "Ошибка удаления: ",
-      "fetchFailed": "Ошибка получения: "
-    },
-    "warnings": {
-      "enterUrl": "Пожалуйста, введите корректный URL GitHub",
-      "noBaseUrl": "Пожалуйста, сначала введите базовый URL",
-      "noApiKey": "Пожалуйста, сначала настройте API ключ Codex"
-    },
-    "mcpConfig": {
-      "tab": "Конфигурация MCP",
-      "configured": "Настроенные MCP",
-      "tool": "Инструменты CLI",
-      "save": "Сохранить конфигурацию",
-      "reload": "Перезагрузить",
-      "configPath": "Путь конфигурации",
-      "quickAdd": "Быстрое добавление MCP",
-      "edit": "Редактировать конфигурацию",
-      "locateHint": "Найти {{key}} в конфигурации.",
-      "quickAddWarning": "Быстрое добавление поддерживает только JSON профили.",
-      "quickAddWarningYAML": "Быстрое добавление пока не поддерживает YAML.",
-      "uninstallWarning": "Удаление поддерживается только для JSON файлов.",
-      "uninstallWarningYAML": "Удаление из YAML пока не поддерживается.",
-      "addedAndSaved": "{{key}} добавлен и сохранен в конфигурации.",
-      "loadFailed": "Не удалось загрузить конфигурацию: ",
-      "saved": "Конфигурация сохранена: ",
-      "saveFailed": "Не удалось сохранить конфигурацию: ",
-      "exists": "уже существует в конфигурации.",
-      "uninstalled": "{{key}} успешно удален и конфигурация сохранена.",
-      "uninstallFailed": "Не удалось удалить MCP.",
-      "added": "{{key}} добавлен в конфигурацию. Пожалуйста, проверьте и сохраните.",
-      "parseError": "Ошибка парсинга JSON. Пожалуйста, исправьте синтаксическую ошибку.",
-      "links": {
-        "awesome": "Awesome MCP",
-        "official": "Официальный MCP",
-        "cursor": "Каталог Cursor",
-        "chinese": "MCP на китайском"
-      },
-      "selectProvider": "Выберите или введите название провайдера",
-      "selectProviderFirst": "Пожалуйста, выберите провайдера",
+    "cliConfig": {
+      "fetchModels": "Получить модели",
       "modelsFetched": "Получено моделей: {{count}}",
       "fetchModelsFailed": "Не удалось получить модели",
-      "fetchModels": "Получить модели",
-      "pluginsHint": "Директория плагинов: ~/.config/opencode/plugins",
-      "savePathTip": "Настройки сохранены в {{path}}",
-      "quickAdds": {
-        "filesystem": {
-          "desc": "Позволяет ИИ безопасно читать и записывать файлы в локальной файловой системе."
+      "loginWithGithub": "Войти через GitHub",
+      "oauthPrompt": "1. Переключитесь в терминал и выполните 'gemini'\n2. Выберите Нет (2) для 'Connect Antigravity'\n3. Введите /auth и выберите 'Login with Google'",
+      "qoder": {
+        "sections": {
+          "apiKeys": "API провайдеров",
+          "appearance": "Внешний вид и тема",
+          "formatting": "Форматирование",
+          "behavior": "Поведение",
+          "minimap": "Миникарта",
+          "highlighting": "Подсветка",
+          "aiModels": "Модели ИИ",
+          "parameters": "Параметры",
+          "usage": "Лимиты использования",
+          "analysis": "Анализ",
+          "network": "Сеть"
         },
-        "context7": {
-          "desc": "Upstash Context7 Cache - эффективное управление длинным контекстом."
-        },
-        "playwright": {
-          "desc": "Автоматизация браузера с Playwright для веб-скрейпинга и тестирования."
-        },
-        "browserTools": {
-          "desc": "Предоставляет возможности взаимодействия с браузером: клики, прокрутка, скриншоты."
-        },
-        "gitmcp": {
-          "desc": "Выполнение Git операций и поиск кода напрямую в репозиториях GitHub."
-        },
-        "everything": {
-          "desc": "Эталонный сервер, демонстрирующий все режимы взаимодействия протокола MCP."
-        },
-        "firecrawl": {
-          "desc": "Преобразует веб-контент в удобный для ИИ Markdown или JSON."
-        },
-        "mysql": {
-          "desc": "Подключение и запросы к базам данных MySQL. Поддержка обнаружения схем и запросов только для чтения."
+        "fields": {
+          "endpoint": "Эндпоинт",
+          "timeout": "Тайм-аут (мс)",
+          "maxRetries": "Макс. попыток",
+          "organization": "ID организации",
+          "themeMode": "Режим темы",
+          "lightTheme": "Светлая тема",
+          "darkTheme": "Темная тема",
+          "contrast": "Контраст",
+          "fontFamily": "Семейство шрифтов",
+          "fontSize": "Размер шрифта",
+          "lineHeight": "Высота строки",
+          "ligatures": "Лигатуры шрифта",
+          "cursorStyle": "Стиль курсора",
+          "blink": "Мигание курсора",
+          "smoothCaret": "Плавный курсор",
+          "tabSize": "Размер табуляции",
+          "insertSpaces": "Вставлять пробелы",
+          "trimWhitespace": "Удалять пробелы в конце",
+          "finalNewline": "Вставлять новую строку в конце",
+          "wordWrap": "Перенос слов",
+          "wordWrapColumn": "Колонка переноса",
+          "autoSave": "Автосохранение",
+          "autoSaveDelay": "Задержка автосохранения",
+          "formatOnSave": "Форматировать при сохранении",
+          "formatOnPaste": "Форматировать при вставке",
+          "formatOnType": "Форматировать при вводе",
+          "semanticHighlighting": "Семантическая подсветка",
+          "bracketMatching": "Парные скобки",
+          "colorDecorators": "Цветовые декораторы",
+          "indentGuides": "Направляющие отступа",
+          "lineNumbers": "Нумерация строк",
+          "activeLineHighlight": "Подсветка активной строки",
+          "modifiedTabsHighlight": "Подсветка измененных вкладок",
+          "primaryModel": "Основная модель",
+          "fallbackModel": "Резервная модель",
+          "autoModelSelection": "Автовыбор модели",
+          "codeCompletion": "Автодополнение кода",
+          "codeReview": "Ревью кода",
+          "archDesign": "Архитектурный дизайн",
+          "documentation": "Документация",
+          "dailyRequests": "Дневной лимит запросов",
+          "hourlyRequests": "Часовой лимит запросов",
+          "dailyCost": "Дневной лимит расходов ($)",
+          "monthlyCost": "Месячный лимит расходов ($)",
+          "alertThreshold": "Порог оповещения",
+          "autoThrottle": "Автоматическое троттлинг",
+          "analysisDepth": "Глубина анализа",
+          "maxFileSize": "Макс. размер файла",
+          "maxFiles": "Макс. количество файлов",
+          "includeDeps": "Включать зависимости",
+          "analyzeExternal": "Анализировать внешние библиотеки",
+          "semanticAnalysis": "Семантический анализ",
+          "crossRef": "Перекрестные ссылки",
+          "addProvider": "Добавить провайдера",
+          "providerName": "Название провайдера (ID)",
+          "fetchModels": "Получить список моделей",
+          "maxOutputTokens": "Макс. токенов вывода",
+          "maxContextTokens": "Макс. токенов контекста",
+          "temperature": "Температура",
+          "topP": "Top P",
+          "presencePenalty": "Штраф за присутствие",
+          "modelsFetched": "Успешно получено моделей: {{count}}",
+          "showSlider": "Показать ползунок",
+          "side": "Сторона",
+          "scale": "Масштаб",
+          "preferences": "Настройки",
+          "stopSequences": "Стоп-последовательности",
+          "stopSequencesPlaceholder": "Нажмите Enter, чтобы добавить",
+          "frequencyPenalty": "Штраф за частоту",
+          "host": "Хост",
+          "port": "Порт",
+          "username": "Имя пользователя",
+          "password": "Пароль",
+          "line": "Строка",
+          "block": "Блок",
+          "underline": "Подчеркивание",
+          "bounded": "Ограниченный",
+          "afterDelay": "После задержки",
+          "onFocusChange": "При смене фокуса",
+          "always": "Всегда",
+          "mouseover": "При наведении",
+          "left": "Слева",
+          "right": "Справа",
+          "basic": "Базовый",
+          "standard": "Стандартный",
+          "comprehensive": "Полный",
+          "small": "Маленький",
+          "large": "Большой"
         }
-      }
-    },
-    "popularPacks": {
-      "findSkills": {
-        "name": "Поиск навыков",
-        "desc": "Инструменты для поиска и обнаружения доступных навыков."
       },
-      "vercelBestPractices": {
-        "name": "Vercel React Best Practices",
-        "desc": "Официальные рекомендации Vercel для разработки на React."
-      },
-      "webDesign": {
-        "name": "Руководство по веб-дизайну",
-        "desc": "Современные стандарты и рекомендации по веб-дизайну."
-      },
-      "remotion": {
-        "name": "Remotion Best Practices",
-        "desc": "Лучшие практики для создания видео с использованием React."
-      },
-      "frontendDesign": {
-        "name": "Frontend Design",
-        "desc": "Паттерны фронтенд-дизайна и техники реализации."
-      },
-      "composition": {
-        "name": "Vercel Composition Patterns",
-        "desc": "Паттерны композиции компонентов Vercel."
-      },
-      "agentBrowser": {
-        "name": "Агент-браузер",
-        "desc": "Включает возможности браузера для агента."
-      },
-      "skillCreator": {
-        "name": "Создатель навыков",
-        "desc": "Инструменты для помощи в создании новых навыков."
-      }
-    },
-    "plugins": {
-      "title": "Управление плагинами",
-      "desc": "Курируемые ИИ-плагины и инструменты для рабочих процессов. Нажмите, чтобы добавить в Claude или соответствующие конфигурации инструментов.",
-      "install": "Добавить",
-      "installed": "Добавлено",
-      "manualInstall": "Ручная установка",
-      "viewDocs": "Документация",
-      "categories": {
-        "all": "Все плагины",
-        "installed": "Установленные"
-      },
-      "recommendedFor": "Рекомендуется для {{tool}}",
-      "empty": {
-        "installed": "Плагины пока не установлены",
-        "available": "Нет доступных плагинов"
-      },
-      "modal": {
-        "title": "Установить плагин вручную",
-        "name": "Название плагина",
-        "namePlaceholder": "напр., Мой кастомный плагин",
-        "desc": "Краткое описание",
-        "descPlaceholder": "Опишите, что делает этот плагин...",
-        "url": "URL / Команда установки",
-        "urlPlaceholder": "GitHub URL или npx команда",
-        "docsUrl": "URL документации (опционально)",
-        "docsUrlPlaceholder": "напр., https://github.com/...",
-        "type": "Тип плагина",
-        "recommendedTool": "Рекомендуемый инструмент",
-        "addBtn": "Добавить плагин",
-        "editTitle": "Редактировать плагин"
-      },
-      "list": {
-        "composio": {
-          "name": "Awesome Claude Plugins (ComposioHQ)",
-          "desc": "Курируемый реестр плагинов + роутер инструментов, превращающий Claude в оркестратор рабочих процессов в различных сервисах."
+      "codebuddy": {
+        "sections": {
+          "env": "Переменные окружения",
+          "general": "Общие настройки",
+          "advanced": "Расширенная конфигурация",
+          "plugins": "Плагины и маркетплейс",
+          "network": "Сеть и система"
         },
-        "mem": {
-          "name": "Claude-Mem",
-          "desc": "Добавляет долгосрочную память, позволяя Claude сохранять контекст и предпочтения между сессиями."
-        },
-        "superpowers": {
-          "name": "Superpowers",
-          "desc": "Структурированное планирование жизненного цикла + фреймворк навыков для мозгового штурма, TDD, отладки и ревью кода."
-        },
-        "localReview": {
-          "name": "Local-Review",
-          "desc": "Параллельное локальное ревью кода (мульти-агент) для обнаружения проблем до коммита."
-        },
-        "plannotator": {
-          "name": "Plannotator",
-          "desc": "Делает режим планирования более четким с помощью структурированных аннотированных планов, которые можно рецензировать и передавать другим."
-        },
-        "ralphWiggum": {
-          "name": "Ralph Wiggum Plugin",
-          "desc": "Визуальные тесты для проверки внешнего вида приложения (особенно для Swift) с помощью симуляторов Xcode."
-        },
-        "shipyard": {
-          "name": "Shipyard",
-          "desc": "Жизненный цикл в стиле Superpowers + валидация IaC и аудит безопасности для рабочих процессов, ориентированных на продакшн."
-        },
-        "devBrowser": {
-          "name": "Dev-Browser Plugin",
-          "desc": "Легкая и быстрая альтернатива для просмотра/тестирования с меньшими затратами контекста, чем в потоках стиля Playwright."
-        },
-        "lsp": {
-          "name": "TypeScript & Rust LSP Plugins",
-          "desc": "Выполняет реальные проверки типов через LSP, отображая ошибки типов/линта в рабочем процессе Claude."
-        },
-        "peerReview": {
-          "name": "Agent-Peer-Review",
-          "desc": "Позволяет Claude и Codex проверять работу друг друга с переходом к инструментам веб-поиска при необходимости."
+        "fields": {
+          "apiKey": "API Ключ (CODEBUDDY_API_KEY)",
+          "baseUrl": "Базовый URL (CODEBUDDY_BASE_URL)",
+          "internetEnv": "Интернет-окружение",
+          "authToken": "Токен авторизации (CODEBUDDY_AUTH_TOKEN)",
+          "model": "Рекомендуемая модель",
+          "cleanupDays": "Цикл очистки (дней)",
+          "alwaysThinking": "Режим 'Thinking' всегда включен",
+          "showTokens": "Показать счетчик токенов",
+          "promptSuggestion": "Подсказки промптов",
+          "autoCompact": "Автосжатие",
+          "envRouteMode": "Режим маршрутизации окружения",
+          "internal": "Внутренний",
+          "ioa": "Аккаунт iOA",
+          "production": "Продакшн",
+          "staging": "Стейджинг",
+          "plan": "Режим планирования (Plan)",
+          "act": "Режим действия (Act)",
+          "statusLineCommand": "Команда строки статуса",
+          "permissions": "Режим прав доступа по умолчанию",
+          "marketplaces": "Маркетплейс плагинов",
+          "memory": "Память",
+          "endpoint": "Эндпоинт сервера",
+          "sandbox": "Включить Bash песочницу",
+          "plugins": "Активированные плагины",
+          "language": "Язык интерфейса",
+          "autoUpdates": "Автообновление",
+          "fetchModels": "Получить модели",
+          "modelsFetched": "Успешно получено моделей: {{count}}"
         }
-      }
-    }
-  },
-  "cliConfig": {
-    "fetchModels": "Получить модели",
-    "modelsFetched": "Получено моделей: {{count}}",
-    "fetchModelsFailed": "Не удалось получить модели",
-    "loginWithGithub": "Войти через GitHub",
-    "oauthPrompt": "1. Переключитесь в терминал и выполните 'gemini'\n2. Выберите Нет (2) для 'Connect Antigravity'\n3. Введите /auth и выберите 'Login with Google'",
-    "qoder": {
-      "sections": {
-        "apiKeys": "API провайдеров",
-        "appearance": "Внешний вид и тема",
-        "formatting": "Форматирование",
-        "behavior": "Поведение",
-        "minimap": "Миникарта",
-        "highlighting": "Подсветка",
-        "aiModels": "Модели ИИ",
-        "parameters": "Параметры",
-        "usage": "Лимиты использования",
-        "analysis": "Анализ",
-        "network": "Сеть"
       },
+      "opencode": {
+        "sections": {
+          "auth": "Аутентификация",
+          "general": "Общие настройки",
+          "server": "Конфигурация сервера",
+          "permissions": "Контроль доступа",
+          "advanced": "Расширенные опции"
+        },
+        "fields": {
+          "theme": "Тема",
+          "address": "Адрес эндпоинта",
+          "fetchFrom": "Источники моделей",
+          "readModels": "Чтение моделей",
+          "model": "Основная модель",
+          "smallModel": "Маленькая модель",
+          "autoupdate": "Автообновление",
+          "share": "Режим общего доступа",
+          "defaultAgent": "Агент по умолчанию",
+          "serverPort": "Порт сервера",
+          "serverHostname": "Имя хоста",
+          "serverMdns": "Включить mDNS",
+          "serverMdnsDomain": "Домен mDNS",
+          "serverCors": "Разрешенные источники CORS",
+          "toolsWrite": "Разрешить запись файлов",
+          "toolsBash": "Разрешить выполнение команд",
+          "compactionAuto": "Автосжатие контекста",
+          "compactionPrune": "Очистка контекста (Prune)",
+          "plugins": "Активированные плагины",
+          "instructions": "Инструкции модели",
+          "permEdit": "Редактирование файлов (edit)",
+          "permBash": "Выполнение команд (bash)",
+          "permRead": "Чтение файлов (read)",
+          "permGrep": "Поиск Regex (grep)",
+          "permGlob": "Поиск по шаблону (glob)",
+          "permList": "Список директорий (list)",
+          "permSkill": "Загрузка навыков (skill)",
+          "permTodoWrite": "Управление задачами (todowrite)",
+          "permTodoRead": "Чтение задач (todoread)",
+          "permWebFetch": "Веб-запросы (webfetch)",
+          "permQuestion": "Вопросы пользователю (question)"
+        }
+      },
+      "codex": {
+        "sections": {
+          "auth": "Аутентификация",
+          "general": "Общие настройки",
+          "provider": "Провайдер моделей"
+        },
+        "fields": {
+          "model": "Название модели",
+          "reasoningEffort": "Уровень рассуждений (Reasoning Effort)",
+          "preferredAuth": "Предпочитаемый метод авторизации",
+          "modelProvider": "Тип провайдера",
+          "baseUrl": "Базовый URL API",
+          "providerName": "Имя провайдера",
+          "wireApi": "Wire API (напр. response)",
+          "timeout": "Тайм-аут (с)",
+          "retryAttempts": "Попытки повтора"
+        }
+      },
+      "oauthTitle": "Шаги Gemini OAuth",
+      "common": {
+        "enabled": "Включено",
+        "disabled": "Отключено",
+        "settings": "Настройки",
+        "save": "Сохранить",
+        "cancel": "Отмена",
+        "delete": "Удалить",
+        "edit": "Редактировать"
+      },
+      "copilotPrompt": "1. Переключитесь в терминал и выполните 'copilot login'\n2. Следуйте инструкциям для аутентификации вашего аккаунта",
+      "copilotTitle": "Шаги аутентификации Copilot",
       "fields": {
-        "endpoint": "Эндпоинт",
-        "timeout": "Тайм-аут (мс)",
-        "maxRetries": "Макс. попыток",
-        "organization": "ID организации",
-        "themeMode": "Режим темы",
-        "lightTheme": "Светлая тема",
-        "darkTheme": "Темная тема",
-        "contrast": "Контраст",
-        "fontFamily": "Семейство шрифтов",
-        "fontSize": "Размер шрифта",
-        "lineHeight": "Высота строки",
-        "ligatures": "Лигатуры шрифта",
-        "cursorStyle": "Стиль курсора",
-        "blink": "Мигание курсора",
-        "smoothCaret": "Плавный курсор",
-        "tabSize": "Размер табуляции",
-        "insertSpaces": "Вставлять пробелы",
-        "trimWhitespace": "Удалять пробелы в конце",
-        "finalNewline": "Вставлять новую строку в конце",
-        "wordWrap": "Перенос слов",
-        "wordWrapColumn": "Колонка переноса",
-        "autoSave": "Автосохранение",
-        "autoSaveDelay": "Задержка автосохранения",
-        "formatOnSave": "Форматировать при сохранении",
-        "formatOnPaste": "Форматировать при вставке",
-        "formatOnType": "Форматировать при вводе",
-        "semanticHighlighting": "Семантическая подсветка",
-        "bracketMatching": "Парные скобки",
-        "colorDecorators": "Цветовые декораторы",
-        "indentGuides": "Направляющие отступа",
-        "lineNumbers": "Нумерация строк",
-        "activeLineHighlight": "Подсветка активной строки",
-        "modifiedTabsHighlight": "Подсветка измененных вкладок",
-        "primaryModel": "Основная модель",
-        "fallbackModel": "Резервная модель",
-        "autoModelSelection": "Автовыбор модели",
-        "codeCompletion": "Автодополнение кода",
-        "codeReview": "Ревью кода",
-        "archDesign": "Архитектурный дизайн",
-        "documentation": "Документация",
-        "dailyRequests": "Дневной лимит запросов",
-        "hourlyRequests": "Часовой лимит запросов",
-        "dailyCost": "Дневной лимит расходов ($)",
-        "monthlyCost": "Месячный лимит расходов ($)",
-        "alertThreshold": "Порог оповещения",
-        "autoThrottle": "Автоматическое троттлинг",
-        "analysisDepth": "Глубина анализа",
-        "maxFileSize": "Макс. размер файла",
-        "maxFiles": "Макс. количество файлов",
-        "includeDeps": "Включать зависимости",
-        "analyzeExternal": "Анализировать внешние библиотеки",
-        "semanticAnalysis": "Семантический анализ",
-        "crossRef": "Перекрестные ссылки",
-        "addProvider": "Добавить провайдера",
-        "providerName": "Название провайдера (ID)",
-        "fetchModels": "Получить список моделей",
-        "maxOutputTokens": "Макс. токенов вывода",
+        "verbose": "Подробный лог",
+        "theme": "Тема",
+        "preferredModel": "Предпочитаемая модель",
+        "editor": "Редактор",
+        "autoUpdate": "Автообновление",
         "maxContextTokens": "Макс. токенов контекста",
+        "maxOutputTokens": "Макс. токенов вывода",
+        "model": "Модель",
+        "modelProvider": "Провайдер модели",
+        "reasoningEffort": "Уровень рассуждений",
+        "disableResponseStorage": "Отключить сохранение ответов",
+        "preferredAuthMethod": "Предпочитаемый метод авторизации",
         "temperature": "Температура",
         "topP": "Top P",
-        "presencePenalty": "Штраф за присутствие",
-        "modelsFetched": "Успешно получено моделей: {{count}}",
-        "showSlider": "Показать ползунок",
-        "side": "Сторона",
-        "scale": "Масштаб",
-        "preferences": "Настройки",
-        "stopSequences": "Стоп-последовательности",
-        "stopSequencesPlaceholder": "Нажмите Enter, чтобы добавить",
-        "frequencyPenalty": "Штраф за частоту",
-        "host": "Хост",
-        "port": "Порт",
-        "username": "Имя пользователя",
-        "password": "Пароль",
-        "line": "Строка",
-        "block": "Блок",
-        "underline": "Подчеркивание",
-        "bounded": "Ограниченный",
-        "afterDelay": "После задержки",
-        "onFocusChange": "При смене фокуса",
-        "always": "Всегда",
-        "mouseover": "При наведении",
-        "left": "Слева",
-        "right": "Справа",
-        "basic": "Базовый",
-        "standard": "Стандартный",
-        "comprehensive": "Полный",
-        "small": "Маленький",
-        "large": "Большой"
-      }
-    },
-    "codebuddy": {
-      "sections": {
-        "env": "Переменные окружения",
-        "general": "Общие настройки",
-        "advanced": "Расширенная конфигурация",
-        "plugins": "Плагины и маркетплейс",
-        "network": "Сеть и система"
-      },
-      "fields": {
-        "apiKey": "API Ключ (CODEBUDDY_API_KEY)",
-        "baseUrl": "Базовый URL (CODEBUDDY_BASE_URL)",
-        "internetEnv": "Интернет-окружение",
-        "authToken": "Токен авторизации (CODEBUDDY_AUTH_TOKEN)",
-        "model": "Рекомендуемая модель",
-        "cleanupDays": "Цикл очистки (дней)",
-        "alwaysThinking": "Режим 'Thinking' всегда включен",
-        "showTokens": "Показать счетчик токенов",
-        "promptSuggestion": "Подсказки промптов",
-        "autoCompact": "Автосжатие",
-        "envRouteMode": "Режим маршрутизации окружения",
-        "internal": "Внутренний",
-        "ioa": "Аккаунт iOA",
-        "production": "Продакшн",
-        "staging": "Стейджинг",
-        "plan": "Режим планирования (Plan)",
-        "act": "Режим действия (Act)",
-        "statusLineCommand": "Команда строки статуса",
-        "permissions": "Режим прав доступа по умолчанию",
-        "marketplaces": "Маркетплейс плагинов",
-        "memory": "Память",
-        "endpoint": "Эндпоинт сервера",
-        "sandbox": "Включить Bash песочницу",
-        "plugins": "Активированные плагины",
-        "language": "Язык интерфейса",
-        "autoUpdates": "Автообновление",
-        "fetchModels": "Получить модели",
-        "modelsFetched": "Успешно получено моделей: {{count}}"
-      }
-    },
-    "opencode": {
-      "sections": {
-        "auth": "Аутентификация",
-        "general": "Общие настройки",
-        "server": "Конфигурация сервера",
-        "permissions": "Контроль доступа",
-        "advanced": "Расширенные опции"
-      },
-      "fields": {
-        "theme": "Тема",
-        "address": "Адрес эндпоинта",
-        "fetchFrom": "Источники моделей",
-        "readModels": "Чтение моделей",
-        "model": "Основная модель",
-        "smallModel": "Маленькая модель",
-        "autoupdate": "Автообновление",
-        "share": "Режим общего доступа",
-        "defaultAgent": "Агент по умолчанию",
-        "serverPort": "Порт сервера",
-        "serverHostname": "Имя хоста",
-        "serverMdns": "Включить mDNS",
-        "serverMdnsDomain": "Домен mDNS",
-        "serverCors": "Разрешенные источники CORS",
-        "toolsWrite": "Разрешить запись файлов",
-        "toolsBash": "Разрешить выполнение команд",
-        "compactionAuto": "Автосжатие контекста",
-        "compactionPrune": "Очистка контекста (Prune)",
-        "plugins": "Активированные плагины",
-        "instructions": "Инструкции модели",
-        "permEdit": "Редактирование файлов (edit)",
-        "permBash": "Выполнение команд (bash)",
-        "permRead": "Чтение файлов (read)",
-        "permGrep": "Поиск Regex (grep)",
-        "permGlob": "Поиск по шаблону (glob)",
-        "permList": "Список директорий (list)",
-        "permSkill": "Загрузка навыков (skill)",
-        "permTodoWrite": "Управление задачами (todowrite)",
-        "permTodoRead": "Чтение задач (todoread)",
-        "permWebFetch": "Веб-запросы (webfetch)",
-        "permQuestion": "Вопросы пользователю (question)"
-      }
-    },
-    "codex": {
-      "sections": {
-        "auth": "Аутентификация",
-        "general": "Общие настройки",
-        "provider": "Провайдер моделей"
-      },
-      "fields": {
-        "model": "Название модели",
-        "reasoningEffort": "Уровень рассуждений (Reasoning Effort)",
-        "preferredAuth": "Предпочитаемый метод авторизации",
-        "modelProvider": "Тип провайдера",
-        "baseUrl": "Базовый URL API",
-        "providerName": "Имя провайдера",
-        "wireApi": "Wire API (напр. response)",
-        "timeout": "Тайм-аут (с)",
-        "retryAttempts": "Попытки повтора"
-      }
-    },
-    "oauthTitle": "Шаги Gemini OAuth",
-    "common": {
-      "enabled": "Включено",
-      "disabled": "Отключено",
-      "settings": "Настройки",
-      "save": "Сохранить",
-      "cancel": "Отмена",
-      "delete": "Удалить",
-      "edit": "Редактировать"
-    },
-    "copilotPrompt": "1. Переключитесь в терминал и выполните 'copilot login'\n2. Следуйте инструкциям для аутентификации вашего аккаунта",
-    "copilotTitle": "Шаги аутентификации Copilot",
-    "fields": {
-      "verbose": "Подробный лог",
-      "theme": "Тема",
-      "preferredModel": "Предпочитаемая модель",
-      "editor": "Редактор",
-      "autoUpdate": "Автообновление",
-      "maxContextTokens": "Макс. токенов контекста",
-      "maxOutputTokens": "Макс. токенов вывода",
-      "model": "Модель",
-      "modelProvider": "Провайдер модели",
-      "reasoningEffort": "Уровень рассуждений",
-      "disableResponseStorage": "Отключить сохранение ответов",
-      "preferredAuthMethod": "Предпочитаемый метод авторизации",
-      "temperature": "Температура",
-      "topP": "Top P",
-      "topK": "Top K",
-      "safetySettings": "Настройки безопасности",
-      "defaultModel": "Модель по умолчанию",
-      "language": "Язык",
-      "enableMcp": "Включить MCP",
-      "telemetry": "Телеметрия",
-      "defaultPermission": "Права по умолчанию",
-      "apiKey": "API Ключ",
-      "editorIntegration": "Интеграция с редактором",
-      "debugMode": "Режим отладки",
-      "confirmExecute": "Подтверждать выполнение",
-      "githubToken": "GitHub Токен",
-      "autoUpdater": "Автообновление",
-      "providerName": "Провайдер услуг",
-      "baseUrl": "Базовый URL",
-      "authType": "Тип авторизации",
-      "defaultAgent": "Агент по умолчанию",
-      "instructions": "Инструкции",
-      "disabledProviders": "Отключенные провайдеры",
-      "server": {
-        "port": "Порт",
-        "hostname": "Имя хоста",
-        "mdns": "Обнаружение mDNS",
-        "cors": "Источники CORS"
-      },
-      "tui": {
-        "scrollSpeed": "Скорость прокрутки",
-        "diffStyle": "Стиль Diff"
-      },
-      "tools": {
-        "write": "Разрешить запись файлов",
-        "bash": "Разрешить выполнение команд"
-      },
-      "permission": {
-        "edit": "Права на редактирование",
-        "bash": "Права на выполнение"
-      },
-      "compaction": {
-        "auto": "Автосжатие",
-        "prune": "Очистка (Prune)"
-      },
-      "provider": {
-        "timeout": "Тайм-аут (мс)",
+        "topK": "Top K",
+        "safetySettings": "Настройки безопасности",
+        "defaultModel": "Модель по умолчанию",
+        "language": "Язык",
+        "enableMcp": "Включить MCP",
+        "telemetry": "Телеметрия",
+        "defaultPermission": "Права по умолчанию",
+        "apiKey": "API Ключ",
+        "editorIntegration": "Интеграция с редактором",
+        "debugMode": "Режим отладки",
+        "confirmExecute": "Подтверждать выполнение",
+        "githubToken": "GitHub Токен",
+        "autoUpdater": "Автообновление",
+        "providerName": "Провайдер услуг",
         "baseUrl": "Базовый URL",
-        "name": "Имя провайдера"
+        "authType": "Тип авторизации",
+        "defaultAgent": "Агент по умолчанию",
+        "instructions": "Инструкции",
+        "disabledProviders": "Отключенные провайдеры",
+        "server": {
+          "port": "Порт",
+          "hostname": "Имя хоста",
+          "mdns": "Обнаружение mDNS",
+          "cors": "Источники CORS"
+        },
+        "tui": {
+          "scrollSpeed": "Скорость прокрутки",
+          "diffStyle": "Стиль Diff"
+        },
+        "tools": {
+          "write": "Разрешить запись файлов",
+          "bash": "Разрешить выполнение команд"
+        },
+        "permission": {
+          "edit": "Права на редактирование",
+          "bash": "Права на выполнение"
+        },
+        "compaction": {
+          "auto": "Автосжатие",
+          "prune": "Очистка (Prune)"
+        },
+        "provider": {
+          "timeout": "Тайм-аут (мс)",
+          "baseUrl": "Базовый URL",
+          "name": "Имя провайдера"
+        },
+        "configuredProviders": "Настроенные провайдеры",
+        "allProviders": "Все провайдеры",
+        "cleanupDays": "Дни хранения",
+        "thinkingMode": "Режим Thinking",
+        "showDuration": "Показать длительность",
+        "updateChannel": "Канал обновлений",
+        "plansDir": "Директория планов",
+        "spinnerTips": "Подсказки при загрузке",
+        "progressBar": "Прогресс-бар в терминале",
+        "allowList": "Белый список (Allowlist)",
+        "denyList": "Черный список (Denylist)",
+        "allowedDirs": "Разрешенные директории",
+        "autoAllowBash": "Авто-разрешение Bash в песочнице",
+        "excludedCmds": "Исключенные команды",
+        "allowLocalBind": "Разрешить локальный биндинг",
+        "unixSockets": "Разрешить Unix сокеты",
+        "apiKeyRequired": "Пожалуйста, сначала введите API ключ",
+        "apiKeyPlaceholder": "Введите ваш API ключ Gemini",
+        "oauthLogin": "Вход через OAuth",
+        "loginWithGoogle": "Войти с Google",
+        "candidateCount": "Количество кандидатов",
+        "outputFormat": "Формат вывода",
+        "syntaxHighlighting": "Подсветка синтаксиса",
+        "showLineNumbers": "Показывать номера строк",
+        "harassment": "Оскорбления",
+        "hateSpeech": "Язык вражды",
+        "sexuallyExplicit": "Сексуальный контент",
+        "dangerousContent": "Опасный контент",
+        "respectGitIgnore": "Учитывать .gitignore",
+        "recursiveSearch": "Рекурсивный поиск",
+        "autoAcceptTools": "Авто-принятие инструментов",
+        "enableSandbox": "Включить песочницу",
+        "toolDiscoveryCommand": "Команда обнаружения инструментов",
+        "toolCallCommand": "Команда вызова инструмента",
+        "checkpointsEnabled": "Чекпоинты включены",
+        "telemetryEnabled": "Телеметрия включена",
+        "otlpEndpoint": "OTLP Эндпоинт",
+        "maxSessionTurns": "Макс. ходов сессии",
+        "compressionThreshold": "Порог сжатия",
+        "fileFiltering": "Фильтрация файлов",
+        "toolsAndSandbox": "Инструменты и Песочница",
+        "debugAndTelemetry": "Отладка и Телеметрия",
+        "sessionManagement": "Управление сессией"
       },
-      "configuredProviders": "Настроенные провайдеры",
-      "allProviders": "Все провайдеры",
-      "cleanupDays": "Дни хранения",
-      "thinkingMode": "Режим Thinking",
-      "showDuration": "Показать длительность",
-      "updateChannel": "Канал обновлений",
-      "plansDir": "Директория планов",
-      "spinnerTips": "Подсказки при загрузке",
-      "progressBar": "Прогресс-бар в терминале",
-      "allowList": "Белый список (Allowlist)",
-      "denyList": "Черный список (Denylist)",
-      "allowedDirs": "Разрешенные директории",
-      "autoAllowBash": "Авто-разрешение Bash в песочнице",
-      "excludedCmds": "Исключенные команды",
-      "allowLocalBind": "Разрешить локальный биндинг",
-      "unixSockets": "Разрешить Unix сокеты",
-      "apiKeyRequired": "Пожалуйста, сначала введите API ключ",
-      "apiKeyPlaceholder": "Введите ваш API ключ Gemini",
-      "oauthLogin": "Вход через OAuth",
-      "loginWithGoogle": "Войти с Google",
-      "candidateCount": "Количество кандидатов",
-      "outputFormat": "Формат вывода",
-      "syntaxHighlighting": "Подсветка синтаксиса",
-      "showLineNumbers": "Показывать номера строк",
-      "harassment": "Оскорбления",
-      "hateSpeech": "Язык вражды",
-      "sexuallyExplicit": "Сексуальный контент",
-      "dangerousContent": "Опасный контент",
-      "respectGitIgnore": "Учитывать .gitignore",
-      "recursiveSearch": "Рекурсивный поиск",
-      "autoAcceptTools": "Авто-принятие инструментов",
-      "enableSandbox": "Включить песочницу",
-      "toolDiscoveryCommand": "Команда обнаружения инструментов",
-      "toolCallCommand": "Команда вызова инструмента",
-      "checkpointsEnabled": "Чекпоинты включены",
-      "telemetryEnabled": "Телеметрия включена",
-      "otlpEndpoint": "OTLP Эндпоинт",
-      "maxSessionTurns": "Макс. ходов сессии",
-      "compressionThreshold": "Порог сжатия",
-      "fileFiltering": "Фильтрация файлов",
-      "toolsAndSandbox": "Инструменты и Песочница",
-      "debugAndTelemetry": "Отладка и Телеметрия",
-      "sessionManagement": "Управление сессией"
+      "sections": {
+        "basic": "Основные",
+        "permissions": "Права доступа",
+        "sandbox": "Песочница",
+        "env": "Окружение",
+        "network": "Сеть",
+        "controls": "Управление",
+        "limits": "Лимиты",
+        "auth": "Авторизация",
+        "advanced": "Расширенные",
+        "generation": "Генерация",
+        "safety": "Безопасность",
+        "features": "Функции"
+      },
+      "descriptions": {
+        "verbose": "Включить подробное логирование",
+        "editor": "Команда для открытия редактора (напр. 'code')",
+        "limitContext": "Ограничить размер контекста",
+        "randomness": "Управление случайностью",
+        "safety": "Настройка безопасности в JSON (сложно)",
+        "githubToken": "Опционально: Переопределить токен авторизации",
+        "tencentKey": "Ваш API ключ Tencent Cloud",
+        "confirmExecute": "Спрашивать перед выполнением",
+        "modelProvider": "Тип провайдера (напр. openai, anthropic). Кастомные эндпоинты типа DeepSeek могут использовать 'openai'.",
+        "githubAuth": "Используйте Copilot CLI для аутентификации вашего аккаунта."
+      },
+      "switchAccount": "Сменить аккаунт"
     },
-    "sections": {
-      "basic": "Основные",
-      "permissions": "Права доступа",
-      "sandbox": "Песочница",
-      "env": "Окружение",
-      "network": "Сеть",
-      "controls": "Управление",
-      "limits": "Лимиты",
-      "auth": "Авторизация",
-      "advanced": "Расширенные",
-      "generation": "Генерация",
-      "safety": "Безопасность",
-      "features": "Функции"
+    "apps": {
+      "title": "Магазин приложений",
+      "subtitle": "Находите и устанавливайте инструменты разработчика, языки и сервисы.",
+      "searchPlaceholder": "Поиск приложений...",
+      "categories": {
+        "languages": "Языки",
+        "web": "Веб-сервисы",
+        "database": "Базы данных",
+        "cache_queue": "Кэш и очереди",
+        "tools": "Инструменты и контейнеры",
+        "config_tools": "Инструменты конфигурации"
+      },
+      "downloadModal": {
+        "title": "Загрузка {{name}}",
+        "waiting": "Пожалуйста, подождите, идет загрузка...",
+        "extracting": "Распаковка файла, пожалуйста, подождите...",
+        "savePath": "Сохранение в /download",
+        "success": "{{name}} успешно загружен и распакован!",
+        "failed": "Операция не удалась: {{error}}"
+      },
+      "messages": {
+        "alreadyInstalled": "{{name}} уже установлен.",
+        "actuallyAlreadyInstalled": "{{name}} действительно установлен: {{version}}",
+        "notConfigured": "{{name}} не настроен для загрузки.",
+        "gitMissing": "Git не установлен. Перенаправление в App Store..."
+      },
+      "items": {
+        "python": {
+          "name": "Python",
+          "desc": "Высокоуровневый язык программирования общего назначения."
+        },
+        "go": {
+          "name": "Go",
+          "desc": "Open source язык программирования, поддерживаемый Google."
+        },
+        "java": {
+          "name": "Java",
+          "desc": "Класс-ориентированный объектно-ориентированный язык программирования."
+        },
+        "bun": {
+          "name": "Bun",
+          "desc": "Сверхбыстрый универсальный JavaScript рантайм, бандлер, тест-раннер и менеджер пакетов."
+        },
+        "rust": {
+          "name": "Rust",
+          "desc": "Язык, позволяющий каждому создавать надежное и эффективное программное обеспечение."
+        },
+        "php": {
+          "name": "PHP",
+          "desc": "Популярный скриптовый язык, особенно подходящий для веб-разработки."
+        },
+        "erlang": {
+          "name": "Erlang",
+          "desc": "Язык программирования для создания масштабируемых систем реального времени."
+        },
+        "perl": {
+          "name": "Perl",
+          "desc": "Многофункциональный язык программирования с более чем 30-летней историей."
+        },
+        "ruby": {
+          "name": "Ruby",
+          "desc": "Динамический open source язык с фокусом на простоте и продуктивности."
+        },
+        "apache": {
+          "name": "Apache",
+          "desc": "Самое используемое программное обеспечение веб-сервера в мире."
+        },
+        "caddy": {
+          "name": "Caddy",
+          "desc": "Ультимативный сервер с автоматическим HTTPS."
+        },
+        "tomcat": {
+          "name": "Tomcat",
+          "desc": "Open source реализация Jakarta Servlet, Jakarta Server Pages и т.д."
+        },
+        "nginx": {
+          "name": "Nginx",
+          "desc": "Высокопроизводительный балансировщик нагрузки, веб-сервер и обратный прокси."
+        },
+        "consul": {
+          "name": "Consul",
+          "desc": "Автоматизирует конфигурацию сети, обнаруживает сервисы и защищает соединения."
+        },
+        "mariadb": {
+          "name": "MariaDB",
+          "desc": "Один из самых популярных серверов баз данных. Создан оригинальными разработчиками MySQL."
+        },
+        "mongodb": {
+          "name": "MongoDB",
+          "desc": "Платформа данных приложений для эпохи облаков."
+        },
+        "mysql": {
+          "name": "MySQL",
+          "desc": "Самая популярная open source база данных в мире."
+        },
+        "postgresql": {
+          "name": "PostgreSQL",
+          "desc": "Самая продвинутая open source реляционная база данных в мире."
+        },
+        "redis": {
+          "name": "Redis",
+          "desc": "Хранилище данных в памяти, используемое миллионами разработчиков."
+        },
+        "memcached": {
+          "name": "Memcached",
+          "desc": "Высокопроизводительная распределенная система кэширования объектов в памяти."
+        },
+        "rabbitmq": {
+          "name": "RabbitMQ",
+          "desc": "Один из самых популярных open source брокеров сообщений."
+        },
+        "etcd": {
+          "name": "Etcd",
+          "desc": "Строго согласованное распределенное хранилище ключ-значение."
+        },
+        "nodejs": {
+          "name": "NodeJS",
+          "desc": "JavaScript рантайм, построенный на движке V8 Chrome."
+        },
+        "git": {
+          "name": "Git",
+          "desc": "Бесплатная и open source распределенная система контроля версий."
+        },
+        "podman": {
+          "name": "Podman",
+          "desc": "Инструмент для управления OCI контейнерами и подами."
+        },
+        "docker": {
+          "name": "Docker",
+          "desc": "Ускорьте создание, совместное использование и запуск приложений."
+        },
+        "minio": {
+          "name": "MinIO",
+          "desc": "Высокопроизводительное S3-совместимое объектное хранилище."
+        }
+      }
     },
-    "descriptions": {
-      "verbose": "Включить подробное логирование",
-      "editor": "Команда для открытия редактора (напр. 'code')",
-      "limitContext": "Ограничить размер контекста",
-      "randomness": "Управление случайностью",
-      "safety": "Настройка безопасности в JSON (сложно)",
-      "githubToken": "Опционально: Переопределить токен авторизации",
-      "tencentKey": "Ваш API ключ Tencent Cloud",
-      "confirmExecute": "Спрашивать перед выполнением",
-      "modelProvider": "Тип провайдера (напр. openai, anthropic). Кастомные эндпоинты типа DeepSeek могут использовать 'openai'.",
-      "githubAuth": "Используйте Copilot CLI для аутентификации вашего аккаунта."
+    "tools": {
+      "claude": "Claude Code",
+      "google": "Gemini",
+      "opencode": "OpenCode",
+      "qoder": "Qoder",
+      "codebuddy": "CodeBuddy",
+      "copilot": "GitHub Copilot",
+      "codex": "OpenAI Codex"
     },
-    "switchAccount": "Сменить аккаунт"
-  },
-  "apps": {
-    "title": "Магазин приложений",
-    "subtitle": "Находите и устанавливайте инструменты разработчика, языки и сервисы.",
-    "searchPlaceholder": "Поиск приложений...",
-    "categories": {
-      "languages": "Языки",
-      "web": "Веб-сервисы",
-      "database": "Базы данных",
-      "cache_queue": "Кэш и очереди",
-      "tools": "Инструменты и контейнеры",
-      "config_tools": "Инструменты конфигурации"
+    "settings": {
+      "theme": "Тема",
+      "language": "Язык",
+      "systemAppearance": "Внешний вид системы",
+      "proxySettings": "Настройки прокси",
+      "systemFont": "Системный шрифт",
+      "primaryColor": "Основной цвет",
+      "textColor": "Цвет текста (Переопределить)",
+      "textColorDesc": "Если задано, этот цвет будет использоваться в светлой теме. Темная тема использует стандартный высокий контраст.",
+      "windowOpacity": "Прозрачность окна",
+      "proxyType": "Тип прокси",
+      "proxyAddress": "Адрес прокси",
+      "noProxy": "Без прокси",
+      "saveConfig": "Сохранить конфигурацию",
+      "appearancePresets": "Пресеты внешнего вида",
+      "applyPreset": "Применить",
+      "preset1": "По умолчанию (Розовый)",
+      "preset2": "Океанский синий",
+      "preset3": "Лесной зеленый",
+      "preset4": "Королевский фиолетовый",
+      "preset5": "Закатный желтый",
+      "preset6": "Вулканический красный",
+      "preset7": "Кибер золотой",
+      "preset8": "Гик серый",
+      "customFontPlaceholder": "Введите название шрифта...",
+      "addFont": "Добавить шрифт",
+      "selectIde": "Выбрать исполняемый файл IDE",
+      "terminal": "Терминал",
+      "terminalFont": "Шрифт терминала",
+      "fontFamily": "Семейство шрифтов",
+      "fontSize": "Размер шрифта",
+      "cursorStyle": "Стиль курсора",
+      "terminalShell": "Оболочка терминала",
+      "terminalColors": "Цвета терминала",
+      "terminalBackground": "Фон",
+      "terminalForeground": "Текст",
+      "terminalPresets": "Пресеты терминала",
+      "proxyWarning": "Прим.: Прокси является глобальной настройкой. Все запросы пойдут через него.",
+      "idePath": "Путь к IDE",
+      "idePathDesc": "Абсолютный путь к исполняемому файлу IDE (напр. VS Code или Cursor) для открытия файлов.",
+      "idePathOpen": "Задать путь",
+      "environment": "Окружение",
+      "environmentCheck": "Проверка окружения",
+      "notInstalled": "Не установлено",
+      "envNote": "Убедитесь, что эти инструменты находятся в системном или пользовательском PATH."
     },
-    "downloadModal": {
-      "title": "Загрузка {{name}}",
-      "waiting": "Пожалуйста, подождите, идет загрузка...",
-      "extracting": "Распаковка файла, пожалуйста, подождите...",
-      "savePath": "Сохранение в /download",
-      "success": "{{name}} успешно загружен и распакован!",
-      "failed": "Операция не удалась: {{error}}"
+    "search": {
+      "title": "Поиск",
+      "placeholder": "Поиск файлов...",
+      "content": "Содержимое",
+      "noResults": "Результатов не найдено"
     },
-    "messages": {
-      "alreadyInstalled": "{{name}} уже установлен.",
-      "actuallyAlreadyInstalled": "{{name}} действительно установлен: {{version}}",
-      "notConfigured": "{{name}} не настроен для загрузки.",
-      "gitMissing": "Git не установлен. Перенаправление в App Store..."
+    "diff": {
+      "title": "Diff файла",
+      "loadError": "Не удалось загрузить diff"
     },
-    "items": {
-      "python": {
-        "name": "Python",
-        "desc": "Высокоуровневый язык программирования общего назначения."
+    "terminal": {
+      "dirError": "Ошибка выбора директории",
+      "selectTool": "Сначала выберите инструмент",
+      "cliTool": "Инструмент CLI",
+      "model": "Модель",
+      "selectModel": "Выбрать модель",
+      "tabs": {
+        "files": "Файлы",
+        "search": "Поиск",
+        "shortcuts": "Ярлыки",
+        "new": "Терминал {{number}}"
       },
-      "go": {
-        "name": "Go",
-        "desc": "Open source язык программирования, поддерживаемый Google."
-      },
-      "java": {
-        "name": "Java",
-        "desc": "Класс-ориентированный объектно-ориентированный язык программирования."
-      },
-      "bun": {
-        "name": "Bun",
-        "desc": "Сверхбыстрый универсальный JavaScript рантайм, бандлер, тест-раннер и менеджер пакетов."
-      },
-      "rust": {
-        "name": "Rust",
-        "desc": "Язык, позволяющий каждому создавать надежное и эффективное программное обеспечение."
-      },
-      "php": {
-        "name": "PHP",
-        "desc": "Популярный скриптовый язык, особенно подходящий для веб-разработки."
-      },
-      "erlang": {
-        "name": "Erlang",
-        "desc": "Язык программирования для создания масштабируемых систем реального времени."
-      },
-      "perl": {
-        "name": "Perl",
-        "desc": "Многофункциональный язык программирования с более чем 30-летней историей."
-      },
-      "ruby": {
-        "name": "Ruby",
-        "desc": "Динамический open source язык с фокусом на простоте и продуктивности."
-      },
-      "apache": {
-        "name": "Apache",
-        "desc": "Самое используемое программное обеспечение веб-сервера в мире."
-      },
-      "caddy": {
-        "name": "Caddy",
-        "desc": "Ультимативный сервер с автоматическим HTTPS."
-      },
-      "tomcat": {
-        "name": "Tomcat",
-        "desc": "Open source реализация Jakarta Servlet, Jakarta Server Pages и т.д."
-      },
-      "nginx": {
-        "name": "Nginx",
-        "desc": "Высокопроизводительный балансировщик нагрузки, веб-сервер и обратный прокси."
-      },
-      "consul": {
-        "name": "Consul",
-        "desc": "Автоматизирует конфигурацию сети, обнаруживает сервисы и защищает соединения."
-      },
-      "mariadb": {
-        "name": "MariaDB",
-        "desc": "Один из самых популярных серверов баз данных. Создан оригинальными разработчиками MySQL."
-      },
-      "mongodb": {
-        "name": "MongoDB",
-        "desc": "Платформа данных приложений для эпохи облаков."
-      },
-      "mysql": {
-        "name": "MySQL",
-        "desc": "Самая популярная open source база данных в мире."
-      },
-      "postgresql": {
-        "name": "PostgreSQL",
-        "desc": "Самая продвинутая open source реляционная база данных в мире."
-      },
-      "redis": {
-        "name": "Redis",
-        "desc": "Хранилище данных в памяти, используемое миллионами разработчиков."
-      },
-      "memcached": {
-        "name": "Memcached",
-        "desc": "Высокопроизводительная распределенная система кэширования объектов в памяти."
-      },
-      "rabbitmq": {
-        "name": "RabbitMQ",
-        "desc": "Один из самых популярных open source брокеров сообщений."
-      },
-      "etcd": {
-        "name": "Etcd",
-        "desc": "Строго согласованное распределенное хранилище ключ-значение."
-      },
-      "nodejs": {
-        "name": "NodeJS",
-        "desc": "JavaScript рантайм, построенный на движке V8 Chrome."
+      "noDirectory": "Директория не выбрана",
+      "workingDir": "Рабочая директория",
+      "chat": {
+        "placeholder": "Введите сообщение... (Shift+Enter для новой строки)",
+        "send": "Отправить"
       },
       "git": {
-        "name": "Git",
-        "desc": "Бесплатная и open source распределенная система контроля версий."
+        "menu": "Операции Git",
+        "setUser": "Установить имя пользователя",
+        "setEmail": "Установить email пользователя",
+        "init": "Инициализировать репозиторий",
+        "addRemote": "Добавить Remote Origin",
+        "add": "Добавить все (git add .)",
+        "commit": "Коммит (Commit)",
+        "push": "Пуш (Push origin master)",
+        "modal": {
+          "userName": "Установить Git User Name",
+          "userEmail": "Установить Git User Email",
+          "remote": "Добавить Remote Origin",
+          "commit": "Git Коммит",
+          "labelName": "Имя",
+          "labelEmail": "Email",
+          "labelUrl": "URL Репозитория",
+          "labelMessage": "Сообщение коммита"
+        }
       },
-      "podman": {
-        "name": "Podman",
-        "desc": "Инструмент для управления OCI контейнерами и подами."
+      "resumed": "Сессия возобновлена...",
+      "fileTree": {
+        "title": "Файловый менеджер",
+        "change": "Изменить",
+        "context": {
+          "addToChat": "Добавить в чат",
+          "open": "Открыть",
+          "modify": "Изменить",
+          "diff": "Diff",
+          "openInIde": "Открыть в IDE",
+          "delete": "Удалить",
+          "rename": "Переименовать",
+          "insertedToChat": "Путь вставлен в поле ввода чата",
+          "insertedToTerminal": "Путь вставлен в терминал"
+        },
+        "modal": {
+          "editing": "Редактирование файла",
+          "save": "Сохранить"
+        }
       },
-      "docker": {
-        "name": "Docker",
-        "desc": "Ускорьте создание, совместное использование и запуск приложений."
-      },
-      "minio": {
-        "name": "MinIO",
-        "desc": "Высокопроизводительное S3-совместимое объектное хранилище."
-      }
-    }
-  },
-  "tools": {
-    "claude": "Claude Code",
-    "google": "Gemini",
-    "opencode": "OpenCode",
-    "qoder": "Qoder",
-    "codebuddy": "CodeBuddy",
-    "copilot": "GitHub Copilot",
-    "codex": "OpenAI Codex"
-  },
-  "settings": {
-    "theme": "Тема",
-    "language": "Язык",
-    "systemAppearance": "Внешний вид системы",
-    "proxySettings": "Настройки прокси",
-    "systemFont": "Системный шрифт",
-    "primaryColor": "Основной цвет",
-    "textColor": "Цвет текста (Переопределить)",
-    "textColorDesc": "Если задано, этот цвет будет использоваться в светлой теме. Темная тема использует стандартный высокий контраст.",
-    "windowOpacity": "Прозрачность окна",
-    "proxyType": "Тип прокси",
-    "proxyAddress": "Адрес прокси",
-    "noProxy": "Без прокси",
-    "saveConfig": "Сохранить конфигурацию",
-    "appearancePresets": "Пресеты внешнего вида",
-    "applyPreset": "Применить",
-    "preset1": "По умолчанию (Розовый)",
-    "preset2": "Океанский синий",
-    "preset3": "Лесной зеленый",
-    "preset4": "Королевский фиолетовый",
-    "preset5": "Закатный желтый",
-    "preset6": "Вулканический красный",
-    "preset7": "Кибер золотой",
-    "preset8": "Гик серый",
-    "customFontPlaceholder": "Введите название шрифта...",
-    "addFont": "Добавить шрифт",
-    "selectIde": "Выбрать исполняемый файл IDE",
-    "terminal": "Терминал",
-    "terminalFont": "Шрифт терминала",
-    "fontFamily": "Семейство шрифтов",
-    "fontSize": "Размер шрифта",
-    "cursorStyle": "Стиль курсора",
-    "terminalShell": "Оболочка терминала",
-    "terminalColors": "Цвета терминала",
-    "terminalBackground": "Фон",
-    "terminalForeground": "Текст",
-    "terminalPresets": "Пресеты терминала",
-    "proxyWarning": "Прим.: Прокси является глобальной настройкой. Все запросы пойдут через него.",
-    "idePath": "Путь к IDE",
-    "idePathDesc": "Абсолютный путь к исполняемому файлу IDE (напр. VS Code или Cursor) для открытия файлов.",
-    "idePathOpen": "Задать путь",
-    "environment": "Окружение",
-    "environmentCheck": "Проверка окружения",
-    "notInstalled": "Не установлено",
-    "envNote": "Убедитесь, что эти инструменты находятся в системном или пользовательском PATH."
-  },
-  "search": {
-    "title": "Поиск",
-    "placeholder": "Поиск файлов...",
-    "content": "Содержимое",
-    "noResults": "Результатов не найдено"
-  },
-  "diff": {
-    "title": "Diff файла",
-    "loadError": "Не удалось загрузить diff"
-  },
-  "terminal": {
-    "dirError": "Ошибка выбора директории",
-    "selectTool": "Сначала выберите инструмент",
-    "cliTool": "Инструмент CLI",
-    "model": "Модель",
-    "selectModel": "Выбрать модель",
-    "tabs": {
-      "files": "Файлы",
-      "search": "Поиск",
-      "shortcuts": "Ярлыки",
-      "new": "Терминал {{number}}"
-    },
-    "noDirectory": "Директория не выбрана",
-    "workingDir": "Рабочая директория",
-    "chat": {
-      "placeholder": "Введите сообщение... (Shift+Enter для новой строки)",
-      "send": "Отправить"
-    },
-    "git": {
-      "menu": "Операции Git",
-      "setUser": "Установить имя пользователя",
-      "setEmail": "Установить email пользователя",
-      "init": "Инициализировать репозиторий",
-      "addRemote": "Добавить Remote Origin",
-      "add": "Добавить все (git add .)",
-      "commit": "Коммит (Commit)",
-      "push": "Пуш (Push origin master)",
-      "modal": {
-        "userName": "Установить Git User Name",
-        "userEmail": "Установить Git User Email",
-        "remote": "Добавить Remote Origin",
-        "commit": "Git Коммит",
-        "labelName": "Имя",
-        "labelEmail": "Email",
-        "labelUrl": "URL Репозитория",
-        "labelMessage": "Сообщение коммита"
-      }
-    },
-    "resumed": "Сессия возобновлена...",
-    "fileTree": {
-      "title": "Файловый менеджер",
-      "change": "Изменить",
-      "context": {
-        "addToChat": "Добавить в чат",
-        "open": "Открыть",
-        "modify": "Изменить",
-        "diff": "Diff",
-        "openInIde": "Открыть в IDE",
+      "commandPresets": {
+        "title": "Быстрые команды",
+        "add": "Добавить команду",
+        "edit": "Редактировать команду",
         "delete": "Удалить",
-        "rename": "Переименовать",
-        "insertedToChat": "Путь вставлен в поле ввода чата",
-        "insertedToTerminal": "Путь вставлен в терминал"
+        "name": "Название",
+        "command": "Команда",
+        "placeholderName": "Напр.: Объяснить код",
+        "placeholderCommand": "Напр.: /explain",
+        "empty": "Нет команд",
+        "run": "Выполнить"
       },
-      "modal": {
-        "editing": "Редактирование файла",
-        "save": "Сохранить"
-      }
+      "contextBuilder": {
+        "title": "Корзина контекста",
+        "empty": "Файл не выбран",
+        "copyXml": "Копировать как XML",
+        "copyMd": "Копировать как Markdown",
+        "clear": "Очистить корзину",
+        "copied": "Контекст скопирован в буфер обмена"
+      },
+      "aiGenerated": "Контент, сгенерированный языковой моделью",
+      "helpButton": "Справка",
+      "helpModalTitle": "Краткое руководство по инструментам CLI",
+      "copilotHelp": "**GitHub Copilot**: Используйте `copilot [command]` или `?? [question]`, чтобы задать вопрос.",
+      "geminiHelp": "**Google Gemini**: Используйте `gemini [prompt]` для общения. Используйте `gemini models` для списка моделей.",
+      "claudeHelp": "**Anthropic Claude**: Используйте `claude [prompt]` для общения.",
+      "generalHelp": "Нажмите `Shift + Tab` для переключения фокуса. Нажмите `Ctrl + S` для сохранения.",
+      "oauthModelHint": "Примечание: Если вы вошли через OAuth, используйте команду `/models` или выберите `Change Model` в контекстном меню чата."
     },
-    "commandPresets": {
-      "title": "Быстрые команды",
-      "add": "Добавить команду",
-      "edit": "Редактировать команду",
+    "common": {
+      "ok": "ОК",
+      "cancel": "Отмена",
+      "confirm": "Подтвердить",
+      "save": "Сохранить",
       "delete": "Удалить",
-      "name": "Название",
-      "command": "Команда",
-      "placeholderName": "Напр.: Объяснить код",
-      "placeholderCommand": "Напр.: /explain",
-      "empty": "Нет команд",
-      "run": "Выполнить"
+      "text": "Текст",
+      "json": "JSON",
+      "enabled": "Включено",
+      "settings": "Настройки",
+      "auto": "Авто",
+      "off": "Выкл",
+      "on": "Вкл",
+      "light": "Светлая",
+      "dark": "Темная",
+      "low": "Низкий",
+      "normal": "Нормальный",
+      "high": "Высокий",
+      "all": "Все",
+      "goToTerminal": "Перейти в терминал",
+      "yes": "Да",
+      "no": "Нет",
+      "add": "Add",
+      "deleteConfirm": "Are you sure you want to delete this provider?"
     },
-    "contextBuilder": {
-      "title": "Корзина контекста",
-      "empty": "Файл не выбран",
-      "copyXml": "Копировать как XML",
-      "copyMd": "Копировать как Markdown",
-      "clear": "Очистить корзину",
-      "copied": "Контекст скопирован в буфер обмена"
-    },
-    "aiGenerated": "Контент, сгенерированный языковой моделью",
-    "helpButton": "Справка",
-    "helpModalTitle": "Краткое руководство по инструментам CLI",
-    "copilotHelp": "**GitHub Copilot**: Используйте `copilot [command]` или `?? [question]`, чтобы задать вопрос.",
-    "geminiHelp": "**Google Gemini**: Используйте `gemini [prompt]` для общения. Используйте `gemini models` для списка моделей.",
-    "claudeHelp": "**Anthropic Claude**: Используйте `claude [prompt]` для общения.",
-    "generalHelp": "Нажмите `Shift + Tab` для переключения фокуса. Нажмите `Ctrl + S` для сохранения.",
-    "oauthModelHint": "Примечание: Если вы вошли через OAuth, используйте команду `/models` или выберите `Change Model` в контекстном меню чата."
-  },
-  "common": {
-    "ok": "ОК",
-    "cancel": "Отмена",
-    "confirm": "Подтвердить",
-    "save": "Сохранить",
-    "delete": "Удалить",
-    "text": "Текст",
-    "json": "JSON",
-    "enabled": "Включено",
-    "settings": "Настройки",
-    "auto": "Авто",
-    "off": "Выкл",
-    "on": "Вкл",
-    "light": "Светлая",
-    "dark": "Темная",
-    "low": "Низкий",
-    "normal": "Нормальный",
-    "high": "Высокий",
-    "all": "Все",
-    "goToTerminal": "Перейти в терминал",
-    "yes": "Да",
-    "no": "Нет",
-    "add": "Add",
-    "deleteConfirm": "Are you sure you want to delete this provider?"
-  },
-  "about": {
-    "description": "OpenVizUI — это мощный и современный визуальный интерфейс для инструментов AI CLI. Он обеспечивает единый, эстетичный и эффективный способ управления вашими рабочими процессами ИИ, от управления навыками до сложной конфигурации.",
-    "visitWebsite": "Посетить сайт",
-    "whyTitle": "Основные возможности",
-    "resourcesTitle": "Ресурсы",
-    "madeBy": "Создано с помощью",
-    "byContributors": "Участники OpenVizUI",
-    "update": {
-      "check": "Проверить обновление",
-      "checking": "Проверка...",
-      "available": "Доступна новая версия: {{version}}",
-      "latest": "У вас установлена последняя версия!",
-      "error": "Не удалось проверить обновления.",
-      "newVersion": "Последняя версия: {{version}}",
-      "isLatest": "Последняя версия",
-      "now": "Обновить сейчас"
-    },
-    "version": {
-      "local": "Локальная версия",
-      "server": "Версия сервера"
-    },
-    "features": {
-      "fast": {
-        "title": "Молниеносно быстро",
-        "desc": "Оптимизировано для производительности с Rust и React."
+    "about": {
+      "description": "OpenVizUI — это мощный и современный визуальный интерфейс для инструментов AI CLI. Он обеспечивает единый, эстетичный и эффективный способ управления вашими рабочими процессами ИИ, от управления навыками до сложной конфигурации.",
+      "visitWebsite": "Посетить сайт",
+      "whyTitle": "Основные возможности",
+      "resourcesTitle": "Ресурсы",
+      "madeBy": "Создано с помощью",
+      "byContributors": "Участники OpenVizUI",
+      "update": {
+        "check": "Проверить обновление",
+        "checking": "Проверка...",
+        "available": "Доступна новая версия: {{version}}",
+        "latest": "У вас установлена последняя версия!",
+        "error": "Не удалось проверить обновления.",
+        "newVersion": "Последняя версия: {{version}}",
+        "isLatest": "Последняя версия",
+        "now": "Обновить сейчас"
       },
-      "community": {
-        "title": "Развивается сообществом",
-        "desc": "Открытый исходный код и совместная разработка."
+      "version": {
+        "local": "Локальная версия",
+        "server": "Версия сервера"
       },
-      "tools": {
-        "title": "Мульти-инструмент ИИ",
-        "desc": "Единый интерфейс для ведущих инструментов AI CLI."
+      "features": {
+        "fast": {
+          "title": "Молниеносно быстро",
+          "desc": "Оптимизировано для производительности с Rust и React."
+        },
+        "community": {
+          "title": "Развивается сообществом",
+          "desc": "Открытый исходный код и совместная разработка."
+        },
+        "tools": {
+          "title": "Мульти-инструмент ИИ",
+          "desc": "Единый интерфейс для ведущих инструментов AI CLI."
+        }
       }
+    },
+    "chat": {
+      "title": "Чат терминала",
+      "newChat": "Новый чат",
+      "currentSession": "Текущий сеанс",
+      "startTypingEmpty": "Начните печатать для взаимодействия с оболочкой...",
+      "startTypingTool": "Начните взаимодействовать с {{tool}}...",
+      "placeholder": "Введите сообщение или команду для терминала...",
+      "configNotice": "Примечание: функции чата и терминала требуют отдельной настройки.",
+      "newChatTitle": "Новый чат",
+      "deleteConfirm": "Вы уверены, что хотите удалить этот сеанс?",
+      "settings": "Настройки LLM",
+      "serviceProvider": "Поставщик услуг",
+      "settingsModalTitle": "Конфигурация LLM",
+      "apiKey": "Ключ API",
+      "baseUrl": "Базовый URL",
+      "model": "Имя модели",
+      "selectProviderToConfigure": "Please select or add a provider to configure.",
+      "enterProviderName": "Enter Provider Name:",
+      "addProvider": "Настроить провайдера",
+      "fetchModels": "Fetch",
+      "fetchSuccess": "Fetched {{count}} models",
+      "fetchError": "Failed to fetch models",
+      "fetchErrorNoConfig": "Please fill in Base URL and API Key first",
+      "modelTooltip": "Select or type a model ID",
+      "noApiKeyWarning": "⚠️ Please set your LLM API Key and Base URL by clicking the Settings icon in the top right.",
+      "apiError": "\n\n**Error:** API request failed. \n\n```json\n{{error}}\n```",
+      "networkError": "\n\n**Network Error:** {{error}}",
+      "modelPlaceholder": "gpt-4o-mini, deepseek-chat..."
     }
-  },
-  "chat": {
-    "title": "Чат терминала",
-    "newChat": "Новый чат",
-    "currentSession": "Текущий сеанс",
-    "startTypingEmpty": "Начните печатать для взаимодействия с оболочкой...",
-    "startTypingTool": "Начните взаимодействовать с {{tool}}...",
-    "placeholder": "Введите сообщение или команду для терминала...",
-    "configNotice": "Примечание: функции чата и терминала требуют отдельной настройки.",
-    "newChatTitle": "Новый чат",
-    "deleteConfirm": "Вы уверены, что хотите удалить этот сеанс?",
-    "settings": "Настройки LLM",
-    "serviceProvider": "Поставщик услуг",
-    "settingsModalTitle": "Конфигурация LLM",
-    "apiKey": "Ключ API",
-    "baseUrl": "Базовый URL",
-    "model": "Имя модели",
-    "selectProviderToConfigure": "Please select or add a provider to configure.",
-    "enterProviderName": "Enter Provider Name:",
-    "addProvider": "Настроить провайдера",
-    "fetchModels": "Fetch",
-    "fetchSuccess": "Fetched {{count}} models",
-    "fetchError": "Failed to fetch models",
-    "fetchErrorNoConfig": "Please fill in Base URL and API Key first",
-    "modelTooltip": "Select or type a model ID",
-    "noApiKeyWarning": "⚠️ Please set your LLM API Key and Base URL by clicking the Settings icon in the top right.",
-    "apiError": "\n\n**Error:** API request failed. \n\n```json\n{{error}}\n```",
-    "networkError": "\n\n**Network Error:** {{error}}",
-    "modelPlaceholder": "gpt-4o-mini, deepseek-chat..."
-  }
 }

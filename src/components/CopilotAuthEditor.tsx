@@ -138,9 +138,9 @@ const CopilotAuthEditor: React.FC = () => {
                     <Form.Item name="debug" label={t('cliConfig.fields.debugMode', 'Debug Mode')} valuePropName="checked">
                         <Switch />
                     </Form.Item>
-                    <Form.Item 
-                        name="confirm_execute" 
-                        label={t('cliConfig.fields.confirmExecute', 'Confirm Before Execute')} 
+                    <Form.Item
+                        name="confirm_execute"
+                        label={t('cliConfig.fields.confirmExecute', 'Confirm Before Execute')}
                         valuePropName="checked"
                         tooltip={t('cliConfig.descriptions.confirmExecute')}
                     >
@@ -152,9 +152,9 @@ const CopilotAuthEditor: React.FC = () => {
                     <Space><BugOutlined />{t('cliConfig.sections.advanced', 'Advanced / Override')}</Space>
                 </Divider>
 
-                <Form.Item 
-                    name={['github', 'token']} 
-                    label={t('cliConfig.fields.githubToken', 'GitHub Token Override')} 
+                <Form.Item
+                    name={['github', 'token']}
+                    label={t('cliConfig.fields.githubToken', 'GitHub Token Override')}
                     tooltip={t('cliConfig.descriptions.githubToken')}
                 >
                     <Input.Password placeholder="ghp_..." />

@@ -71,12 +71,12 @@ export const useChatStore = create<ChatState>()(
                     const newSessions = state.sessions.filter((s) => s.id !== id);
                     const newMessages = { ...state.messages };
                     delete newMessages[id];
-                    
+
                     return {
                         sessions: newSessions,
                         messages: newMessages,
-                        activeSessionId: state.activeSessionId === id 
-                            ? (newSessions[0]?.id || null) 
+                        activeSessionId: state.activeSessionId === id
+                            ? (newSessions[0]?.id || null)
                             : state.activeSessionId
                     };
                 });
@@ -90,20 +90,20 @@ export const useChatStore = create<ChatState>()(
                 set((state) => {
                     const sessionMessages = state.messages[sessionId] || [];
                     const fullMessage: Message = { ...message, timestamp: Date.now() };
-                    
+
                     // Auto-update title based on first user message if it's still generic
                     const session = state.sessions.find(s => s.id === sessionId);
                     let newSessions = state.sessions;
-                    
+
                     const isDefaultTitle = session && (!session.title || session.title === 'New Chat' || session.title === '新对话' || session.title === 'Terminal Chat');
-                    
+
                     if (session && message.type === 'user' && isDefaultTitle) {
                         const title = message.content.slice(0, 30) + (message.content.length > 30 ? '...' : '');
-                        newSessions = state.sessions.map(s => 
+                        newSessions = state.sessions.map(s =>
                             s.id === sessionId ? { ...s, title, updatedAt: Date.now() } : s
                         );
                     } else {
-                        newSessions = state.sessions.map(s => 
+                        newSessions = state.sessions.map(s =>
                             s.id === sessionId ? { ...s, updatedAt: Date.now() } : s
                         );
                     }
@@ -124,8 +124,8 @@ export const useChatStore = create<ChatState>()(
             updateLastMessage: (sessionId: string, appendContent: string) => {
                 set((state) => {
                     const sessionMessages = state.messages[sessionId] || [];
-                    
-                    const newSessions = state.sessions.map(s => 
+
+                    const newSessions = state.sessions.map(s =>
                         s.id === sessionId ? { ...s, updatedAt: Date.now() } : s
                     );
 

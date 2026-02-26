@@ -14,10 +14,10 @@ interface ChatInputProps {
     onRemoveFile?: (index: number) => void;
 }
 
-const ChatInput: React.FC<ChatInputProps> = ({ 
-    onSend, 
-    disabled, 
-    value: propValue, 
+const ChatInput: React.FC<ChatInputProps> = ({
+    onSend,
+    disabled,
+    value: propValue,
     onChange,
     attachedFiles = [],
     onRemoveFile
@@ -25,7 +25,7 @@ const ChatInput: React.FC<ChatInputProps> = ({
     const { token } = theme.useToken();
     const { t } = useTranslation();
     const [localValue, setLocalValue] = useState('');
-    
+
     const value = propValue !== undefined ? propValue : localValue;
     const setValue = onChange || setLocalValue;
 
@@ -45,7 +45,7 @@ const ChatInput: React.FC<ChatInputProps> = ({
     };
 
     return (
-        <div style={{ 
+        <div style={{
             position: 'relative',
             background: token.colorBgContainer,
             borderRadius: 16,
@@ -79,7 +79,7 @@ const ChatInput: React.FC<ChatInputProps> = ({
                                     {fileName}
                                 </span>
                                 {onRemoveFile && (
-                                    <span 
+                                    <span
                                         style={{ cursor: 'pointer', color: token.colorTextDescription, marginLeft: 4 }}
                                         onClick={() => onRemoveFile(index)}
                                     >
@@ -91,31 +91,31 @@ const ChatInput: React.FC<ChatInputProps> = ({
                     })}
                 </div>
             )}
-            
+
             <div style={{ display: 'flex', alignItems: 'flex-end', gap: 12, width: '100%' }}>
                 <TextArea
-                value={value}
-                onChange={(e) => setValue(e.target.value)}
-                onKeyDown={handleKeyDown}
-                placeholder={t('chat.placeholder', 'Type a message or a command for the terminal...')}
-                autoSize={{ minRows: 2, maxRows: 6 }}
-                disabled={disabled}
-                variant="borderless"
-                style={{ 
-                    flex: 1, 
-                    resize: 'none', 
-                    padding: '8px 0',
-                    boxShadow: 'none'
-                }}
-            />
-            <Button 
-                type="primary" 
-                shape="circle"
-                icon={<SendOutlined />} 
-                onClick={handleSend} 
-                disabled={disabled || (!value.trim() && attachedFiles.length === 0)}
-                style={{ marginBottom: 4 }}
-            />
+                    value={value}
+                    onChange={(e) => setValue(e.target.value)}
+                    onKeyDown={handleKeyDown}
+                    placeholder={t('chat.placeholder', 'Type a message or a command for the terminal...')}
+                    autoSize={{ minRows: 2, maxRows: 6 }}
+                    disabled={disabled}
+                    variant="borderless"
+                    style={{
+                        flex: 1,
+                        resize: 'none',
+                        padding: '8px 0',
+                        boxShadow: 'none'
+                    }}
+                />
+                <Button
+                    type="primary"
+                    shape="circle"
+                    icon={<SendOutlined />}
+                    onClick={handleSend}
+                    disabled={disabled || (!value.trim() && attachedFiles.length === 0)}
+                    style={{ marginBottom: 4 }}
+                />
             </div>
         </div>
     );

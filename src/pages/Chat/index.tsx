@@ -29,18 +29,18 @@ const ChatPage: React.FC = () => {
     const [inputValue, setInputValue] = useState('');
     const [attachedFiles, setAttachedFiles] = useState<string[]>([]);
     const messagesEndRef = useRef<HTMLDivElement>(null);
-    
+
     const { activeChatToolId, toolConfigs, setToolConfig, addChatProvider, setActiveChatToolId } = useAppStore();
     const [fetchedModels, setFetchedModels] = useState<string[]>([]);
     const [fetchingModels, setFetchingModels] = useState(false);
     const [modelSelectOpen, setModelSelectOpen] = useState(false);
     const [form] = Form.useForm();
-    const { 
-        sessions, 
-        messages, 
-        activeSessionId, 
-        createSession, 
-        setActiveSession, 
+    const {
+        sessions,
+        messages,
+        activeSessionId,
+        createSession,
+        setActiveSession,
         deleteSession,
         addMessage
     } = useChatStore();
@@ -62,11 +62,11 @@ const ChatPage: React.FC = () => {
             const newId = createSession(activeChatToolId, t('chat.newChatTitle', 'New Chat'));
             setActiveSession(newId);
         } else if (activeSessionId && activeChatToolId) {
-             const session = sessions.find(s => s.id === activeSessionId);
-             if (!session) {
-                 const newId = createSession(activeChatToolId, t('chat.newChatTitle', 'New Chat'));
-                 setActiveSession(newId);
-             }
+            const session = sessions.find(s => s.id === activeSessionId);
+            if (!session) {
+                const newId = createSession(activeChatToolId, t('chat.newChatTitle', 'New Chat'));
+                setActiveSession(newId);
+            }
         }
     }, [activeChatToolId, activeSessionId, sessions.length]);
 
@@ -94,16 +94,16 @@ const ChatPage: React.FC = () => {
         setIsStreaming(true);
         // Force the assistant message box to appear
         const sessionMessages = useChatStore.getState().messages[activeSessionId] || [];
-        
+
         try {
             const apiBaseUrl = localAiBaseUrl || "https://api.openai.com/v1";
-            
+
             // Build messages array
             const openAiMessages = [...sessionMessages, { type: 'user', content: combinedText }].map(msg => ({
                 role: msg.type === 'user' ? 'user' : 'assistant',
                 content: msg.content
             }));
-            
+
             const response = await fetch(`${apiBaseUrl}/chat/completions`, {
                 method: 'POST',
                 headers: {
@@ -131,7 +131,7 @@ const ChatPage: React.FC = () => {
                 while (true) {
                     const { done, value } = await reader.read();
                     if (done) break;
-                    
+
                     const chunk = decoder.decode(value, { stream: true });
                     const lines = chunk.split('\n');
                     for (const line of lines) {
@@ -164,11 +164,11 @@ const ChatPage: React.FC = () => {
 
     return (
         <Layout style={{ height: '100%', background: 'transparent' }} hasSider>
-            <Sider 
-                width={260} 
-                theme="light" 
-                style={{ 
-                    background: token.colorBgContainer, 
+            <Sider
+                width={260}
+                theme="light"
+                style={{
+                    background: token.colorBgContainer,
                     borderRight: `1px solid ${token.colorBorderSecondary}`,
                     display: 'flex',
                     flexDirection: 'column'
@@ -185,11 +185,11 @@ const ChatPage: React.FC = () => {
                         renderItem={item => {
                             const isActive = item.id === activeSessionId;
                             return (
-                                <List.Item 
-                                    style={{ 
-                                        padding: '12px 16px', 
-                                        borderBottom: 'none', 
-                                        cursor: 'pointer', 
+                                <List.Item
+                                    style={{
+                                        padding: '12px 16px',
+                                        borderBottom: 'none',
+                                        cursor: 'pointer',
                                         background: isActive ? token.controlItemBgActive : 'transparent',
                                         borderRadius: 8,
                                         marginTop: 8
@@ -203,7 +203,7 @@ const ChatPage: React.FC = () => {
                                                 {getDisplayTitle(item.title, t)}
                                             </Text>
                                         </Space>
-                                        
+
                                         <Popconfirm
                                             title={t('chat.deleteConfirm', 'Are you sure you want to delete this session?')}
                                             onConfirm={(e) => {
@@ -214,10 +214,10 @@ const ChatPage: React.FC = () => {
                                             okText={t('common.yes', 'Yes')}
                                             cancelText={t('common.no', 'No')}
                                         >
-                                            <Button 
-                                                type="text" 
-                                                size="small" 
-                                                icon={<DeleteOutlined />} 
+                                            <Button
+                                                type="text"
+                                                size="small"
+                                                icon={<DeleteOutlined />}
                                                 onClick={(e) => e.stopPropagation()}
                                                 style={{ color: token.colorError, opacity: isActive ? 1 : 0.4 }}
                                             />
@@ -230,11 +230,11 @@ const ChatPage: React.FC = () => {
                 </div>
             </Sider>
             <Layout style={{ background: 'transparent' }}>
-                <Header style={{ 
-                    background: token.colorBgContainer, 
-                    padding: '0 24px', 
-                    display: 'flex', 
-                    alignItems: 'center', 
+                <Header style={{
+                    background: token.colorBgContainer,
+                    padding: '0 24px',
+                    display: 'flex',
+                    alignItems: 'center',
                     justifyContent: 'space-between',
                     borderBottom: `1px solid ${token.colorBorderSecondary}`,
                     height: 60,
@@ -258,9 +258,9 @@ const ChatPage: React.FC = () => {
                         </Button>
                     </Space>
                 </Header>
-                <Content style={{ 
-                    display: 'flex', 
-                    flexDirection: 'column', 
+                <Content style={{
+                    display: 'flex',
+                    flexDirection: 'column',
                     background: token.colorBgLayout,
                     position: 'relative'
                 }}>
@@ -277,11 +277,11 @@ const ChatPage: React.FC = () => {
                         <div ref={messagesEndRef} style={{ height: 1 }} />
                     </div>
                     <div style={{ padding: '0 24px 12px' }}>
-                        <ChatInput 
-                            onSend={handleSend} 
-                            disabled={isStreaming} 
-                            value={inputValue} 
-                            onChange={setInputValue} 
+                        <ChatInput
+                            onSend={handleSend}
+                            disabled={isStreaming}
+                            value={inputValue}
+                            onChange={setInputValue}
                             attachedFiles={attachedFiles}
                             onRemoveFile={(idx: number) => setAttachedFiles(prev => prev.filter((_, i) => i !== idx))}
                         />
@@ -293,9 +293,9 @@ const ChatPage: React.FC = () => {
                     </div>
                 </Content>
             </Layout>
-            <WorkspaceSider 
-                sessionId={activeSessionId || 'default'} 
-                placement="right" 
+            <WorkspaceSider
+                sessionId={activeSessionId || 'default'}
+                placement="right"
                 onInsertPath={(path) => {
                     if (!attachedFiles.includes(path)) {
                         setAttachedFiles(prev => [...prev, path]);
@@ -343,11 +343,11 @@ const ChatPage: React.FC = () => {
                 <Form
                     form={form}
                     layout="vertical"
-                    initialValues={{ 
+                    initialValues={{
                         provider: activeChatToolId || '',
-                        apiKey: activeChatToolId ? toolConfigs[activeChatToolId]?.llmApiKey || '' : '', 
-                        model: activeChatToolId && toolConfigs[activeChatToolId]?.llmModel ? [toolConfigs[activeChatToolId]?.llmModel] : [], 
-                        baseUrl: activeChatToolId ? toolConfigs[activeChatToolId]?.llmBaseUrl || '' : '' 
+                        apiKey: activeChatToolId ? toolConfigs[activeChatToolId]?.llmApiKey || '' : '',
+                        model: activeChatToolId && toolConfigs[activeChatToolId]?.llmModel ? [toolConfigs[activeChatToolId]?.llmModel] : [],
+                        baseUrl: activeChatToolId ? toolConfigs[activeChatToolId]?.llmBaseUrl || '' : ''
                     }}
                     onFinish={(values) => {
                         const newProvider = values.provider.trim();
@@ -365,36 +365,36 @@ const ChatPage: React.FC = () => {
                         }
                     }}
                 >
-                    <Form.Item 
-                        label={t('chat.serviceProvider', 'Service Provider')} 
+                    <Form.Item
+                        label={t('chat.serviceProvider', 'Service Provider')}
                         name="provider"
                         rules={[{ required: true, message: t('chat.enterProviderName', 'Please input a provider name') }]}
                     >
                         <Input placeholder="e.g. google, openai, deepseek..." />
                     </Form.Item>
-                    <Form.Item 
-                        label={t('chat.apiKey', 'API Key')} 
+                    <Form.Item
+                        label={t('chat.apiKey', 'API Key')}
                         name="apiKey"
                         rules={[{ required: true, message: 'Please input an API Key' }]}
                     >
                         <Input.Password placeholder="sk-..." />
                     </Form.Item>
-                    <Form.Item 
-                        label={t('chat.baseUrl', 'Base URL')} 
+                    <Form.Item
+                        label={t('chat.baseUrl', 'Base URL')}
                         name="baseUrl"
                         rules={[{ required: true, message: 'Please input the Base URL' }]}
                     >
                         <Input placeholder="https://api.openai.com/v1" />
                     </Form.Item>
-                    <Form.Item 
-                        label={t('chat.model', 'Model Name')} 
+                    <Form.Item
+                        label={t('chat.model', 'Model Name')}
                         tooltip={t('chat.modelTooltip', 'Select or type a model ID')}
                     >
                         <Row gutter={8}>
                             <Col flex="auto">
-                                <Form.Item 
-                                    name="model" 
-                                    noStyle 
+                                <Form.Item
+                                    name="model"
+                                    noStyle
                                     rules={[{ required: true, message: 'Please input the Model ID' }]}
                                     getValueFromEvent={(val) => Array.isArray(val) ? val : [val]}
                                 >

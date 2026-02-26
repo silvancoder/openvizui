@@ -48,8 +48,8 @@ const Settings = () => {
                 {/* Column 1: General */}
                 <Col xs={24} md={8}>
                     <Form.Item label={t('settings.language')}>
-                        <Select 
-                            value={useAppStore.getState().language} 
+                        <Select
+                            value={useAppStore.getState().language}
                             onChange={setLanguage}
                             options={[
                                 { value: "en", label: "English" },
@@ -66,8 +66,8 @@ const Settings = () => {
                         />
                     </Form.Item>
                     <Form.Item label={t('settings.theme')}>
-                        <Select 
-                            value={useAppStore.getState().theme} 
+                        <Select
+                            value={useAppStore.getState().theme}
                             onChange={setTheme}
                             options={[
                                 { value: "light", label: "Light" },
@@ -270,8 +270,8 @@ const Settings = () => {
                                         { value: "powershell.exe", label: "PowerShell" },
                                         { value: "cmd.exe", label: "Command Prompt" },
                                         { value: "wsl", label: "WSL (Linux)" },
-                                        ...(!['bash.exe', 'powershell.exe', 'cmd.exe', 'wsl'].includes(terminalShell) 
-                                                ? [{ value: terminalShell, label: terminalShell }] : [])
+                                        ...(!['bash.exe', 'powershell.exe', 'cmd.exe', 'wsl'].includes(terminalShell)
+                                            ? [{ value: terminalShell, label: terminalShell }] : [])
                                     ]}
                                     popupRender={(menu) => (
                                         <>
@@ -383,11 +383,11 @@ const Settings = () => {
             try {
                 const controller = new AbortController();
                 const timeoutId = setTimeout(() => controller.abort(), 5000);
-                
+
                 // Use a reliable URL to test connectivity
-                await fetch('https://www.google.com/generate_204', { 
+                await fetch('https://www.google.com/generate_204', {
                     mode: 'no-cors',
-                    signal: controller.signal 
+                    signal: controller.signal
                 });
                 clearTimeout(timeoutId);
                 message.success(t('aiSettings.moreConfigs.localAI.checkBtn') + ': Success');
@@ -403,8 +403,8 @@ const Settings = () => {
                 <Card title={<span><GlobalOutlined /> {t('settings.proxySettings')}</span>} size="small">
                     <Form layout="vertical">
                         <Form.Item label={t('settings.proxyType')}>
-                            <Select 
-                                value={proxyType} 
+                            <Select
+                                value={proxyType}
                                 onChange={setProxyType}
                                 options={[
                                     { value: 'none', label: t('settings.noProxy') },
@@ -525,7 +525,7 @@ const Settings = () => {
                         {t('app.refresh')}
                     </Button>
                 </div>
-                
+
                 <Row gutter={[16, 16]}>
                     {tools.map(tool => {
                         const version = status ? (status as any)[tool.key] : null;
@@ -550,7 +550,7 @@ const Settings = () => {
                         );
                     })}
                 </Row>
-                
+
                 <Alert
                     description={t('settings.envNote', "Ensure these tools are in your system PATH to be detected.")}
                     type="info"

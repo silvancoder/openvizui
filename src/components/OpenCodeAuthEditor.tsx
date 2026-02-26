@@ -153,12 +153,12 @@ const OpenCodeAuthEditor: React.FC = () => {
                 const parsed = JSON.parse(generalContent);
                 setGeneralConfig(parsed);
                 form.setFieldsValue(parsed);
-                
+
                 if (parsed.fetchFrom && configAuthContentHasKey(authContent, parsed.fetchFrom)) {
-                     setFetchProvider(parsed.fetchFrom);
+                    setFetchProvider(parsed.fetchFrom);
                 } else if (firstAuthProvider) {
-                     setFetchProvider(firstAuthProvider);
-                     form.setFieldsValue({ fetchFrom: firstAuthProvider });
+                    setFetchProvider(firstAuthProvider);
+                    form.setFieldsValue({ fetchFrom: firstAuthProvider });
                 }
             } else {
                 setGeneralConfig({});
@@ -181,7 +181,7 @@ const OpenCodeAuthEditor: React.FC = () => {
 
     const handleProviderChange = (provider: string) => {
         if (authConfig[provider]) {
-            form.setFieldsValue({ 
+            form.setFieldsValue({
                 key: authConfig[provider].key,
                 address: authConfig[provider].address || ''
             });
@@ -204,11 +204,11 @@ const OpenCodeAuthEditor: React.FC = () => {
             let models: string[] = [];
             if (address && key) {
                 // Use remote fetch if address and key are provided
-                models = await invoke<string[]>('fetch_remote_models', { 
-                    baseUrl: address, 
-                    apiKey: key, 
-                    apiType: providerName.toLowerCase().includes('anthropic') ? 'anthropic' : 
-                             providerName.toLowerCase().includes('google') ? 'google' : 'openai'
+                models = await invoke<string[]>('fetch_remote_models', {
+                    baseUrl: address,
+                    apiKey: key,
+                    apiType: providerName.toLowerCase().includes('anthropic') ? 'anthropic' :
+                        providerName.toLowerCase().includes('google') ? 'google' : 'openai'
                 });
             } else {
                 // Fallback to local CLI command
@@ -308,7 +308,7 @@ const OpenCodeAuthEditor: React.FC = () => {
             <Row gutter={16} align="bottom">
                 <Col span={12}>
                     <Form.Item name="fetchFrom" label={t('cliConfig.opencode.fields.fetchFrom', 'Fetch Models From')}>
-                        <Select 
+                        <Select
                             placeholder={t('aiSettings.mcpConfig.selectProvider', 'Select provider')}
                             options={Object.keys(authConfig).map(k => ({ label: k, value: k }))}
                             onChange={(v) => setFetchProvider(v)}
@@ -318,10 +318,10 @@ const OpenCodeAuthEditor: React.FC = () => {
                 </Col>
                 <Col span={12}>
                     <Form.Item>
-                        <Button 
+                        <Button
                             type="primary"
-                            icon={<CloudDownloadOutlined />} 
-                            onClick={fetchModels} 
+                            icon={<CloudDownloadOutlined />}
+                            onClick={fetchModels}
                             loading={fetchingModels}
                             block
                         >

@@ -29,13 +29,13 @@ const QoderAuthEditor: React.FC = () => {
             const content = await invoke<string>('get_config_file', { path: SETTINGS_PATH });
             if (content) {
                 const parsed = JSON.parse(content);
-                
+
                 // Map nested api_keys object to array for Form.List
                 const apiKeysArray = Object.entries(parsed.api_keys || {}).map(([name, config]) => ({
                     name,
                     ...(config as any)
                 }));
-                
+
                 form.setFieldsValue({
                     ...parsed,
                     api_keys_list: apiKeysArray
@@ -58,7 +58,7 @@ const QoderAuthEditor: React.FC = () => {
     const handleSave = async (values: any) => {
         try {
             const { api_keys_list, ...rest } = values;
-            
+
             // Map array back to object for settings.json
             const api_keys: Record<string, any> = {};
             (api_keys_list || []).forEach((item: any) => {
@@ -83,7 +83,7 @@ const QoderAuthEditor: React.FC = () => {
     const fetchModels = async (index: number) => {
         const list = form.getFieldValue('api_keys_list');
         const provider = list[index];
-        
+
         if (!provider || !provider.name || !provider.key || !provider.endpoint) {
             message.warning(t('cliConfig.fields.apiKeyRequired', 'Please enter Name, API Key and Endpoint first'));
             return;
@@ -96,7 +96,7 @@ const QoderAuthEditor: React.FC = () => {
                 apiKey: provider.key,
                 apiType: 'openai' // Qoder usually follows OpenAI-compatible formats
             });
-            
+
             setProviderModels(prev => ({ ...prev, [provider.name]: fetchedModels }));
             message.success(t('cliConfig.qoder.fields.modelsFetched', { count: fetchedModels.length }));
         } catch (error) {
@@ -118,8 +118,8 @@ const QoderAuthEditor: React.FC = () => {
         let totalFetched = 0;
         const newProviderModels = { ...providerModels };
 
-        const providersToFetch = selectedProvider === 'all' 
-            ? list 
+        const providersToFetch = selectedProvider === 'all'
+            ? list
             : list.filter((p: any) => p.name === selectedProvider);
 
         if (providersToFetch.length === 0 && selectedProvider !== 'all') {
@@ -169,26 +169,26 @@ const QoderAuthEditor: React.FC = () => {
                         {(fields, { add, remove }) => (
                             <>
                                 {fields.map(({ key, name, ...restField }) => (
-                                    <Card 
-                                        key={key} 
-                                        size="small" 
+                                    <Card
+                                        key={key}
+                                        size="small"
                                         style={{ marginBottom: 16 }}
                                         title={`${t('cliConfig.qoder.fields.providerName')} #${name + 1}`}
                                         extra={
                                             <Space>
                                                 <Tooltip title={t('cliConfig.qoder.fields.fetchModels')}>
-                                                    <Button 
-                                                        icon={<CloudDownloadOutlined />} 
-                                                        onClick={() => fetchModels(name)} 
+                                                    <Button
+                                                        icon={<CloudDownloadOutlined />}
+                                                        onClick={() => fetchModels(name)}
                                                         loading={fetchingModels[form.getFieldValue(['api_keys_list', name, 'name'])]}
                                                         type="text"
                                                     />
                                                 </Tooltip>
-                                                <Button 
-                                                    icon={<DeleteOutlined />} 
-                                                    onClick={() => remove(name)} 
-                                                    danger 
-                                                    type="text" 
+                                                <Button
+                                                    icon={<DeleteOutlined />}
+                                                    onClick={() => remove(name)}
+                                                    danger
+                                                    type="text"
                                                 />
                                             </Space>
                                         }
@@ -488,8 +488,8 @@ const QoderAuthEditor: React.FC = () => {
             children: (
                 <div style={{ padding: '16px 0' }}>
                     <div style={{ marginBottom: 16, display: 'flex', justifyContent: 'flex-end', gap: 8 }}>
-                        <Select 
-                            value={selectedProvider} 
+                        <Select
+                            value={selectedProvider}
                             onChange={setSelectedProvider}
                             style={{ width: 200 }}
                             placeholder={t('cliConfig.qoder.fields.providerName')}
@@ -501,9 +501,9 @@ const QoderAuthEditor: React.FC = () => {
                                 }))
                             ]}
                         />
-                        <Button 
-                            icon={<CloudDownloadOutlined />} 
-                            onClick={fetchTargetModels} 
+                        <Button
+                            icon={<CloudDownloadOutlined />}
+                            onClick={fetchTargetModels}
                             loading={fetchingAll}
                             type="primary"
                             ghost

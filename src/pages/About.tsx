@@ -7,10 +7,10 @@
 
 import { useState, useEffect } from 'react';
 import { Typography, Card, Space, Divider, Button, Row, Col, List, Layout, Tag, Badge, message } from 'antd';
-import { 
-    GithubOutlined, 
-    GlobalOutlined, 
-    HeartFilled, 
+import {
+    GithubOutlined,
+    GlobalOutlined,
+    HeartFilled,
     InfoCircleOutlined,
     RocketOutlined,
     TeamOutlined,
@@ -130,15 +130,15 @@ const About = () => {
                         </Space>
                     </Space>
                     <Badge dot={status === 'available'} offset={[-5, 5]}>
-                        <Button 
+                        <Button
                             type={status === 'available' ? 'primary' : 'default'}
-                            size="middle" 
-                            icon={checking ? <SyncOutlined spin /> : <SyncOutlined />} 
+                            size="middle"
+                            icon={checking ? <SyncOutlined spin /> : <SyncOutlined />}
                             onClick={status === 'available' ? () => openUrl('https://github.com/silvancoder/openvizui') : checkUpdate}
                             disabled={checking}
                         >
-                            {status === 'available' 
-                                ? t('about.update.now', 'Update Now') 
+                            {status === 'available'
+                                ? t('about.update.now', 'Update Now')
                                 : (checking ? t('about.update.checking', 'Checking...') : t('about.update.check', 'Check Update'))
                             }
                         </Button>
@@ -165,16 +165,16 @@ const About = () => {
                     </Paragraph>
                 </div>
                 <Space size="large" style={{ marginTop: 24 }}>
-                    <Button 
-                        type="primary" 
-                        size="large" 
+                    <Button
+                        type="primary"
+                        size="large"
                         icon={<GithubOutlined />}
                         onClick={() => openUrl('https://github.com/silvancoder/openvizui')}
                     >
                         GitHub
                     </Button>
-                    <Button 
-                        size="large" 
+                    <Button
+                        size="large"
                         icon={<GlobalOutlined />}
                         onClick={() => openUrl('https://openvizui.com')}
                     >
@@ -208,9 +208,9 @@ const About = () => {
                         dataSource={resources}
                         renderItem={item => (
                             <List.Item>
-                                <Button 
-                                    type="link" 
-                                    icon={item.icon} 
+                                <Button
+                                    type="link"
+                                    icon={item.icon}
                                     onClick={() => openUrl(item.url)}
                                     style={{ padding: 0 }}
                                 >

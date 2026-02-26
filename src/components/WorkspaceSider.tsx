@@ -181,14 +181,14 @@ const WorkspaceSider: React.FC<WorkspaceSiderProps> = ({ sessionId, placement = 
         const normalizedPath = path.replace(/\//g, '\\');
 
         const pathToInsert = normalizedPath.includes(' ') ? `"${normalizedPath}"` : normalizedPath;
-        
+
         if (onInsertPath) {
             onInsertPath(pathToInsert);
             message.success(t('terminal.fileTree.context.insertedToChat', 'Inserted path to chat input'));
         } else {
             // Write directly to PTY instead of state
             if (sessionId) {
-                 ptyWrite(sessionId, pathToInsert);
+                ptyWrite(sessionId, pathToInsert);
             }
             message.success(t('terminal.fileTree.context.insertedToTerminal', 'Inserted path to terminal'));
         }
@@ -323,10 +323,10 @@ const WorkspaceSider: React.FC<WorkspaceSiderProps> = ({ sessionId, placement = 
                     {/* Service Provider / CLI Tool Selection */}
                     {placement === 'right' && chatProviders.length === 0 ? (
                         <div style={{ marginBottom: 16 }}>
-                            <Button 
-                                block 
-                                type="dashed" 
-                                icon={<PlusOutlined />} 
+                            <Button
+                                block
+                                type="dashed"
+                                icon={<PlusOutlined />}
                                 onClick={onOpenSettings}
                                 style={{ height: 40, color: token.colorTextSecondary }}
                             >
@@ -340,10 +340,10 @@ const WorkspaceSider: React.FC<WorkspaceSiderProps> = ({ sessionId, placement = 
                                     {placement === 'left' ? t('terminal.cliTool', 'CLI 工具') : t('chat.serviceProvider', '服务商')}
                                 </Text>
                                 {placement === 'right' && onOpenSettings && (
-                                    <Button 
-                                        type="text" 
-                                        size="small" 
-                                        icon={<SettingOutlined />} 
+                                    <Button
+                                        type="text"
+                                        size="small"
+                                        icon={<SettingOutlined />}
                                         onClick={onOpenSettings}
                                         style={{ fontSize: 11, padding: '0 4px', height: 20, color: token.colorTextSecondary }}
                                     >
@@ -374,7 +374,7 @@ const WorkspaceSider: React.FC<WorkspaceSiderProps> = ({ sessionId, placement = 
                     )}
 
                     <div style={{ flex: 1, minHeight: 0, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
-                            <Tabs
+                        <Tabs
                             defaultActiveKey="files"
                             size="small"
                             tabBarStyle={{ marginBottom: 4 }}

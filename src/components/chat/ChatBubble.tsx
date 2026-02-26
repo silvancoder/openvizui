@@ -14,7 +14,7 @@ interface ChatBubbleProps {
 const ChatBubble: React.FC<ChatBubbleProps> = ({ content, type }) => {
     const { token } = theme.useToken();
     const isUser = type === 'user';
-    
+
     // For assistant messages, we strip ANSI terminal formatting
     // so we can render actual markdown
     const renderMarkdown = () => {
@@ -39,13 +39,13 @@ const ChatBubble: React.FC<ChatBubbleProps> = ({ content, type }) => {
             gap: 16,
             alignItems: 'flex-start',
         }}>
-            <Avatar 
+            <Avatar
                 size={36}
-                icon={isUser ? <UserOutlined /> : <RobotOutlined />} 
-                style={{ 
+                icon={isUser ? <UserOutlined /> : <RobotOutlined />}
+                style={{
                     backgroundColor: isUser ? token.colorPrimary : token.colorSuccess,
-                    flexShrink: 0 
-                }} 
+                    flexShrink: 0
+                }}
             />
             <div style={{
                 maxWidth: '80%',
@@ -57,15 +57,15 @@ const ChatBubble: React.FC<ChatBubbleProps> = ({ content, type }) => {
                 boxShadow: token.boxShadowTertiary,
                 overflowX: 'auto'
             }}>
-                <div style={{ 
-                    whiteSpace: 'pre-wrap', 
+                <div style={{
+                    whiteSpace: 'pre-wrap',
                     fontFamily: isUser ? 'inherit' : 'Consolas, Monaco, "Courier New", monospace',
                     fontSize: 14,
                     lineHeight: 1.6
                 }}>
-                   {content ? (
-                       isUser ? <Ansi>{content}</Ansi> : renderMarkdown()
-                   ) : null} 
+                    {content ? (
+                        isUser ? <Ansi>{content}</Ansi> : renderMarkdown()
+                    ) : null}
                 </div>
             </div>
             {/* Global style for markdown inside bubbles */}

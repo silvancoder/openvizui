@@ -77,7 +77,7 @@ const CommandPresets: React.FC<CommandPresetsProps> = ({ sessionId }) => {
                 <Text strong><ThunderboltOutlined /> {t('terminal.commandPresets.title')}</Text>
                 <Button size="small" type="text" icon={<PlusOutlined />} onClick={handleAdd} />
             </div>
-            
+
             <div style={{ flex: 1, overflowY: 'auto', minHeight: 0 }}>
                 <List
                     size="small"

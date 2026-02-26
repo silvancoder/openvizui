@@ -7,9 +7,9 @@
 
 import React, { useState } from 'react';
 import { Typography, Button, Space, List, Tooltip, message, theme } from 'antd';
-import { 
-    DeleteOutlined, 
-    FileTextOutlined, 
+import {
+    DeleteOutlined,
+    FileTextOutlined,
     ClearOutlined,
     ContainerOutlined,
     FileMarkdownOutlined,
@@ -40,7 +40,7 @@ const ContextBucket: React.FC = () => {
         try {
             let result = '';
             if (format === 'xml') result += '<context>\n';
-            
+
             for (const path of contextFiles) {
                 const fileName = path.split(/[/\\]/).pop();
                 try {
@@ -54,9 +54,9 @@ const ContextBucket: React.FC = () => {
                     message.error(`Failed to read ${fileName}`);
                 }
             }
-            
+
             if (format === 'xml') result += '</context>';
-            
+
             await navigator.clipboard.writeText(result);
             message.success(t('terminal.contextBuilder.copied'));
         } catch (error) {
@@ -68,10 +68,10 @@ const ContextBucket: React.FC = () => {
     };
 
     return (
-        <div style={{ 
-            marginTop: 12, 
-            display: 'flex', 
-            flexDirection: 'column', 
+        <div style={{
+            marginTop: 12,
+            display: 'flex',
+            flexDirection: 'column',
             gap: 8,
             borderTop: `1px solid ${token.colorBorderSecondary}`,
             paddingTop: 12
@@ -79,12 +79,12 @@ const ContextBucket: React.FC = () => {
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <Text strong><ContainerOutlined /> {t('terminal.contextBuilder.title')} ({contextFiles.length})</Text>
                 <Tooltip title={t('terminal.contextBuilder.clear')}>
-                    <Button 
-                        size="small" 
-                        type="text" 
-                        danger 
-                        icon={<ClearOutlined />} 
-                        onClick={clearContextFiles} 
+                    <Button
+                        size="small"
+                        type="text"
+                        danger
+                        icon={<ClearOutlined />}
+                        onClick={clearContextFiles}
                     />
                 </Tooltip>
             </div>
@@ -94,14 +94,14 @@ const ContextBucket: React.FC = () => {
                     size="small"
                     dataSource={contextFiles}
                     renderItem={(path) => (
-                        <List.Item 
+                        <List.Item
                             style={{ padding: '4px 0' }}
                             actions={[
-                                <Button 
-                                    size="small" 
-                                    type="text" 
-                                    icon={<DeleteOutlined />} 
-                                    onClick={() => removeContextFile(path)} 
+                                <Button
+                                    size="small"
+                                    type="text"
+                                    icon={<DeleteOutlined />}
+                                    onClick={() => removeContextFile(path)}
                                 />
                             ]}
                         >
@@ -117,19 +117,19 @@ const ContextBucket: React.FC = () => {
             </div>
 
             <Space orientation="vertical" style={{ width: '100%' }}>
-                <Button 
-                    block 
-                    size="small" 
-                    icon={<FileZipOutlined />} 
+                <Button
+                    block
+                    size="small"
+                    icon={<FileZipOutlined />}
                     onClick={() => formatContext('xml')}
                     loading={generating}
                 >
                     {t('terminal.contextBuilder.copyXml')}
                 </Button>
-                <Button 
-                    block 
-                    size="small" 
-                    icon={<FileMarkdownOutlined />} 
+                <Button
+                    block
+                    size="small"
+                    icon={<FileMarkdownOutlined />}
                     onClick={() => formatContext('markdown')}
                     loading={generating}
                 >

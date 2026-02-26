@@ -823,7 +823,7 @@ const CliConfigTab = ({
         {activeTool === 'Copilot' && <CopilotAuthEditor />}
         {activeTool === 'Qoder' && <QoderAuthEditor />}
         {activeTool === 'CodeBuddy' && <CodebuddyAuthEditor />}
-        
+
         {(!SPECIAL_TOOLS.includes(activeTool) || viewMode === 'code') && (
             <>
                 <div style={{ marginBottom: 8, marginTop: SPECIAL_TOOLS.includes(activeTool) ? 16 : 0 }}>

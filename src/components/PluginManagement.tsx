@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Card, List, Button, Typography, Tag, Space, message, Tooltip, Badge, Modal, Form, Input, Select, Row, Col, Segmented } from 'antd';
-import { 
-    PlusOutlined, 
-    GlobalOutlined, 
+import {
+    PlusOutlined,
+    GlobalOutlined,
     InfoCircleOutlined,
     RocketOutlined,
     FormOutlined,
@@ -45,79 +45,79 @@ const PluginManagement: React.FC = () => {
     const [editingKey, setEditingKey] = useState<string | null>(null);
 
     const CURATED_PLUGINS: PluginInfo[] = [
-        { 
-            key: 'composio', 
-            repo: 'ComposioHQ/composio', 
-            type: 'mcp', 
+        {
+            key: 'composio',
+            repo: 'ComposioHQ/composio',
+            type: 'mcp',
             recommendedTool: 'Claude',
             spec: { command: 'npx', args: ['-y', '@composio/mcp-server'] }
         },
-        { 
-            key: 'mem', 
-            repo: 'claudemem/claude-mem', 
-            type: 'mcp', 
+        {
+            key: 'mem',
+            repo: 'claudemem/claude-mem',
+            type: 'mcp',
             recommendedTool: 'Claude',
             spec: { command: 'npx', args: ['-y', '@claudemem/mcp-server'] }
         },
-        { 
-            key: 'superpowers', 
-            repo: 'superpowers/superpowers', 
-            type: 'skill', 
+        {
+            key: 'superpowers',
+            repo: 'superpowers/superpowers',
+            type: 'skill',
             recommendedTool: 'Claude',
             url: 'https://github.com/superpowers/superpowers.git'
         },
-        { 
-            key: 'localReview', 
-            repo: 'agencyenterprise/local-review', 
-            type: 'mcp', 
+        {
+            key: 'localReview',
+            repo: 'agencyenterprise/local-review',
+            type: 'mcp',
             recommendedTool: 'Claude',
             spec: { command: 'npx', args: ['-y', '@agencyenterprise/local-review-mcp'] }
         },
-        { 
-            key: 'plannotator', 
-            repo: 'm-onz/plannotator', 
-            type: 'mcp', 
+        {
+            key: 'plannotator',
+            repo: 'm-onz/plannotator',
+            type: 'mcp',
             recommendedTool: 'Claude',
             spec: { command: 'npx', args: ['-y', 'plannotator-mcp'] }
         },
-        { 
-            key: 'ralphWiggum', 
-            repo: 'jpsim/RalphWiggum', 
-            type: 'mcp', 
+        {
+            key: 'ralphWiggum',
+            repo: 'jpsim/RalphWiggum',
+            type: 'mcp',
             recommendedTool: 'Claude',
             spec: { command: 'npx', args: ['-y', 'ralph-wiggum-mcp'] }
         },
-        { 
-            key: 'shipyard', 
-            repo: 'shipyard/shipyard', 
-            type: 'mcp', 
+        {
+            key: 'shipyard',
+            repo: 'shipyard/shipyard',
+            type: 'mcp',
             recommendedTool: 'Claude',
             spec: { command: 'npx', args: ['-y', '@shipyard/mcp-server'] }
         },
-        { 
-            key: 'devBrowser', 
-            repo: 'dev-browser/dev-browser', 
-            type: 'mcp', 
+        {
+            key: 'devBrowser',
+            repo: 'dev-browser/dev-browser',
+            type: 'mcp',
             recommendedTool: 'Claude',
             spec: { command: 'npx', args: ['-y', '@dev-browser/mcp-server'] }
         },
-        { 
-            key: 'lsp', 
-            repo: 'sourcegraph/cody', 
-            type: 'mcp', 
+        {
+            key: 'lsp',
+            repo: 'sourcegraph/cody',
+            type: 'mcp',
             recommendedTool: 'Claude',
             spec: { command: 'npx', args: ['-y', '@sourcegraph/mcp-server-lsp'] }
         },
-        { 
-            key: 'peerReview', 
-            repo: 'agent-peer-review/agent-peer-review', 
-            type: 'mcp', 
+        {
+            key: 'peerReview',
+            repo: 'agent-peer-review/agent-peer-review',
+            type: 'mcp',
             recommendedTool: 'Claude',
             spec: { command: 'npx', args: ['-y', 'agent-peer-review-mcp'] }
         },
     ];
 
-    
+
     const STORAGE_KEY = 'openviz_custom_plugins';
 
     // Load custom plugins from localStorage on mount
@@ -136,7 +136,7 @@ const PluginManagement: React.FC = () => {
     useEffect(() => {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(customPlugins));
     }, [customPlugins]);
-    
+
     // Config paths mapping (replicated from AISettings.tsx for logic consistency)
     const TOOLS_CONFIG = [
         { name: 'Claude', configPath: '~/.claude.json', type: 'json' },
@@ -152,12 +152,12 @@ const PluginManagement: React.FC = () => {
     useEffect(() => {
         const scanInstalled = async () => {
             const installed = new Set<string>();
-            
+
             // 1. Scan Skills
             try {
                 const skills = await invoke<any[]>('list_installed_skills', { target: 'agents' });
                 skills.forEach(s => installed.add(s.name));
-            } catch (e) {}
+            } catch (e) { }
 
             // 2. Scan MCP Servers in all supported tools
             for (const tool of TOOLS_CONFIG) {
@@ -165,11 +165,11 @@ const PluginManagement: React.FC = () => {
                     const content = await invoke<string>('get_config_file', { path: tool.configPath });
                     if (!content) continue;
                     const config = JSON.parse(content);
-                    const mcpKey = tool.name === 'OpenCode' || tool.name === 'Qoder' ? 'mcp' : 
-                                   tool.type === 'toml' ? 'mcp_servers' : 'mcpServers';
+                    const mcpKey = tool.name === 'OpenCode' || tool.name === 'Qoder' ? 'mcp' :
+                        tool.type === 'toml' ? 'mcp_servers' : 'mcpServers';
                     const servers = config[mcpKey] || {};
                     Object.keys(servers).forEach(key => installed.add(key));
-                } catch (e) {}
+                } catch (e) { }
             }
 
             setInstalledKeys(Array.from(installed));
@@ -187,14 +187,14 @@ const PluginManagement: React.FC = () => {
     }, [customPlugins]); // CURATED_PLUGINS is a constant
 
     // Filter plugins based on category
-    const filteredPlugins = category === 'installed' 
+    const filteredPlugins = category === 'installed'
         ? allPlugins.filter(p => installedKeys.includes(p.key) || installedKeys.includes(p.repo?.split('/').pop() || ''))
         : allPlugins;
 
     const handleInstall = async (plugin: PluginInfo) => {
         setLoading((prev: Record<string, boolean>) => ({ ...prev, [plugin.key]: true }));
         const pluginName = plugin.isCustom ? plugin.name : t(`aiSettings.plugins.list.${plugin.key}.name`);
-        
+
         try {
             if (plugin.type === 'skill') {
                 const url = plugin.url || (plugin.repo ? `https://github.com/${plugin.repo}.git` : '');
@@ -209,15 +209,15 @@ const PluginManagement: React.FC = () => {
                 let config = JSON.parse(content || '{}');
 
                 // Determine the correct key for MCP servers
-                const mcpKey = toolName === 'OpenCode' || toolName === 'Qoder' ? 'mcp' : 
-                               tool.type === 'toml' ? 'mcp_servers' : 'mcpServers';
-                
+                const mcpKey = toolName === 'OpenCode' || toolName === 'Qoder' ? 'mcp' :
+                    tool.type === 'toml' ? 'mcp_servers' : 'mcpServers';
+
                 if (!config[mcpKey]) config[mcpKey] = {};
 
                 // Add or update the server
                 const command = plugin.spec?.command || (plugin.url?.startsWith('npx') ? 'npx' : plugin.url);
                 const args = plugin.spec?.args || (plugin.url?.startsWith('npx') ? plugin.url.split(' ').slice(1) : []);
-                
+
                 config[mcpKey][plugin.key] = {
                     command,
                     args,
@@ -241,7 +241,7 @@ const PluginManagement: React.FC = () => {
     const handleUninstall = async (plugin: PluginInfo) => {
         setLoading((prev: Record<string, boolean>) => ({ ...prev, [plugin.key]: true }));
         const pluginName = plugin.isCustom ? plugin.name : t(`aiSettings.plugins.list.${plugin.key}.name`);
-        
+
         try {
             if (plugin.type === 'skill') {
                 const skills = await invoke<any[]>('list_installed_skills', { target: 'agents' });
@@ -256,8 +256,8 @@ const PluginManagement: React.FC = () => {
                     const content = await invoke<string>('get_config_file', { path: tool.configPath });
                     if (content) {
                         let config = JSON.parse(content);
-                        const mcpKey = toolName === 'OpenCode' || toolName === 'Qoder' ? 'mcp' : 
-                                       tool.type === 'toml' ? 'mcp_servers' : 'mcpServers';
+                        const mcpKey = toolName === 'OpenCode' || toolName === 'Qoder' ? 'mcp' :
+                            tool.type === 'toml' ? 'mcp_servers' : 'mcpServers';
                         if (config[mcpKey] && config[mcpKey][plugin.key]) {
                             delete config[mcpKey][plugin.key];
                             await invoke('save_config_file', { path: tool.configPath, content: JSON.stringify(config, null, 2) });
@@ -330,7 +330,7 @@ const PluginManagement: React.FC = () => {
             setCustomPlugins((prev: PluginInfo[]) => [newPlugin, ...prev]);
             message.success(t('aiSettings.plugins.installed'));
         }
-        
+
         setIsModalVisible(false);
         setEditingKey(null);
         form.resetFields();
@@ -350,9 +350,9 @@ const PluginManagement: React.FC = () => {
                     {t('aiSettings.plugins.desc')}
                 </Paragraph>
                 <Space size="middle">
-                    <Button 
-                        type="primary" 
-                        icon={<FormOutlined />} 
+                    <Button
+                        type="primary"
+                        icon={<FormOutlined />}
                         onClick={() => {
                             setEditingKey(null);
                             form.resetFields();
@@ -399,40 +399,40 @@ const PluginManagement: React.FC = () => {
                 }}
                 renderItem={(item) => (
                     <List.Item>
-                        <Card 
-                            hoverable 
+                        <Card
+                            hoverable
                             style={{ height: '100%', border: item.isCustom ? '1px dashed #1890ff' : undefined }}
                             actions={[
                                 <Tooltip title={t('aiSettings.plugins.viewDocs')}>
-                                    <Button 
-                                        type="link" 
-                                        icon={<GlobalOutlined />} 
+                                    <Button
+                                        type="link"
+                                        icon={<GlobalOutlined />}
                                         onClick={() => openUrl(item.docsUrl || item.url || (item.repo ? `https://github.com/${item.repo}` : undefined))}
                                         disabled={!item.docsUrl && !item.url && !item.repo}
                                     />
                                 </Tooltip>,
                                 <Tooltip title={t('aiSettings.mcpConfig.edit', 'Edit')}>
-                                    <Button 
-                                        type="link" 
-                                        icon={<FormOutlined />} 
+                                    <Button
+                                        type="link"
+                                        icon={<FormOutlined />}
                                         onClick={() => handleEdit(item)}
                                     />
                                 </Tooltip>,
                                 installedKeys.includes(item.key) ? (
-                                    <Button 
-                                        type="text" 
+                                    <Button
+                                        type="text"
                                         danger
-                                        icon={<DeleteOutlined />} 
+                                        icon={<DeleteOutlined />}
                                         loading={loading[item.key]}
                                         onClick={() => handleUninstall(item)}
                                     >
                                         {t('app.uninstall')}
                                     </Button>
                                 ) : (
-                                    <Button 
-                                        type="primary" 
-                                        ghost 
-                                        icon={<PlusOutlined />} 
+                                    <Button
+                                        type="primary"
+                                        ghost
+                                        icon={<PlusOutlined />}
                                         loading={loading[item.key]}
                                         onClick={() => handleInstall(item)}
                                     >
@@ -444,10 +444,10 @@ const PluginManagement: React.FC = () => {
                             <Card.Meta
                                 avatar={
                                     <Badge count={item.isCustom ? 'Manual' : item.recommendedTool} offset={[10, 0]} color={item.isCustom ? 'cyan' : 'blue'}>
-                                        <div style={{ 
-                                            width: 48, 
-                                            height: 48, 
-                                            borderRadius: 8, 
+                                        <div style={{
+                                            width: 48,
+                                            height: 48,
+                                            borderRadius: 8,
                                             backgroundColor: '#f0f2f5',
                                             display: 'flex',
                                             alignItems: 'center',
@@ -466,7 +466,7 @@ const PluginManagement: React.FC = () => {
                                     </Tooltip>
                                 }
                                 description={
-                                    <Paragraph 
+                                    <Paragraph
                                         ellipsis={{ rows: 3, expandable: true, symbol: 'more' }}
                                         type="secondary"
                                         style={{ height: 66, marginBottom: 0 }}
@@ -552,7 +552,7 @@ const PluginManagement: React.FC = () => {
                                 name="recommendedTool"
                                 label={t('aiSettings.plugins.modal.recommendedTool')}
                             >
-                                <Select 
+                                <Select
                                     allowClear
                                     placeholder="e.g. Claude"
                                     options={[
@@ -563,7 +563,7 @@ const PluginManagement: React.FC = () => {
                                         { value: 'Qoder', label: 'Qoder' },
                                         { value: 'CodeBuddy', label: 'CodeBuddy' },
                                         { value: 'Codex', label: 'Codex' },
-                                    ]} 
+                                    ]}
                                 />
                             </Form.Item>
                         </Col>
