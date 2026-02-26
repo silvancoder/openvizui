@@ -958,7 +958,9 @@
         "diff": "Diff",
         "openInIde": "Ouvrir dans IDE",
         "delete": "Supprimer",
-        "rename": "Renommer"
+        "rename": "Renommer",
+        "insertedToChat": "Chemin inséré dans la saisie du chat",
+        "insertedToTerminal": "Chemin inséré dans le terminal"
       },
       "modal": {
         "editing": "Modifier Fichier",
@@ -1013,7 +1015,11 @@
     "normal": "Normal",
     "high": "Haut",
     "all": "Tous",
-    "goToTerminal": "Aller au terminal"
+    "goToTerminal": "Aller au terminal",
+    "yes": "Oui",
+    "no": "Non",
+    "add": "Add",
+    "deleteConfirm": "Are you sure you want to delete this provider?"
   },
   "about": {
     "description": "OpenVizUI est une interface de visualisation puissante et moderne pour les outils IA CLI. Elle fournit un moyen unifié, esthétique et efficace pour gérer vos flux de travail IA, de la gestion des skills aux configurations complexes.",
@@ -1053,11 +1059,31 @@
   },
   "chat": {
     "title": "Chat du Terminal",
-    "newChat": "Nouveau Chat",
+    "newChat": "Nouvelle discussion",
     "currentSession": "Session Actuelle",
     "startTypingEmpty": "Commencez à taper pour interagir avec le shell...",
     "startTypingTool": "Commencez à interagir avec {{tool}}...",
     "placeholder": "Tapez un message ou une commande pour le terminal...",
-    "devNotice": "Remarque : Cette fonctionnalité de chat est actuellement en cours de développement et peut ne pas être totalement stable."
+    "configNotice": "Remarque : les fonctionnalités de chat et de terminal nécessitent une configuration distincte.",
+    "newChatTitle": "Nouveau Chat",
+    "deleteConfirm": "Êtes-vous sûr de vouloir supprimer cette session ?",
+    "settings": "Paramètres LLM",
+    "serviceProvider": "Fournisseur de services",
+    "settingsModalTitle": "Configuration LLM",
+    "apiKey": "Clé API",
+    "baseUrl": "URL de base",
+    "model": "Nom du modèle",
+    "selectProviderToConfigure": "Please select or add a provider to configure.",
+    "enterProviderName": "Enter Provider Name:",
+    "addProvider": "Configurer le fournisseur",
+    "fetchModels": "Fetch",
+    "fetchSuccess": "Fetched {{count}} models",
+    "fetchError": "Failed to fetch models",
+    "fetchErrorNoConfig": "Please fill in Base URL and API Key first",
+    "modelTooltip": "Select or type a model ID",
+    "noApiKeyWarning": "⚠️ Please set your LLM API Key and Base URL by clicking the Settings icon in the top right.",
+    "apiError": "\n\n**Error:** API request failed. \n\n```json\n{{error}}\n```",
+    "networkError": "\n\n**Network Error:** {{error}}",
+    "modelPlaceholder": "gpt-4o-mini, deepseek-chat..."
   }
 }

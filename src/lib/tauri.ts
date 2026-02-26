@@ -113,6 +113,8 @@ export interface AppConfig {
     terminal_shell: string | null;
     current_directory: string | null;
     active_tool_id: string | null;
+    active_chat_tool_id: string | null;
+    chat_providers: string[] | null;
     env_status: EnvironmentStatus | null;
     tool_statuses: Record<string, ToolStatus> | null;
     tool_configs: Record<string, { working_directory: string | null }> | null;
@@ -146,6 +148,8 @@ export const getAppConfig = async (): Promise<AppConfig> => {
             terminal_shell: 'bash.exe',
             current_directory: null,
             active_tool_id: null,
+            active_chat_tool_id: null,
+            chat_providers: [],
             env_status: null,
             tool_statuses: null,
             tool_configs: null,

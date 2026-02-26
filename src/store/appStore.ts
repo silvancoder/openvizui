@@ -10,6 +10,15 @@ import { checkEnvironment, checkToolStatus, getAppConfig, saveAppConfig, type En
 
 export interface ToolConfig {
     working_directory: string | null;
+    llmApiKey?: string;
+    llmBaseUrl?: string;
+    llmModel?: string;
+}
+
+export interface LLMConfig {
+    apiKey: string;
+    baseUrl: string;
+    model: string;
 }
 
 interface AppState {
@@ -36,12 +45,14 @@ interface AppState {
     pendingCommand: string | null;
     currentDirectory: string | null;
     activeToolId: string | null;
+    activeChatToolId: string | null;
     globalInstructions: string | null;
     localAiBaseUrl: string;
     localAiProvider: string;
     idePath: string | null;
     contextFiles: string[];
     commandPresets: { id: string; name: string; command: string }[];
+    chatProviders: string[];
 
     // Actions
     setTheme: (theme: 'light' | 'dark') => void;
@@ -55,6 +66,7 @@ interface AppState {
     setPendingCommand: (command: string | null) => void;
     setCurrentDirectory: (dir: string | null) => void;
     setActiveToolId: (toolId: string | null) => void;
+    setActiveChatToolId: (toolId: string | null) => void;
     setTerminalSettings: (settings: Partial<{
         terminalFontFamily: string;
         terminalFontSize: number;
@@ -80,6 +92,9 @@ interface AppState {
     addCommandPreset: (preset: { id: string; name: string; command: string }) => void;
     removeCommandPreset: (id: string) => void;
     updateCommandPreset: (id: string, preset: Partial<{ name: string; command: string }>) => void;
+    setChatProviders: (providers: string[]) => void;
+    addChatProvider: (provider: string) => void;
+    removeChatProvider: (provider: string) => void;
 }
 
 const persistConfig = async (state: AppState) => {
@@ -103,6 +118,7 @@ const persistConfig = async (state: AppState) => {
             terminal_shell: state.terminalShell,
             current_directory: state.currentDirectory,
             active_tool_id: state.activeToolId,
+            active_chat_tool_id: state.activeChatToolId,
             env_status: state.envStatus,
             tool_statuses: state.toolStatuses,
             tool_configs: state.toolConfigs as any,
@@ -111,6 +127,7 @@ const persistConfig = async (state: AppState) => {
             local_ai_provider: state.localAiProvider,
             ide_path: state.idePath,
             command_presets: state.commandPresets,
+            chat_providers: state.chatProviders,
         });
     } catch (e) {
         console.error("Failed to persist config", e);
@@ -140,13 +157,14 @@ export const useAppStore = create<AppState>((set, get) => ({
     pendingCommand: null,
     currentDirectory: null,
     activeToolId: null,
+    activeChatToolId: null,
     globalInstructions: null,
     localAiBaseUrl: 'http://localhost:11434',
     localAiProvider: 'ollama',
     idePath: null,
     contextFiles: [],
     commandPresets: [],
-
+    chatProviders: [],
 
     setTheme: (theme) => {
         set({ theme });
@@ -191,6 +209,10 @@ export const useAppStore = create<AppState>((set, get) => ({
         set({ activeToolId });
         persistConfig(get());
     },
+    setActiveChatToolId: (activeChatToolId) => {
+        set({ activeChatToolId });
+        persistConfig(get());
+    },
     setTerminalSettings: (settings) => {
         set((state) => ({ ...state, ...settings }));
         persistConfig(get());
@@ -224,18 +246,20 @@ export const useAppStore = create<AppState>((set, get) => ({
                 activeTools: config.active_tools || [],
                 currentDirectory: config.current_directory || null,
                 activeToolId: config.active_tool_id || null,
+                activeChatToolId: config.active_chat_tool_id || null,
                 envStatus: config.env_status || null,
                 toolStatuses: config.tool_statuses || {},
                 toolConfigs: (config.tool_configs as any) || {},
                 globalInstructions: config.global_instructions || null,
                 localAiBaseUrl: config.local_ai_base_url || 'http://localhost:11434',
                 localAiProvider: config.local_ai_provider || 'ollama',
-                idePath: config.ide_path || null,
+                contextFiles: [],
                 commandPresets: config.command_presets || [
                     { id: 'default-1', name: 'Explain Code', command: '/explain' },
                     { id: 'default-2', name: 'Review Code', command: '/review' },
                     { id: 'default-3', name: 'Generate Test', command: '/test' }
                 ],
+                chatProviders: config.chat_providers || [],
                 isLoaded: true
             });
         } catch (e) {
@@ -338,6 +362,22 @@ export const useAppStore = create<AppState>((set, get) => ({
         set({
             commandPresets: commandPresets.map(p => p.id === id ? { ...p, ...preset } : p)
         });
+        persistConfig(get());
+    },
+    setChatProviders: (chatProviders) => {
+        set({ chatProviders });
+        persistConfig(get());
+    },
+    addChatProvider: (provider) => {
+        const { chatProviders } = get();
+        if (!chatProviders.includes(provider)) {
+            set({ chatProviders: [...chatProviders, provider] });
+            persistConfig(get());
+        }
+    },
+    removeChatProvider: (provider) => {
+        const { chatProviders } = get();
+        set({ chatProviders: chatProviders.filter(p => p !== provider) });
         persistConfig(get());
     },
 }));

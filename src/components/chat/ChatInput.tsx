@@ -1,22 +1,37 @@
 import React, { useState } from 'react';
 import { Input, Button, theme } from 'antd';
 import { useTranslation } from 'react-i18next';
-import { SendOutlined } from '@ant-design/icons';
+import { SendOutlined, FileOutlined } from '@ant-design/icons';
 
 const { TextArea } = Input;
 
 interface ChatInputProps {
     onSend: (message: string) => void;
     disabled?: boolean;
+    value?: string;
+    onChange?: (val: string) => void;
+    attachedFiles?: string[];
+    onRemoveFile?: (index: number) => void;
 }
 
-const ChatInput: React.FC<ChatInputProps> = ({ onSend, disabled }) => {
+const ChatInput: React.FC<ChatInputProps> = ({ 
+    onSend, 
+    disabled, 
+    value: propValue, 
+    onChange,
+    attachedFiles = [],
+    onRemoveFile
+}) => {
     const { token } = theme.useToken();
     const { t } = useTranslation();
-    const [value, setValue] = useState('');
+    const [localValue, setLocalValue] = useState('');
+    
+    const value = propValue !== undefined ? propValue : localValue;
+    const setValue = onChange || setLocalValue;
 
     const handleSend = () => {
-        if (value.trim()) {
+        // Allow sending if there's text OR if there are attached files
+        if (value.trim() || attachedFiles.length > 0) {
             onSend(value);
             setValue('');
         }
@@ -36,17 +51,54 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSend, disabled }) => {
             borderRadius: 16,
             border: `1px solid ${token.colorBorder}`,
             boxShadow: token.boxShadowTertiary,
-            padding: '8px 16px',
+            padding: '12px 16px',
             display: 'flex',
-            alignItems: 'flex-end',
-            gap: 12
+            flexDirection: 'column',
+            gap: 8
         }}>
-            <TextArea
+            {attachedFiles.length > 0 && (
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, padding: '4px 0' }}>
+                    {attachedFiles.map((file, index) => {
+                        const fileName = file.replace(/\\/g, '/').split('/').pop() || file;
+                        return (
+                            <div
+                                key={`${file}-${index}`}
+                                style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: 6,
+                                    background: token.colorFillAlter,
+                                    border: `1px solid ${token.colorBorder}`,
+                                    borderRadius: 6,
+                                    padding: '2px 8px',
+                                    fontSize: 12,
+                                }}
+                            >
+                                <FileOutlined style={{ color: token.colorPrimary }} />
+                                <span style={{ maxWidth: 200, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                                    {fileName}
+                                </span>
+                                {onRemoveFile && (
+                                    <span 
+                                        style={{ cursor: 'pointer', color: token.colorTextDescription, marginLeft: 4 }}
+                                        onClick={() => onRemoveFile(index)}
+                                    >
+                                        ✕
+                                    </span>
+                                )}
+                            </div>
+                        );
+                    })}
+                </div>
+            )}
+            
+            <div style={{ display: 'flex', alignItems: 'flex-end', gap: 12, width: '100%' }}>
+                <TextArea
                 value={value}
                 onChange={(e) => setValue(e.target.value)}
                 onKeyDown={handleKeyDown}
                 placeholder={t('chat.placeholder', 'Type a message or a command for the terminal...')}
-                autoSize={{ minRows: 1, maxRows: 6 }}
+                autoSize={{ minRows: 2, maxRows: 6 }}
                 disabled={disabled}
                 variant="borderless"
                 style={{ 
@@ -61,9 +113,10 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSend, disabled }) => {
                 shape="circle"
                 icon={<SendOutlined />} 
                 onClick={handleSend} 
-                disabled={disabled || !value.trim()}
+                disabled={disabled || (!value.trim() && attachedFiles.length === 0)}
                 style={{ marginBottom: 4 }}
             />
+            </div>
         </div>
     );
 };

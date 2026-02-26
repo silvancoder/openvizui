@@ -291,13 +291,6 @@ const ModelSwitcher: React.FC<ModelSwitcherProps> = ({ toolId }) => {
                     />
                 </Tooltip>
             </Space.Compact>
-            {(toolId === 'google' || toolId === 'copilot') && (
-                <div style={{ marginTop: 4 }}>
-                    <span style={{ fontSize: 11, color: token.colorTextSecondary }}>
-                        {t('terminal.oauthModelHint', 'Note: If logged in via OAuth, please use `/models` command to switch models')}
-                    </span>
-                </div>
-            )}
         </div>
     );
 };

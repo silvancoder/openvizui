@@ -1,32 +1,51 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Layout, theme, Typography, Button, List, Space, Avatar, Modal } from 'antd';
-import { listen } from '@tauri-apps/api/event';
-import { ptyOpen, ptyWrite, ptyClose } from '../../lib/tauri';
+import { Layout, theme, Typography, Button, List, Space, Avatar, Modal, Popconfirm, Input, Form, message, Select, Row, Col } from 'antd';
+
 import ChatBubble from '../../components/chat/ChatBubble';
 import ChatInput from '../../components/chat/ChatInput';
-import { MessageOutlined, PlusOutlined, RobotOutlined, QuestionCircleOutlined } from '@ant-design/icons';
+import { MessageOutlined, PlusOutlined, RobotOutlined, QuestionCircleOutlined, DeleteOutlined } from '@ant-design/icons';
 import { useAppStore } from '../../store/appStore';
-import WorkspaceSider, { TOOL_COMMANDS } from '../../components/WorkspaceSider';
+import { useChatStore } from '../../store/chatStore';
+import WorkspaceSider from '../../components/WorkspaceSider';
 import { useTranslation } from 'react-i18next';
+import { fetchRemoteModels } from '../../lib/tauri';
 
 const { Sider, Content, Header } = Layout;
 const { Title, Text } = Typography;
 
-interface Message {
-    id: string;
-    type: 'user' | 'assistant';
-    content: string;
-}
+const getDisplayTitle = (title: string | undefined, t: any) => {
+    if (!title || title === 'New Chat' || title === '新对话') {
+        return t('chat.newChatTitle', 'New Chat');
+    }
+    return title;
+};
 
 const ChatPage: React.FC = () => {
     const { token } = theme.useToken();
     const { t } = useTranslation();
-    const [messages, setMessages] = useState<Message[]>([]);
     const [isHelpModalOpen, setIsHelpModalOpen] = useState(false);
+    const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
+    const [isStreaming, setIsStreaming] = useState(false);
+    const [inputValue, setInputValue] = useState('');
+    const [attachedFiles, setAttachedFiles] = useState<string[]>([]);
     const messagesEndRef = useRef<HTMLDivElement>(null);
-    const sessionId = useRef(`chat-${Date.now()}`).current;
     
-    const { activeToolId } = useAppStore();
+    const { activeChatToolId, toolConfigs, setToolConfig, addChatProvider, setActiveChatToolId } = useAppStore();
+    const [fetchedModels, setFetchedModels] = useState<string[]>([]);
+    const [fetchingModels, setFetchingModels] = useState(false);
+    const [modelSelectOpen, setModelSelectOpen] = useState(false);
+    const [form] = Form.useForm();
+    const { 
+        sessions, 
+        messages, 
+        activeSessionId, 
+        createSession, 
+        setActiveSession, 
+        deleteSession,
+        addMessage
+    } = useChatStore();
+
+    const currentMessages = activeSessionId ? (messages[activeSessionId] || []) : [];
 
     // Auto-scroll to bottom
     const scrollToBottom = () => {
@@ -35,70 +54,112 @@ const ChatPage: React.FC = () => {
 
     useEffect(() => {
         scrollToBottom();
-    }, [messages]);
+    }, [currentMessages.length, currentMessages[currentMessages.length - 1]?.content.length]);
 
     useEffect(() => {
-        let unlisten: () => void;
-        let isCancelled = false;
-
-        const initPty = async () => {
-            await ptyClose(sessionId);
-            await ptyOpen(sessionId, 80, 24);
-
-            if (isCancelled) return;
-
-            if (activeToolId) {
-                const cmd = TOOL_COMMANDS[activeToolId] || activeToolId;
-                setTimeout(async () => {
-                    await ptyWrite(sessionId, '\x03'); // Cancel any running process
-                    setTimeout(async () => {
-                        await ptyWrite(sessionId, `${cmd}\r`);
-                    }, 100);
-                }, 500); 
-            }
-
-            const unlistenFn = await listen<{ id: string, data: number[] }>('pty-data', (event) => {
-                if (event.payload.id === sessionId) {
-                    let text = new TextDecoder().decode(new Uint8Array(event.payload.data));
-                    text = text.replace(/\x1b\]0;.*?(?:\x07|\x1b\\)/g, '');
-                    
-                    setMessages(prev => {
-                        const lastMsg = prev[prev.length - 1];
-                        if (lastMsg && lastMsg.type === 'assistant') {
-                            return [
-                                ...prev.slice(0, -1),
-                                { ...lastMsg, content: lastMsg.content + text }
-                            ];
-                        } else {
-                            return [
-                                ...prev,
-                                { id: Date.now().toString(), type: 'assistant', content: text }
-                            ];
-                        }
-                    });
-                }
-            });
-            unlisten = unlistenFn;
-        };
-
-        if (activeToolId) {
-             setMessages([]); 
-             initPty();
+        if (!activeSessionId && activeChatToolId) {
+            // Automatically start a new chat if there are no sessions
+            const newId = createSession(activeChatToolId, t('chat.newChatTitle', 'New Chat'));
+            setActiveSession(newId);
+        } else if (activeSessionId && activeChatToolId) {
+             const session = sessions.find(s => s.id === activeSessionId);
+             if (!session) {
+                 const newId = createSession(activeChatToolId, t('chat.newChatTitle', 'New Chat'));
+                 setActiveSession(newId);
+             }
         }
-
-        return () => {
-            isCancelled = true;
-            if (unlisten) unlisten();
-            ptyClose(sessionId);
-        };
-    }, [activeToolId, sessionId]);
+    }, [activeChatToolId, activeSessionId, sessions.length]);
 
     const handleSend = async (text: string) => {
-        const userMsg: Message = { id: Date.now().toString(), type: 'user', content: text };
-        const assistantMsg: Message = { id: (Date.now() + 1).toString(), type: 'assistant', content: '' };
+        if (!activeSessionId || isStreaming) return;
+
+        let combinedText = text;
+        if (attachedFiles.length > 0) {
+            combinedText = `${attachedFiles.map(f => `[Attached File Context: ${f}]`).join('\n')}\n${text}`.trim();
+        }
+
+        addMessage(activeSessionId, { type: 'user', content: combinedText, id: Date.now().toString() });
+        setAttachedFiles([]); // Clear after sending
+
+        const activeToolConfig = activeChatToolId ? toolConfigs[activeChatToolId] : undefined;
+        const llmApiKey = activeToolConfig?.llmApiKey || '';
+        const llmModel = activeToolConfig?.llmModel || 'gpt-4o-mini';
+        const localAiBaseUrl = activeToolConfig?.llmBaseUrl || '';
+
+        if (!llmApiKey && !localAiBaseUrl) {
+            useChatStore.getState().updateLastMessage(activeSessionId, t('chat.noApiKeyWarning', '⚠️ Please set your LLM API Key and Base URL by clicking the Settings icon in the top right.'));
+            return;
+        }
+
+        setIsStreaming(true);
+        // Force the assistant message box to appear
+        const sessionMessages = useChatStore.getState().messages[activeSessionId] || [];
         
-        setMessages(prev => [...prev, userMsg, assistantMsg]);
-        await ptyWrite(sessionId, `${text}\r`);
+        try {
+            const apiBaseUrl = localAiBaseUrl || "https://api.openai.com/v1";
+            
+            // Build messages array
+            const openAiMessages = [...sessionMessages, { type: 'user', content: combinedText }].map(msg => ({
+                role: msg.type === 'user' ? 'user' : 'assistant',
+                content: msg.content
+            }));
+            
+            const response = await fetch(`${apiBaseUrl}/chat/completions`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${llmApiKey}`
+                },
+                body: JSON.stringify({
+                    model: llmModel || 'gpt-4o-mini',
+                    messages: openAiMessages,
+                    stream: true
+                })
+            });
+
+            if (!response.ok) {
+                const err = await response.text();
+                useChatStore.getState().updateLastMessage(activeSessionId, t('chat.apiError', '\n\n**Error:** API request failed. \n\n```json\n{{error}}\n```', { error: err }));
+                setIsStreaming(false);
+                return;
+            }
+
+            const reader = response.body?.getReader();
+            const decoder = new TextDecoder("utf-8");
+
+            if (reader) {
+                while (true) {
+                    const { done, value } = await reader.read();
+                    if (done) break;
+                    
+                    const chunk = decoder.decode(value, { stream: true });
+                    const lines = chunk.split('\n');
+                    for (const line of lines) {
+                        if (line.startsWith('data: ') && line !== 'data: [DONE]') {
+                            try {
+                                const parsed = JSON.parse(line.slice(6));
+                                const delta = parsed.choices?.[0]?.delta?.content || "";
+                                useChatStore.getState().updateLastMessage(activeSessionId, delta);
+                            } catch (e) {
+                                // ignore parse errors on fragmented stream
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (error: any) {
+            console.error("LLM Stream Error", error);
+            useChatStore.getState().updateLastMessage(activeSessionId, t('chat.networkError', '\n\n**Network Error:** {{error}}', { error: error?.message || String(error) }));
+        } finally {
+            setIsStreaming(false);
+        }
+    };
+
+    const handleNewChat = () => {
+        if (activeChatToolId) {
+            const newId = createSession(activeChatToolId, t('chat.newChatTitle', 'New Chat'));
+            setActiveSession(newId);
+        }
     };
 
     return (
@@ -114,30 +175,57 @@ const ChatPage: React.FC = () => {
                 }}
             >
                 <div style={{ padding: '16px 16px 8px 16px' }}>
-                    <Button type="dashed" block icon={<PlusOutlined />} onClick={() => setMessages([])}>
+                    <Button type="dashed" block icon={<PlusOutlined />} onClick={handleNewChat}>
                         {t('chat.newChat', 'New Chat')}
                     </Button>
                 </div>
                 <div style={{ overflowY: 'auto', flex: 1, padding: '0 8px' }}>
                     <List
-                        dataSource={[{ id: '1', title: t('chat.currentSession', 'Current Session') }]}
-                        renderItem={item => (
-                            <List.Item 
-                                style={{ 
-                                    padding: '12px 16px', 
-                                    borderBottom: 'none', 
-                                    cursor: 'pointer', 
-                                    background: token.controlItemBgActive,
-                                    borderRadius: 8,
-                                    marginTop: 8
-                                }}
-                            >
-                                <Space>
-                                    <MessageOutlined style={{ color: token.colorPrimary }} />
-                                    <Text ellipsis style={{ width: 180, fontWeight: 500 }}>{item.title}</Text>
-                                </Space>
-                            </List.Item>
-                        )}
+                        dataSource={sessions}
+                        renderItem={item => {
+                            const isActive = item.id === activeSessionId;
+                            return (
+                                <List.Item 
+                                    style={{ 
+                                        padding: '12px 16px', 
+                                        borderBottom: 'none', 
+                                        cursor: 'pointer', 
+                                        background: isActive ? token.controlItemBgActive : 'transparent',
+                                        borderRadius: 8,
+                                        marginTop: 8
+                                    }}
+                                    onClick={() => setActiveSession(item.id)}
+                                >
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', alignItems: 'center' }}>
+                                        <Space style={{ flex: 1, overflow: 'hidden' }}>
+                                            <MessageOutlined style={{ color: isActive ? token.colorPrimary : token.colorTextSecondary }} />
+                                            <Text ellipsis style={{ width: 140, fontWeight: isActive ? 600 : 400 }}>
+                                                {getDisplayTitle(item.title, t)}
+                                            </Text>
+                                        </Space>
+                                        
+                                        <Popconfirm
+                                            title={t('chat.deleteConfirm', 'Are you sure you want to delete this session?')}
+                                            onConfirm={(e) => {
+                                                e?.stopPropagation();
+                                                deleteSession(item.id);
+                                            }}
+                                            onCancel={(e) => e?.stopPropagation()}
+                                            okText={t('common.yes', 'Yes')}
+                                            cancelText={t('common.no', 'No')}
+                                        >
+                                            <Button 
+                                                type="text" 
+                                                size="small" 
+                                                icon={<DeleteOutlined />} 
+                                                onClick={(e) => e.stopPropagation()}
+                                                style={{ color: token.colorError, opacity: isActive ? 1 : 0.4 }}
+                                            />
+                                        </Popconfirm>
+                                    </div>
+                                </List.Item>
+                            );
+                        }}
                     />
                 </div>
             </Sider>
@@ -154,17 +242,21 @@ const ChatPage: React.FC = () => {
                 }}>
                     <Space>
                         <Avatar icon={<RobotOutlined />} style={{ backgroundColor: token.colorPrimary, color: '#fff' }} />
-                        <Title level={5} style={{ margin: 0, fontWeight: 600 }}>{t('chat.title', 'Terminal Chat')}</Title>
+                        <Title level={5} style={{ margin: 0, fontWeight: 600 }}>
+                            {getDisplayTitle(sessions.find(s => s.id === activeSessionId)?.title, t) || t('chat.title', 'Terminal Chat')}
+                        </Title>
                     </Space>
-                    <Button
-                        type="text"
-                        size="small"
-                        icon={<QuestionCircleOutlined />}
-                        onClick={() => setIsHelpModalOpen(true)}
-                        style={{ color: token.colorTextSecondary, fontSize: 12 }}
-                    >
-                        {t('terminal.aiGenerated', '内容由AI语言模型生成')}
-                    </Button>
+                    <Space>
+                        <Button
+                            type="text"
+                            size="small"
+                            icon={<QuestionCircleOutlined />}
+                            onClick={() => setIsHelpModalOpen(true)}
+                            style={{ color: token.colorTextSecondary, fontSize: 12 }}
+                        >
+                            {t('terminal.aiGenerated', '内容由AI语言模型生成')}
+                        </Button>
+                    </Space>
                 </Header>
                 <Content style={{ 
                     display: 'flex', 
@@ -172,30 +264,45 @@ const ChatPage: React.FC = () => {
                     background: token.colorBgLayout,
                     position: 'relative'
                 }}>
-                    <div style={{ flex: 1, overflowY: 'auto', padding: '24px 4%' }}>
-                        {messages.length === 0 && (
+                    <div style={{ flex: 1, overflowY: 'auto', padding: '24px 24px' }}>
+                        {currentMessages.length === 0 && (
                             <div style={{ textAlign: 'center', color: token.colorTextSecondary, marginTop: 100 }}>
                                 <RobotOutlined style={{ fontSize: 48, color: token.colorBorder, marginBottom: 16 }} />
-                                <div>{activeToolId === undefined ? t('chat.startTypingEmpty', 'Start typing to interact with the shell...') : t('chat.startTypingTool', { tool: activeToolId, defaultValue: 'Start interacting with {{tool}}...' })}</div>
+                                <div>{activeChatToolId === undefined ? t('chat.startTypingEmpty', 'Start typing to interact with the shell...') : t('chat.startTypingTool', { tool: activeChatToolId, defaultValue: 'Start interacting with {{tool}}...' })}</div>
                             </div>
                         )}
-                        {messages.map((msg) => (
+                        {currentMessages.map((msg) => (
                             <ChatBubble key={msg.id} content={msg.content} type={msg.type} />
                         ))}
                         <div ref={messagesEndRef} style={{ height: 1 }} />
-                        <div ref={messagesEndRef} style={{ height: 1 }} />
                     </div>
-                    <div style={{ padding: '0 4% 24px' }}>
-                        <ChatInput onSend={handleSend} disabled={false} />
-                        <div style={{ textAlign: 'center', marginTop: 12 }}>
+                    <div style={{ padding: '0 24px 12px' }}>
+                        <ChatInput 
+                            onSend={handleSend} 
+                            disabled={isStreaming} 
+                            value={inputValue} 
+                            onChange={setInputValue} 
+                            attachedFiles={attachedFiles}
+                            onRemoveFile={(idx: number) => setAttachedFiles(prev => prev.filter((_, i) => i !== idx))}
+                        />
+                        <div style={{ textAlign: 'center', marginTop: 8 }}>
                             <Text type="secondary" style={{ fontSize: 12 }}>
-                                {t('chat.devNotice', 'Note: This chat feature is currently under development and may not be fully stable.')}
+                                {t('chat.configNotice', 'Note: Chat and Terminal features require separate configuration.')}
                             </Text>
                         </div>
                     </div>
                 </Content>
             </Layout>
-            <WorkspaceSider sessionId={sessionId} placement="right" />
+            <WorkspaceSider 
+                sessionId={activeSessionId || 'default'} 
+                placement="right" 
+                onInsertPath={(path) => {
+                    if (!attachedFiles.includes(path)) {
+                        setAttachedFiles(prev => [...prev, path]);
+                    }
+                }}
+                onOpenSettings={() => setIsSettingsModalOpen(true)}
+            />
 
             {/* Help Modal */}
             <Modal
@@ -223,9 +330,130 @@ const ChatPage: React.FC = () => {
                     </div>
                 </div>
             </Modal>
+
+            {/* Settings Modal */}
+            <Modal
+                title={t('chat.settingsModalTitle', 'LLM Configuration')}
+                open={isSettingsModalOpen}
+                onCancel={() => setIsSettingsModalOpen(false)}
+                footer={null}
+                destroyOnHidden
+                width={500}
+            >
+                <Form
+                    form={form}
+                    layout="vertical"
+                    initialValues={{ 
+                        provider: activeChatToolId || '',
+                        apiKey: activeChatToolId ? toolConfigs[activeChatToolId]?.llmApiKey || '' : '', 
+                        model: activeChatToolId && toolConfigs[activeChatToolId]?.llmModel ? [toolConfigs[activeChatToolId]?.llmModel] : [], 
+                        baseUrl: activeChatToolId ? toolConfigs[activeChatToolId]?.llmBaseUrl || '' : '' 
+                    }}
+                    onFinish={(values) => {
+                        const newProvider = values.provider.trim();
+                        if (newProvider) {
+                            addChatProvider(newProvider);
+                            const modelValue = Array.isArray(values.model) ? values.model[0] : values.model; // Extract single model from array
+                            setToolConfig(newProvider, {
+                                llmApiKey: values.apiKey,
+                                llmModel: modelValue,
+                                llmBaseUrl: values.baseUrl
+                            });
+                            setActiveChatToolId(newProvider);
+                            message.success(t('chat.saved', 'Settings saved!'));
+                            setIsSettingsModalOpen(false);
+                        }
+                    }}
+                >
+                    <Form.Item 
+                        label={t('chat.serviceProvider', 'Service Provider')} 
+                        name="provider"
+                        rules={[{ required: true, message: t('chat.enterProviderName', 'Please input a provider name') }]}
+                    >
+                        <Input placeholder="e.g. google, openai, deepseek..." />
+                    </Form.Item>
+                    <Form.Item 
+                        label={t('chat.apiKey', 'API Key')} 
+                        name="apiKey"
+                        rules={[{ required: true, message: 'Please input an API Key' }]}
+                    >
+                        <Input.Password placeholder="sk-..." />
+                    </Form.Item>
+                    <Form.Item 
+                        label={t('chat.baseUrl', 'Base URL')} 
+                        name="baseUrl"
+                        rules={[{ required: true, message: 'Please input the Base URL' }]}
+                    >
+                        <Input placeholder="https://api.openai.com/v1" />
+                    </Form.Item>
+                    <Form.Item 
+                        label={t('chat.model', 'Model Name')} 
+                        tooltip={t('chat.modelTooltip', 'Select or type a model ID')}
+                    >
+                        <Row gutter={8}>
+                            <Col flex="auto">
+                                <Form.Item 
+                                    name="model" 
+                                    noStyle 
+                                    rules={[{ required: true, message: 'Please input the Model ID' }]}
+                                    getValueFromEvent={(val) => Array.isArray(val) ? val : [val]}
+                                >
+                                    <Select
+                                        mode="tags"
+                                        maxCount={1}
+                                        open={modelSelectOpen}
+                                        onDropdownVisibleChange={setModelSelectOpen}
+                                        onSelect={() => setModelSelectOpen(false)}
+                                        onChange={(val) => {
+                                            // Always keep only the last selected/typed item
+                                            const newVal = Array.isArray(val) ? val.slice(-1) : [val];
+                                            form.setFieldValue('model', newVal);
+                                        }}
+                                        options={fetchedModels.map((m: string) => ({ value: m, label: m }))}
+                                        placeholder={t('chat.modelPlaceholder', 'gpt-4o-mini, deepseek-chat...')}
+                                        style={{ width: '100%' }}
+                                    />
+                                </Form.Item>
+                            </Col>
+                            <Col>
+                                <Button
+                                    loading={fetchingModels}
+                                    onClick={async () => {
+                                        const values = form.getFieldsValue();
+                                        if (!values.baseUrl || !values.apiKey) {
+                                            message.warning(t('chat.fetchErrorNoConfig', 'Please fill in Base URL and API Key first'));
+                                            return;
+                                        }
+                                        setFetchingModels(true);
+                                        try {
+                                            const models = await fetchRemoteModels(values.baseUrl, values.apiKey);
+                                            setFetchedModels(models);
+                                            setModelSelectOpen(true);
+                                            message.success(t('chat.fetchSuccess', 'Fetched {{count}} models', { count: models.length }));
+                                        } catch (e) {
+                                            message.error(t('chat.fetchError', 'Failed to fetch models'));
+                                        } finally {
+                                            setFetchingModels(false);
+                                        }
+                                    }}
+                                >
+                                    {t('chat.fetchModels', 'Fetch')}
+                                </Button>
+                            </Col>
+                        </Row>
+                    </Form.Item>
+                    <Form.Item style={{ marginBottom: 0, textAlign: 'right' }}>
+                        <Button onClick={() => setIsSettingsModalOpen(false)} style={{ marginRight: 8 }}>
+                            {t('common.cancel', 'Cancel')}
+                        </Button>
+                        <Button type="primary" htmlType="submit">
+                            {t('common.save', 'Save')}
+                        </Button>
+                    </Form.Item>
+                </Form>
+            </Modal>
         </Layout>
     );
 };
-
 
 export default ChatPage;

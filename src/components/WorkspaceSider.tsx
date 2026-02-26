@@ -4,7 +4,9 @@ import {
     FolderOutlined,
     CodeOutlined,
     SendOutlined,
-    SearchOutlined
+    SearchOutlined,
+    SettingOutlined,
+    PlusOutlined
 } from '@ant-design/icons';
 import Editor from '@monaco-editor/react';
 import { useAppStore } from '../store/appStore';
@@ -61,19 +63,25 @@ const getLanguageFromFilename = (filename: string) => {
 interface WorkspaceSiderProps {
     sessionId: string;
     placement?: 'left' | 'right';
+    onInsertPath?: (path: string) => void;
+    onOpenSettings?: () => void;
 }
 
-const WorkspaceSider: React.FC<WorkspaceSiderProps> = ({ sessionId, placement = 'left' }) => {
+const WorkspaceSider: React.FC<WorkspaceSiderProps> = ({ sessionId, placement = 'left', onInsertPath, onOpenSettings }) => {
     const { token } = theme.useToken();
     const { t } = useTranslation();
     const {
         activeToolId,
         setActiveToolId,
+        activeChatToolId,
+        setActiveChatToolId,
+        chatProviders,
         activeTools,
         currentDirectory,
         setCurrentDirectory,
         contextFiles,
         toggleContextFile,
+        setPendingCommand,
     } = useAppStore();
 
     const [treeData, setTreeData] = useState<DataNode[]>([]);
@@ -153,15 +161,14 @@ const WorkspaceSider: React.FC<WorkspaceSiderProps> = ({ sessionId, placement = 
 
     // --- Model / API Logic ---
     const handleToolChange = (val: string) => {
-        setActiveToolId(val);
-        const cmd = TOOL_COMMANDS[val] || val;
-        // Execute tool command in terminal
-        if (sessionId) {
-            // Send Ctrl+C to terminate any running process first
-            ptyWrite(sessionId, '\x03');
-            setTimeout(() => {
-                ptyWrite(sessionId, `${cmd}\r`);
-            }, 100);
+        if (placement === 'left') {
+            setActiveToolId(val);
+            if (sessionId) {
+                const cmd = TOOL_COMMANDS[val] || val;
+                setPendingCommand(cmd);
+            }
+        } else {
+            setActiveChatToolId(val);
         }
     };
 
@@ -174,11 +181,17 @@ const WorkspaceSider: React.FC<WorkspaceSiderProps> = ({ sessionId, placement = 
         const normalizedPath = path.replace(/\//g, '\\');
 
         const pathToInsert = normalizedPath.includes(' ') ? `"${normalizedPath}"` : normalizedPath;
-        // Write directly to PTY instead of state
-        if (sessionId) {
-             ptyWrite(sessionId, pathToInsert);
+        
+        if (onInsertPath) {
+            onInsertPath(pathToInsert);
+            message.success(t('terminal.fileTree.context.insertedToChat', 'Inserted path to chat input'));
+        } else {
+            // Write directly to PTY instead of state
+            if (sessionId) {
+                 ptyWrite(sessionId, pathToInsert);
+            }
+            message.success(t('terminal.fileTree.context.insertedToTerminal', 'Inserted path to terminal'));
         }
-        message.success("Inserted path to terminal");
     };
 
     const handleDeleteFile = (path: string) => {
@@ -307,25 +320,56 @@ const WorkspaceSider: React.FC<WorkspaceSiderProps> = ({ sessionId, placement = 
                 />
 
                 <div style={{ display: 'flex', flexDirection: 'column', height: '100%', gap: 16 }}>
-                    {/* CLI Tool Selection */}
-                    <div>
-                        <Text type="secondary" style={{ fontSize: 12 }}>{t('terminal.cliTool')}</Text>
-                        <Space.Compact style={{ width: '100%' }}>
-                            <Select
-                                placeholder={t('terminal.selectTool')}
-                                style={{ width: '100%' }}
-                                options={activeTools.map(t => ({ value: t, label: t }))}
-                                value={activeToolId}
-                                onChange={handleToolChange}
-                            />
-                            <Button icon={<SendOutlined />} onClick={() => handleToolChange(activeToolId!)} disabled={!activeToolId} />
-                        </Space.Compact>
-                    </div>
+                    {/* Service Provider / CLI Tool Selection */}
+                    {placement === 'right' && chatProviders.length === 0 ? (
+                        <div style={{ marginBottom: 16 }}>
+                            <Button 
+                                block 
+                                type="dashed" 
+                                icon={<PlusOutlined />} 
+                                onClick={onOpenSettings}
+                                style={{ height: 40, color: token.colorTextSecondary }}
+                            >
+                                {t('chat.addProvider', 'Add Service Provider')}
+                            </Button>
+                        </div>
+                    ) : (
+                        <div>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 }}>
+                                <Text type="secondary" style={{ fontSize: 12 }}>
+                                    {placement === 'left' ? t('terminal.cliTool', 'CLI 工具') : t('chat.serviceProvider', '服务商')}
+                                </Text>
+                                {placement === 'right' && onOpenSettings && (
+                                    <Button 
+                                        type="text" 
+                                        size="small" 
+                                        icon={<SettingOutlined />} 
+                                        onClick={onOpenSettings}
+                                        style={{ fontSize: 11, padding: '0 4px', height: 20, color: token.colorTextSecondary }}
+                                    >
+                                        {t('chat.settings', 'LLM Settings')}
+                                    </Button>
+                                )}
+                            </div>
+                            <Space.Compact style={{ width: '100%' }}>
+                                <Select
+                                    placeholder={t('terminal.selectTool')}
+                                    style={{ width: '100%' }}
+                                    options={(placement === 'left' ? activeTools : chatProviders).map(t => ({ value: t, label: t }))}
+                                    value={placement === 'left' ? activeToolId : activeChatToolId}
+                                    onChange={handleToolChange}
+                                />
+                                {placement === 'left' && (
+                                    <Button icon={<SendOutlined />} onClick={() => handleToolChange(activeToolId!)} disabled={!activeToolId} />
+                                )}
+                            </Space.Compact>
+                        </div>
+                    )}
 
                     {/* Model Switcher */}
-                    {activeToolId && (
+                    {(placement === 'left' ? activeToolId : activeChatToolId) && (
                         <div>
-                            <ModelSwitcher toolId={activeToolId} />
+                            <ModelSwitcher toolId={(placement === 'left' ? activeToolId : activeChatToolId)!} />
                         </div>
                     )}
 

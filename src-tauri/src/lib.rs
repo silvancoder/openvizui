@@ -34,6 +34,12 @@ struct PtySession {
     child: Box<dyn Child + Send>,
 }
 
+impl Drop for PtySession {
+    fn drop(&mut self) {
+        let _ = self.child.kill();
+    }
+}
+
 struct AppPty {
     sessions: Arc<Mutex<HashMap<String, PtySession>>>,
 }
@@ -1266,8 +1272,8 @@ async fn inspect_mcp_server(
         "method": "initialize",
         "params": {
             "capabilities": {},
-            "clientInfo": {"name": "OpenVizUI", "version": "1.0.2"},
-            "protocolVersion": "2026-02-25"
+            "clientInfo": {"name": "OpenVizUI", "version": "1.0.3"},
+            "protocolVersion": "2026-02-26"
         }
     });
     
@@ -1568,6 +1574,15 @@ pub fn run() {
             inspect_mcp_server,
             get_models
         ])
-        .run(tauri::generate_context!())
-        .expect("error while running tauri application");
+        .build(tauri::generate_context!())
+        .expect("error while building tauri application")
+        .run(|app_handle, event| match event {
+            tauri::RunEvent::ExitRequested { .. } | tauri::RunEvent::Exit => {
+                use tauri::Manager;
+                let state = app_handle.state::<AppPty>();
+                let mut sessions = state.sessions.lock().unwrap();
+                sessions.clear();
+            }
+            _ => {}
+        });
 }
