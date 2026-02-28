@@ -69,7 +69,7 @@
         "docs": {
           "title": "官方资源",
           "desc": "访问已配置 CLI 工具的文档和指南。",
-          "visit": "官方文档"
+          "visit": "文档"
         },
         "diagnostics": {
           "title": "环境诊断",
@@ -1007,8 +1007,8 @@
       "enabled": "已启用",
       "settings": "设置",
       "auto": "自动",
-      "off": "关",
-      "on": "开",
+      "off": "关闭",
+      "on": "开启",
       "light": "浅色",
       "dark": "深色",
       "low": "低",
@@ -1065,7 +1065,7 @@
       "currentSession": "当前会话",
       "startTypingEmpty": "开始输入以与终端交互...",
       "startTypingTool": "开始与 {{tool}} 交互...",
-      "placeholder": "输入消息或终端命令...",
+      "placeholder": "请输入互动消息...",
       "configNotice": "注：对话和终端功能需要分别配置。",
       "settings": "LLM 设置",
       "serviceProvider": "服务商",
@@ -1084,6 +1084,17 @@
       "noApiKeyWarning": "⚠️ 请通过点击右上角的设置图标来设置您的 LLM API 密钥和基础 URL。",
       "apiError": "\n\n**错误：** API 请求失败。\n\n```json\n{{error}}\n```",
       "networkError": "\n\n**网络错误：** {{error}}",
-      "modelPlaceholder": "gpt-4o-mini, deepseek-chat..."
+      "modelPlaceholder": "gpt-4o-mini, deepseek-chat...",
+      "configTitle": "会话配置",
+      "chatType": "对话类型",
+      "mcp": "MCP",
+      "skills": "技能",
+      "typeNormal": "普通",
+      "typeCode": "代码",
+      "typeDeep": "深度思考",
+      "saved": "设置已保存",
+      "enterApiKey": "请输入 API 密钥",
+      "enterBaseUrl": "请输入基础 URL",
+      "enterModelId": "请输入模型 ID"
     }
 }

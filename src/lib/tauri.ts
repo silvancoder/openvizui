@@ -21,6 +21,29 @@ export interface EnvironmentStatus {
     codebuddy_version: string | null;
 }
 
+export interface ChatMessage {
+    id: string;
+    type: 'user' | 'assistant';
+    content: string;
+    timestamp: number;
+}
+
+export interface ChatSessionConfig {
+    chatType: 'normal' | 'code' | 'deep';
+    mcpEnabled: boolean;
+    skillsEnabled: boolean;
+}
+
+export interface ChatSession {
+    id: string;
+    title: string;
+    createdAt: number;
+    updatedAt: number;
+    toolId: string;
+    config: ChatSessionConfig;
+    messages: ChatMessage[];
+}
+
 export const checkEnvironment = async (): Promise<EnvironmentStatus> => {
     try {
         return await invoke('check_environment');
@@ -123,6 +146,8 @@ export interface AppConfig {
     local_ai_provider: string | null;
     ide_path: string | null;
     command_presets: { id: string; name: string; command: string }[] | null;
+    chat_sidebar_width: number | null;
+    resource_sidebar_width: number | null;
 }
 
 export const getAppConfig = async (): Promise<AppConfig> => {
@@ -157,7 +182,9 @@ export const getAppConfig = async (): Promise<AppConfig> => {
             local_ai_base_url: 'http://localhost:11434',
             local_ai_provider: 'ollama',
             ide_path: null,
-            command_presets: []
+            command_presets: [],
+            chat_sidebar_width: 260,
+            resource_sidebar_width: 280,
         };
     }
 };
@@ -217,6 +244,23 @@ export const ptyExists = async (id: string): Promise<boolean> => {
     } catch (e) {
         console.warn("PTY Exists check failed", e);
         return false;
+    }
+};
+
+export const getChatSessions = async (): Promise<ChatSession[]> => {
+    try {
+        return await invoke('get_chat_sessions');
+    } catch (e) {
+        console.warn("Get Chat Sessions failed (Browser Mode)", e);
+        return [];
+    }
+};
+
+export const saveChatSessions = async (sessions: any[]): Promise<void> => {
+    try {
+        await invoke('save_chat_sessions', { sessions });
+    } catch (e) {
+        console.warn("Save Chat Sessions failed (Browser Mode)", e);
     }
 };
 

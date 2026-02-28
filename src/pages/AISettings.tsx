@@ -1312,27 +1312,30 @@ ${TOOLS.map(tool => {
                             styles={{ body: { padding: '12px 24px' } }}
                             style={{ marginTop: 24 }}
                         >
-                            <List
-                                dataSource={CLI_DOCS}
-                                renderItem={item => (
-                                    <List.Item
-                                        actions={[
-                                            <Button
-                                                type="link"
-                                                icon={<GlobalOutlined />}
-                                                onClick={() => invoke('open_url', { url: item.url })}
-                                            >
-                                                {t('aiSettings.moreConfigs.docs.visit')}
-                                            </Button>
-                                        ]}
-                                    >
-                                        <List.Item.Meta
-                                            title={<Text strong>{item.name}</Text>}
-                                            avatar={<InfoCircleOutlined style={{ color: '#1890ff' }} />}
-                                        />
-                                    </List.Item>
-                                )}
-                            />
+                             <List
+                                 dataSource={CLI_DOCS}
+                                 renderItem={item => (
+                                     <List.Item
+                                         style={{ flexWrap: 'nowrap' }}
+                                         actions={[
+                                             <Button
+                                                 type="link"
+                                                 size="small"
+                                                 style={{ padding: '0 4px' }}
+                                                 icon={<GlobalOutlined />}
+                                                 onClick={() => invoke('open_url', { url: item.url })}
+                                             >
+                                                 {t('aiSettings.moreConfigs.docs.visit')}
+                                             </Button>
+                                         ]}
+                                     >
+                                         <List.Item.Meta
+                                             title={<Text strong ellipsis={{ tooltip: item.name }}>{item.name}</Text>}
+                                             avatar={<InfoCircleOutlined style={{ color: '#1890ff' }} />}
+                                         />
+                                     </List.Item>
+                                 )}
+                             />
                         </Card>
                     </Col>
                 </Row>

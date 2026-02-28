@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Layout, theme, Typography, Button, List, Space, Avatar, Modal, Popconfirm, Input, Form, message, Select, Row, Col } from 'antd';
+import { Layout, theme, Typography, Button, List, Space, Avatar, Modal, Popconfirm, Input, Form, message, Select, Row, Col, Switch, Divider } from 'antd';
 
 import ChatBubble from '../../components/chat/ChatBubble';
 import ChatInput from '../../components/chat/ChatInput';
@@ -30,11 +30,48 @@ const ChatPage: React.FC = () => {
     const [attachedFiles, setAttachedFiles] = useState<string[]>([]);
     const messagesEndRef = useRef<HTMLDivElement>(null);
 
-    const { activeChatToolId, toolConfigs, setToolConfig, addChatProvider, setActiveChatToolId } = useAppStore();
+    const [modelSelectOpen, setModelSelectOpen] = useState(false);
     const [fetchedModels, setFetchedModels] = useState<string[]>([]);
     const [fetchingModels, setFetchingModels] = useState(false);
-    const [modelSelectOpen, setModelSelectOpen] = useState(false);
     const [form] = Form.useForm();
+
+    const {
+        activeChatToolId,
+        toolConfigs,
+        setToolConfig,
+        addChatProvider,
+        setActiveChatToolId,
+        chatSidebarWidth,
+        setChatSidebarWidth
+    } = useAppStore();
+
+    const [isResizing, setIsResizing] = useState(false);
+
+    useEffect(() => {
+        const handleMouseMove = (e: MouseEvent) => {
+            if (!isResizing) return;
+            // Limit width between 200px and 600px
+            const newWidth = Math.max(200, Math.min(600, e.clientX));
+            setChatSidebarWidth(newWidth);
+        };
+
+        const handleMouseUp = () => {
+            setIsResizing(false);
+            document.body.style.cursor = 'default';
+        };
+
+        if (isResizing) {
+            document.addEventListener('mousemove', handleMouseMove);
+            document.addEventListener('mouseup', handleMouseUp);
+            document.body.style.cursor = 'col-resize';
+        }
+
+        return () => {
+            document.removeEventListener('mousemove', handleMouseMove);
+            document.removeEventListener('mouseup', handleMouseUp);
+        };
+    }, [isResizing, setChatSidebarWidth]);
+
     const {
         sessions,
         messages,
@@ -45,9 +82,10 @@ const ChatPage: React.FC = () => {
         addMessage
     } = useChatStore();
 
+    const activeSession = sessions.find(s => s.id === activeSessionId);
     const currentMessages = activeSessionId ? (messages[activeSessionId] || []) : [];
 
-    // Auto-scroll to bottom
+    const { updateSessionConfig } = useChatStore();
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     };
@@ -56,7 +94,16 @@ const ChatPage: React.FC = () => {
         scrollToBottom();
     }, [currentMessages.length, currentMessages[currentMessages.length - 1]?.content.length]);
 
+    const { loadSessions, isLoaded: sessionsLoaded } = useChatStore();
+
     useEffect(() => {
+        if (!sessionsLoaded) {
+            loadSessions();
+        }
+    }, [sessionsLoaded, loadSessions]);
+
+    useEffect(() => {
+        if (!sessionsLoaded) return;
         if (!activeSessionId && activeChatToolId) {
             // Automatically start a new chat if there are no sessions
             const newId = createSession(activeChatToolId, t('chat.newChatTitle', 'New Chat'));
@@ -68,7 +115,7 @@ const ChatPage: React.FC = () => {
                 setActiveSession(newId);
             }
         }
-    }, [activeChatToolId, activeSessionId, sessions.length]);
+    }, [activeChatToolId, activeSessionId, sessions.length, sessionsLoaded]);
 
     const handleSend = async (text: string) => {
         if (!activeSessionId || isStreaming) return;
@@ -165,68 +212,133 @@ const ChatPage: React.FC = () => {
     return (
         <Layout style={{ height: '100%', background: 'transparent' }} hasSider>
             <Sider
-                width={260}
+                width={chatSidebarWidth}
                 theme="light"
                 style={{
                     background: token.colorBgContainer,
                     borderRight: `1px solid ${token.colorBorderSecondary}`,
-                    display: 'flex',
-                    flexDirection: 'column'
+                    position: 'relative'
                 }}
             >
-                <div style={{ padding: '16px 16px 8px 16px' }}>
-                    <Button type="dashed" block icon={<PlusOutlined />} onClick={handleNewChat}>
-                        {t('chat.newChat', 'New Chat')}
-                    </Button>
-                </div>
-                <div style={{ overflowY: 'auto', flex: 1, padding: '0 8px' }}>
-                    <List
-                        dataSource={sessions}
-                        renderItem={item => {
-                            const isActive = item.id === activeSessionId;
-                            return (
-                                <List.Item
-                                    style={{
-                                        padding: '12px 16px',
-                                        borderBottom: 'none',
-                                        cursor: 'pointer',
-                                        background: isActive ? token.controlItemBgActive : 'transparent',
-                                        borderRadius: 8,
-                                        marginTop: 8
-                                    }}
-                                    onClick={() => setActiveSession(item.id)}
-                                >
-                                    <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', alignItems: 'center' }}>
-                                        <Space style={{ flex: 1, overflow: 'hidden' }}>
-                                            <MessageOutlined style={{ color: isActive ? token.colorPrimary : token.colorTextSecondary }} />
-                                            <Text ellipsis style={{ width: 140, fontWeight: isActive ? 600 : 400 }}>
-                                                {getDisplayTitle(item.title, t)}
-                                            </Text>
-                                        </Space>
-
-                                        <Popconfirm
-                                            title={t('chat.deleteConfirm', 'Are you sure you want to delete this session?')}
-                                            onConfirm={(e) => {
-                                                e?.stopPropagation();
-                                                deleteSession(item.id);
-                                            }}
-                                            onCancel={(e) => e?.stopPropagation()}
-                                            okText={t('common.yes', 'Yes')}
-                                            cancelText={t('common.no', 'No')}
-                                        >
-                                            <Button
-                                                type="text"
-                                                size="small"
-                                                icon={<DeleteOutlined />}
-                                                onClick={(e) => e.stopPropagation()}
-                                                style={{ color: token.colorError, opacity: isActive ? 1 : 0.4 }}
-                                            />
-                                        </Popconfirm>
-                                    </div>
-                                </List.Item>
-                            );
+                <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+                    {/* Resize Handle */}
+                    <div
+                        style={{
+                            position: 'absolute',
+                            right: -5,
+                            top: 0,
+                            bottom: 0,
+                            width: 10,
+                            cursor: 'col-resize',
+                            zIndex: 100,
+                        }}
+                        onMouseDown={(e) => {
+                            e.preventDefault();
+                            setIsResizing(true);
                         }}
                     />
+                    <div style={{ padding: '16px 16px 8px 16px' }}>
+                        <Button type="dashed" block icon={<PlusOutlined />} onClick={handleNewChat}>
+                            {t('chat.newChat', 'New Chat')}
+                        </Button>
+                    </div>
+                    <div style={{ overflowY: 'auto', flex: 1, padding: '0 8px' }}>
+                        <List
+                            dataSource={sessions}
+                            renderItem={item => {
+                                const isActive = item.id === activeSessionId;
+                                return (
+                                    <List.Item
+                                        style={{
+                                            padding: '12px 16px',
+                                            borderBottom: 'none',
+                                            cursor: 'pointer',
+                                            background: isActive ? token.controlItemBgActive : 'transparent',
+                                            borderRadius: 8,
+                                            marginTop: 8
+                                        }}
+                                        onClick={() => setActiveSession(item.id)}
+                                    >
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', alignItems: 'center' }}>
+                                            <Space style={{ flex: 1, overflow: 'hidden' }}>
+                                                <MessageOutlined style={{ color: isActive ? token.colorPrimary : token.colorTextSecondary }} />
+                                                <Text ellipsis style={{ width: 140, fontWeight: isActive ? 600 : 400 }}>
+                                                    {getDisplayTitle(item.title, t)}
+                                                </Text>
+                                            </Space>
+
+                                            <Popconfirm
+                                                title={t('chat.deleteConfirm', 'Are you sure you want to delete this session?')}
+                                                onConfirm={(e) => {
+                                                    e?.stopPropagation();
+                                                    deleteSession(item.id);
+                                                }}
+                                                onCancel={(e) => e?.stopPropagation()}
+                                                okText={t('common.yes', 'Yes')}
+                                                cancelText={t('common.no', 'No')}
+                                            >
+                                                <Button
+                                                    type="text"
+                                                    size="small"
+                                                    icon={<DeleteOutlined />}
+                                                    onClick={(e) => e.stopPropagation()}
+                                                    style={{ color: token.colorError, opacity: isActive ? 1 : 0.4 }}
+                                                />
+                                            </Popconfirm>
+                                        </div>
+                                    </List.Item>
+                                );
+                            }}
+                        />
+                    </div>
+
+                    {/* Session Configuration Area (Bottom of Sider) */}
+                    {(activeSession || activeChatToolId) && (
+                        <div style={{
+                            padding: '16px',
+                            borderTop: `1px solid ${token.colorBorderSecondary}`,
+                            background: token.colorBgContainer,
+                            marginTop: 'auto'
+                        }}>
+                            <div style={{ marginBottom: 12 }}>
+                                <Text strong style={{ fontSize: 13, color: token.colorTextSecondary, display: 'block', marginBottom: 8 }}>
+                                    {t('chat.configTitle', 'Session Configuration')}
+                                </Text>
+                                <Space direction="vertical" style={{ width: '100%' }} size={12}>
+                                    <div>
+                                        <Text type="secondary" style={{ fontSize: 11, display: 'block', marginBottom: 4 }}>{t('chat.chatType', 'Chat Type')}</Text>
+                                        <Select
+                                            size="small"
+                                            style={{ width: '100%' }}
+                                            value={activeSession?.config?.chatType || 'normal'}
+                                            onChange={(val) => activeSession && updateSessionConfig(activeSession.id, { chatType: val })}
+                                            options={[
+                                                { value: 'normal', label: t('chat.typeNormal', 'Normal') },
+                                                { value: 'code', label: t('chat.typeCode', 'Code') },
+                                                { value: 'deep', label: t('chat.typeDeep', 'Deep Thinking') },
+                                            ]}
+                                        />
+                                    </div>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                        <Text type="secondary" style={{ fontSize: 11 }}>{t('chat.mcp', 'MCP')}</Text>
+                                        <Switch
+                                            size="small"
+                                            checked={activeSession?.config?.mcpEnabled ?? true}
+                                            onChange={(val) => activeSession && updateSessionConfig(activeSession.id, { mcpEnabled: val })}
+                                        />
+                                    </div>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                        <Text type="secondary" style={{ fontSize: 11 }}>{t('chat.skills', 'Skills')}</Text>
+                                        <Switch
+                                            size="small"
+                                            checked={activeSession?.config?.skillsEnabled ?? true}
+                                            onChange={(val) => activeSession && updateSessionConfig(activeSession.id, { skillsEnabled: val })}
+                                        />
+                                    </div>
+                                </Space>
+                            </div>
+                        </div>
+                    )}
                 </div>
             </Sider>
             <Layout style={{ background: 'transparent' }}>
@@ -254,7 +366,7 @@ const ChatPage: React.FC = () => {
                             onClick={() => setIsHelpModalOpen(true)}
                             style={{ color: token.colorTextSecondary, fontSize: 12 }}
                         >
-                            {t('terminal.aiGenerated', '内容由AI语言模型生成')}
+                            {t('terminal.aiGenerated', 'Content generated by AI')}
                         </Button>
                     </Space>
                 </Header>
@@ -286,9 +398,21 @@ const ChatPage: React.FC = () => {
                             onRemoveFile={(idx: number) => setAttachedFiles(prev => prev.filter((_, i) => i !== idx))}
                         />
                         <div style={{ textAlign: 'center', marginTop: 8 }}>
-                            <Text type="secondary" style={{ fontSize: 12 }}>
-                                {t('chat.configNotice', 'Note: Chat and Terminal features require separate configuration.')}
-                            </Text>
+                            <Space split={(activeSession || activeChatToolId) ? <Divider type="vertical" /> : null} style={{ fontSize: 12 }}>
+                                {(activeSession || activeChatToolId) && (
+                                    <Space size={16}>
+                                        <Text type="secondary">
+                                            {t('chat.chatType', 'Chat Type')}: <span style={{ color: token.colorPrimary }}>{t(`chat.type${(activeSession?.config?.chatType || 'normal') === 'deep' ? 'Deep' : ((activeSession?.config?.chatType || 'normal') === 'code' ? 'Code' : 'Normal')}`)}</span>
+                                        </Text>
+                                        <Text type="secondary">
+                                            {t('chat.mcp', 'MCP')}: <span style={{ color: (activeSession?.config?.mcpEnabled ?? true) !== false ? token.colorSuccess : token.colorTextQuaternary }}>{(activeSession?.config?.mcpEnabled ?? true) !== false ? t('common.on', 'ON') : t('common.off', 'OFF')}</span>
+                                        </Text>
+                                        <Text type="secondary">
+                                            {t('chat.skills', 'Skills')}: <span style={{ color: (activeSession?.config?.skillsEnabled ?? true) !== false ? token.colorSuccess : token.colorTextQuaternary }}>{(activeSession?.config?.skillsEnabled ?? true) !== false ? t('common.on', 'ON') : t('common.off', 'OFF')}</span>
+                                        </Text>
+                                    </Space>
+                                )}
+                            </Space>
                         </div>
                     </div>
                 </Content>
@@ -375,14 +499,14 @@ const ChatPage: React.FC = () => {
                     <Form.Item
                         label={t('chat.apiKey', 'API Key')}
                         name="apiKey"
-                        rules={[{ required: true, message: 'Please input an API Key' }]}
+                        rules={[{ required: true, message: t('chat.enterApiKey', 'Please input an API Key') }]}
                     >
                         <Input.Password placeholder="sk-..." />
                     </Form.Item>
                     <Form.Item
                         label={t('chat.baseUrl', 'Base URL')}
                         name="baseUrl"
-                        rules={[{ required: true, message: 'Please input the Base URL' }]}
+                        rules={[{ required: true, message: t('chat.enterBaseUrl', 'Please input the Base URL') }]}
                     >
                         <Input placeholder="https://api.openai.com/v1" />
                     </Form.Item>
@@ -395,14 +519,14 @@ const ChatPage: React.FC = () => {
                                 <Form.Item
                                     name="model"
                                     noStyle
-                                    rules={[{ required: true, message: 'Please input the Model ID' }]}
+                                    rules={[{ required: true, message: t('chat.enterModelId', 'Please input the Model ID') }]}
                                     getValueFromEvent={(val) => Array.isArray(val) ? val : [val]}
                                 >
                                     <Select
                                         mode="tags"
                                         maxCount={1}
                                         open={modelSelectOpen}
-                                        onDropdownVisibleChange={setModelSelectOpen}
+                                        onOpenChange={setModelSelectOpen}
                                         onSelect={() => setModelSelectOpen(false)}
                                         onChange={(val) => {
                                             // Always keep only the last selected/typed item
@@ -452,6 +576,22 @@ const ChatPage: React.FC = () => {
                     </Form.Item>
                 </Form>
             </Modal>
+
+            {/* Resize Overlay */}
+            {isResizing && (
+                <div
+                    style={{
+                        position: 'fixed',
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        zIndex: 9999,
+                        cursor: 'col-resize',
+                        userSelect: 'none'
+                    }}
+                />
+            )}
         </Layout>
     );
 };

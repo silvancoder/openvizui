@@ -16,7 +16,7 @@ use std::path::PathBuf;
 use std::process::Command;
 use std::sync::{Arc, Mutex};
 use std::thread;
-use tauri::{AppHandle, Emitter, State}; // For streaming response body
+use tauri::{AppHandle, Emitter, Manager, State}; // For streaming response body
 
 #[cfg(windows)]
 use std::os::windows::process::CommandExt;
@@ -93,6 +93,12 @@ struct ModelsResponse {
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct ToolConfig {
     pub working_directory: Option<String>,
+    #[serde(rename = "llmApiKey")]
+    pub llm_api_key: Option<String>,
+    #[serde(rename = "llmBaseUrl")]
+    pub llm_base_url: Option<String>,
+    #[serde(rename = "llmModel")]
+    pub llm_model: Option<String>,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
@@ -125,12 +131,48 @@ pub struct AppConfig {
     pub env_status: Option<EnvironmentStatus>,
     pub tool_statuses: Option<std::collections::HashMap<String, ToolStatus>>,
     pub tool_configs: Option<std::collections::HashMap<String, ToolConfig>>,
-    // New Fields
+    pub command_presets: Option<Vec<CommandPreset>>,
+    pub chat_sidebar_width: Option<u32>,
+    pub resource_sidebar_width: Option<u32>,
+    pub active_chat_tool_id: Option<String>,
     pub global_instructions: Option<String>,
     pub local_ai_base_url: Option<String>,
     pub local_ai_provider: Option<String>,
     pub ide_path: Option<String>,
-    pub command_presets: Option<Vec<CommandPreset>>,
+    pub chat_providers: Option<Vec<String>>,
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone)]
+pub struct ChatMessage {
+    pub id: String,
+    #[serde(rename = "type")]
+    pub msg_type: String, // "user" or "assistant"
+    pub content: String,
+    pub timestamp: u64,
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone)]
+pub struct ChatSessionConfig {
+    #[serde(rename = "chatType")]
+    pub chat_type: String, // "normal", "code", "deep"
+    #[serde(rename = "mcpEnabled")]
+    pub mcp_enabled: bool,
+    #[serde(rename = "skillsEnabled")]
+    pub skills_enabled: bool,
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone)]
+pub struct ChatSession {
+    pub id: String,
+    pub title: String,
+    #[serde(rename = "createdAt")]
+    pub created_at: u64,
+    #[serde(rename = "updatedAt")]
+    pub updated_at: u64,
+    #[serde(rename = "toolId")]
+    pub tool_id: String,
+    pub config: ChatSessionConfig,
+    pub messages: Vec<ChatMessage>,
 }
 
 impl Default for AppConfig {
@@ -170,6 +212,10 @@ impl Default for AppConfig {
             local_ai_provider: Some("ollama".to_string()),
             ide_path: None,
             command_presets: None,
+            chat_sidebar_width: Some(260),
+            resource_sidebar_width: Some(280),
+            active_chat_tool_id: None,
+            chat_providers: None,
         }
     }
 }
@@ -540,6 +586,36 @@ fn save_app_config(app: AppHandle, config: AppConfig) -> Result<(), String> {
 
     let content = serde_json::to_string_pretty(&config).map_err(|e| e.to_string())?;
     fs::write(config_path, content).map_err(|e| e.to_string())?;
+    Ok(())
+}
+
+fn get_sessions_path(app: &AppHandle) -> std::path::PathBuf {
+    let app_dir = app.path().app_config_dir().unwrap();
+    app_dir.join("sessions.json")
+}
+
+#[tauri::command]
+fn get_chat_sessions(app: AppHandle) -> Result<Vec<ChatSession>, String> {
+    let sessions_path = get_sessions_path(&app);
+    if !sessions_path.exists() {
+        return Ok(Vec::new());
+    }
+
+    let content = fs::read_to_string(sessions_path).map_err(|e| e.to_string())?;
+    let sessions: Vec<ChatSession> = serde_json::from_str(&content).map_err(|e| e.to_string())?;
+    Ok(sessions)
+}
+
+#[tauri::command]
+fn save_chat_sessions(app: AppHandle, sessions: Vec<ChatSession>) -> Result<(), String> {
+    let sessions_path = get_sessions_path(&app);
+    let dir = sessions_path.parent().unwrap();
+    if !dir.exists() {
+        fs::create_dir_all(dir).map_err(|e| e.to_string())?;
+    }
+
+    let content = serde_json::to_string_pretty(&sessions).map_err(|e| e.to_string())?;
+    fs::write(sessions_path, content).map_err(|e| e.to_string())?;
     Ok(())
 }
 
@@ -1272,8 +1348,8 @@ async fn inspect_mcp_server(
         "method": "initialize",
         "params": {
             "capabilities": {},
-            "clientInfo": {"name": "OpenVizUI", "version": "1.0.3"},
-            "protocolVersion": "2026-02-26"
+            "clientInfo": {"name": "OpenVizUI", "version": "1.0.4"},
+            "protocolVersion": "2026-02-27"
         }
     });
     
@@ -1572,7 +1648,9 @@ pub fn run() {
             uninstall_skills,
             open_folder,
             inspect_mcp_server,
-            get_models
+            get_models,
+            get_chat_sessions,
+            save_chat_sessions,
         ])
         .build(tauri::generate_context!())
         .expect("error while building tauri application")

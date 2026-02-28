@@ -9,7 +9,7 @@
         "restart": "Reiniciar Sessão"
       },
       "install": "Instalar",
-      "docs": "Documentação",
+      "docs": "Docs",
       "installed": "Instalado",
       "uninstall": "Desinstalar",
       "launch": "Iniciar",
@@ -69,7 +69,7 @@
         "docs": {
           "title": "Recursos Oficiais",
           "desc": "Acesse documentação e guias para as ferramentas CLI configuradas.",
-          "visit": "Documentação Oficial"
+          "visit": "Docs Oficial"
         },
         "diagnostics": {
           "title": "Diagnóstico do Sistema",
@@ -1084,6 +1084,17 @@
       "noApiKeyWarning": "⚠️ Please set your LLM API Key and Base URL by clicking the Settings icon in the top right.",
       "apiError": "\n\n**Error:** API request failed. \n\n```json\n{{error}}\n```",
       "networkError": "\n\n**Network Error:** {{error}}",
-      "modelPlaceholder": "gpt-4o-mini, deepseek-chat..."
+      "modelPlaceholder": "gpt-4o-mini, deepseek-chat...",
+      "configTitle": "Configuração da sessão",
+      "chatType": "Tipo de chat",
+      "mcp": "MCP",
+      "skills": "Habilidades",
+      "typeNormal": "Normal",
+      "typeCode": "Código",
+      "typeDeep": "Pensamento profundo",
+      "saved": "Settings saved!",
+      "enterApiKey": "Please input an API Key",
+      "enterBaseUrl": "Please input the Base URL",
+      "enterModelId": "Please input the Model ID"
     }
 }

@@ -53,6 +53,8 @@ interface AppState {
     contextFiles: string[];
     commandPresets: { id: string; name: string; command: string }[];
     chatProviders: string[];
+    chatSidebarWidth: number;
+    resourceSidebarWidth: number;
 
     // Actions
     setTheme: (theme: 'light' | 'dark') => void;
@@ -95,43 +97,55 @@ interface AppState {
     setChatProviders: (providers: string[]) => void;
     addChatProvider: (provider: string) => void;
     removeChatProvider: (provider: string) => void;
+    setChatSidebarWidth: (width: number) => void;
+    setResourceSidebarWidth: (width: number) => void;
 }
 
-const persistConfig = async (state: AppState) => {
+let saveTimeout: any = null;
+const persistConfig = (state: AppState) => {
     if (!state.isLoaded) return;
-    try {
-        await saveAppConfig({
-            proxy_type: state.proxyType,
-            proxy_address: state.proxyAddress,
-            theme: state.theme,
-            language: state.language,
-            active_tools: state.activeTools,
-            primary_color: state.primaryColor,
-            opacity: state.opacity,
-            font_family: state.fontFamily,
-            text_color: state.textColor,
-            terminal_font_family: state.terminalFontFamily,
-            terminal_font_size: state.terminalFontSize,
-            terminal_background: state.terminalBackground,
-            terminal_foreground: state.terminalForeground,
-            terminal_cursor_style: state.terminalCursorStyle,
-            terminal_shell: state.terminalShell,
-            current_directory: state.currentDirectory,
-            active_tool_id: state.activeToolId,
-            active_chat_tool_id: state.activeChatToolId,
-            env_status: state.envStatus,
-            tool_statuses: state.toolStatuses,
-            tool_configs: state.toolConfigs as any,
-            global_instructions: state.globalInstructions,
-            local_ai_base_url: state.localAiBaseUrl,
-            local_ai_provider: state.localAiProvider,
-            ide_path: state.idePath,
-            command_presets: state.commandPresets,
-            chat_providers: state.chatProviders,
-        });
-    } catch (e) {
-        console.error("Failed to persist config", e);
+    
+    if (saveTimeout) {
+        clearTimeout(saveTimeout);
     }
+
+    saveTimeout = setTimeout(async () => {
+        try {
+            await saveAppConfig({
+                proxy_type: state.proxyType,
+                proxy_address: state.proxyAddress,
+                theme: state.theme,
+                language: state.language,
+                active_tools: state.activeTools,
+                primary_color: state.primaryColor,
+                opacity: state.opacity,
+                font_family: state.fontFamily,
+                text_color: state.textColor,
+                terminal_font_family: state.terminalFontFamily,
+                terminal_font_size: state.terminalFontSize,
+                terminal_background: state.terminalBackground,
+                terminal_foreground: state.terminalForeground,
+                terminal_cursor_style: state.terminalCursorStyle,
+                terminal_shell: state.terminalShell,
+                current_directory: state.currentDirectory,
+                active_tool_id: state.activeToolId,
+                active_chat_tool_id: state.activeChatToolId,
+                env_status: state.envStatus,
+                tool_statuses: state.toolStatuses,
+                tool_configs: state.toolConfigs as any,
+                global_instructions: state.globalInstructions,
+                local_ai_base_url: state.localAiBaseUrl,
+                local_ai_provider: state.localAiProvider,
+                ide_path: state.idePath,
+                command_presets: state.commandPresets,
+                chat_providers: state.chatProviders,
+                chat_sidebar_width: state.chatSidebarWidth,
+                resource_sidebar_width: state.resourceSidebarWidth,
+            });
+        } catch (e) {
+            console.error("Failed to persist config", e);
+        }
+    }, 500); // 500ms debounce
 };
 
 export const useAppStore = create<AppState>((set, get) => ({
@@ -165,6 +179,8 @@ export const useAppStore = create<AppState>((set, get) => ({
     contextFiles: [],
     commandPresets: [],
     chatProviders: [],
+    chatSidebarWidth: 260,
+    resourceSidebarWidth: 280,
 
     setTheme: (theme) => {
         set({ theme });
@@ -259,9 +275,17 @@ export const useAppStore = create<AppState>((set, get) => ({
                     { id: 'default-2', name: 'Review Code', command: '/review' },
                     { id: 'default-3', name: 'Generate Test', command: '/test' }
                 ],
-                chatProviders: config.chat_providers || [],
+                chatProviders: config.chat_providers && config.chat_providers.length > 0 ? config.chat_providers : (config.active_tools || []),
+                chatSidebarWidth: config.chat_sidebar_width || 260,
+                resourceSidebarWidth: config.resource_sidebar_width || 280,
                 isLoaded: true
             });
+
+            // Ensure activeChatToolId is set if missing but providers exist
+            const state = get();
+            if (!state.activeChatToolId && state.chatProviders.length > 0) {
+                set({ activeChatToolId: state.chatProviders[0] });
+            }
         } catch (e) {
             console.error("Load config failed", e);
         }
@@ -378,6 +402,14 @@ export const useAppStore = create<AppState>((set, get) => ({
     removeChatProvider: (provider) => {
         const { chatProviders } = get();
         set({ chatProviders: chatProviders.filter(p => p !== provider) });
+        persistConfig(get());
+    },
+    setChatSidebarWidth: (chatSidebarWidth) => {
+        set({ chatSidebarWidth });
+        persistConfig(get());
+    },
+    setResourceSidebarWidth: (resourceSidebarWidth) => {
+        set({ resourceSidebarWidth });
         persistConfig(get());
     },
 }));

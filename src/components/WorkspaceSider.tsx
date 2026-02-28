@@ -82,6 +82,8 @@ const WorkspaceSider: React.FC<WorkspaceSiderProps> = ({ sessionId, placement = 
         contextFiles,
         toggleContextFile,
         setPendingCommand,
+        resourceSidebarWidth,
+        setResourceSidebarWidth
     } = useAppStore();
 
     const [treeData, setTreeData] = useState<DataNode[]>([]);
@@ -253,7 +255,6 @@ const WorkspaceSider: React.FC<WorkspaceSiderProps> = ({ sessionId, placement = 
     };
 
     /* Resizable Sidebar Logic */
-    const [sidebarWidth, setSidebarWidth] = useState(280);
     const [isResizing, setIsResizing] = useState(false);
 
     useEffect(() => {
@@ -262,10 +263,10 @@ const WorkspaceSider: React.FC<WorkspaceSiderProps> = ({ sessionId, placement = 
             // Limit width between 200px and 600px
             if (placement === 'left') {
                 const newWidth = Math.max(200, Math.min(600, e.clientX));
-                setSidebarWidth(newWidth);
+                setResourceSidebarWidth(newWidth);
             } else {
                 const newWidth = Math.max(200, Math.min(600, window.innerWidth - e.clientX));
-                setSidebarWidth(newWidth);
+                setResourceSidebarWidth(newWidth);
             }
         };
 
@@ -289,7 +290,7 @@ const WorkspaceSider: React.FC<WorkspaceSiderProps> = ({ sessionId, placement = 
     return (
         <>
             <Sider
-                width={sidebarWidth}
+                width={resourceSidebarWidth}
                 style={{
                     background: token.colorBgContainer,
                     borderRadius: '8px',
@@ -475,14 +476,16 @@ const WorkspaceSider: React.FC<WorkspaceSiderProps> = ({ sessionId, placement = 
                                             </div>
                                             <ContextBucket />
                                         </div>
-                                    )
+                                    ),
+                                    style: { height: '100%' }
                                 },
                                 {
                                     key: 'search',
                                     label: <Space><div style={{ transform: 'rotate(90deg)' }}><SearchOutlined /></div>{t('terminal.tabs.search', 'Search')}</Space>,
                                     children: (
                                         <GlobalSearch onOpenFile={handleOpenEditor} />
-                                    )
+                                    ),
+                                    style: { height: '100%' }
                                 },
                                 {
                                     key: 'shortcuts',
@@ -491,10 +494,11 @@ const WorkspaceSider: React.FC<WorkspaceSiderProps> = ({ sessionId, placement = 
                                         <div style={{ height: '100%', overflow: 'hidden' }}>
                                             <CommandPresets sessionId={sessionId} />
                                         </div>
-                                    )
+                                    ),
+                                    style: { height: '100%' }
                                 }
                             ]}
-                            style={{ flex: 1, overflow: 'hidden', height: '100%' }}
+                            style={{ flex: 1, overflow: 'hidden', height: '100%', display: 'flex', flexDirection: 'column' }}
                         />
                     </div>
                 </div>

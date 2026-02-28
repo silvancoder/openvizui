@@ -1,6 +1,19 @@
 All notable changes to this project will be documented in this file.
 
-## [1.0.3] - 2026-02-26
+## [1.0.4] - 2026-02-27
+
+### Added
+- Implement resizable sidebars for the Chat and Resource panels with persistent widths
+- Restore auto-updater and application code signing features
+
+### Changed
+- Enhance SVG icons by removing hardcoded backgrounds and optimizing sizes
+- Beautify the UI with a modern mesh gradient background, glassmorphism cards, and refined soft shadows
+
+### Fixed
+- Fix missing properties (`global_instructions`, `chat_sidebar_width`) in the `AppConfig` type definitions
+
+## [1.0.3] - 2026-02-17
 
 ### Added
 - Add "Fetch Models" button in Chat Settings to dynamically retrieve model lists

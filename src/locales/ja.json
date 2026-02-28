@@ -9,7 +9,7 @@
         "restart": "セッション再起動"
       },
       "install": "インストール",
-      "docs": "ドキュメント",
+      "docs": "Docs",
       "installed": "インストール済",
       "uninstall": "アンインストール",
       "launch": "起動",
@@ -1084,6 +1084,17 @@
       "noApiKeyWarning": "⚠️ 右上の設定アイコンをクリックして、LLM APIキーとベースURLを設定してください。",
       "apiError": "\n\n**エラー：** APIリクエストに失敗しました。\n\n```json\n{{error}}\n```",
       "networkError": "\n\n**ネットワークエラー：** {{error}}",
-      "modelPlaceholder": "gpt-4o-mini, deepseek-chat..."
+      "modelPlaceholder": "gpt-4o-mini, deepseek-chat...",
+      "configTitle": "セッション構成",
+      "chatType": "チャットタイプ",
+      "mcp": "MCP",
+      "skills": "スキル",
+      "typeNormal": "通常",
+      "typeCode": "コード",
+      "typeDeep": "思考",
+      "saved": "設定を保存しました！",
+      "enterApiKey": "Please input an API Key",
+      "enterBaseUrl": "Please input the Base URL",
+      "enterModelId": "Please input the Model ID"
     }
 }

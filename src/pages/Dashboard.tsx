@@ -323,7 +323,7 @@ const Dashboard = () => {
                                             onClick={() => docLinks[tool.id] && openUrl(docLinks[tool.id])}
                                             disabled={!docLinks[tool.id]}
                                         >
-                                            {t('app.docs', 'Docs')}
+                                            {t('app.docs', 'Doc')}
                                         </Button>
                                     </Col>
                                 </Row>

@@ -59,3 +59,146 @@ body.dark ::-webkit-scrollbar-thumb:hover {
 body.dark ::-webkit-scrollbar-corner {
     background: transparent;
 }
+
+/* Ensure Tabs content takes up full height to allow internal scrolling */
+.ant-tabs-content-holder, 
+.ant-tabs-content,
+.ant-tabs-tabpane {
+    height: 100%;
+}
+
+/* --- Global Shadows for Modern UI --- */
+/* Card Shadows - Airy & Light */
+.ant-card {
+    /* Multi-layered shadow: sharp inner contact shadow + large diffuse shadow */
+    box-shadow: 0 4px 12px rgba(20, 24, 34, 0.02), 0 8px 30px rgba(20, 24, 34, 0.04) !important;
+    border-radius: 16px !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    /* Soft clean border to frame the card nicely */
+    border: 1px solid rgba(220, 226, 235, 0.8) !important;
+    background-color: #ffffff !important;
+}
+
+.ant-card:hover {
+    box-shadow: 0 8px 24px rgba(20, 24, 34, 0.04), 0 16px 40px rgba(20, 24, 34, 0.08) !important;
+    border-color: rgba(220, 226, 235, 1) !important;
+}
+
+body.dark .ant-card {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4), 0 12px 40px rgba(0, 0, 0, 0.6) !important;
+    border: 1px solid rgba(255, 255, 255, 0.06) !important;
+    background-color: rgba(30, 30, 35, 0.95) !important;
+}
+
+body.dark .ant-card:hover {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5), 0 16px 48px rgba(0, 0, 0, 0.7) !important;
+    border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Button Shadows & Texture */
+.ant-btn {
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02), 0 1px 2px rgba(0, 0, 0, 0.04) !important;
+}
+
+.ant-btn:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06) !important;
+    transform: translateY(-1px);
+}
+
+/* Primary buttons get the premium gradient and strong colored shadow */
+.ant-btn-primary {
+    background: linear-gradient(135deg, #1677ff 0%, #3a8cff 100%) !important;
+    border: none !important;
+    box-shadow: 0 4px 14px rgba(22, 119, 255, 0.3) !important;
+    color: #ffffff !important;
+}
+
+.ant-btn-primary:hover {
+    box-shadow: 0 6px 20px rgba(22, 119, 255, 0.45) !important;
+    transform: translateY(-1px);
+}
+
+/* Danger buttons texture */
+.ant-btn-dangerous {
+    box-shadow: 0 2px 6px rgba(255, 77, 79, 0.1) !important;
+}
+.ant-btn-dangerous:hover {
+    box-shadow: 0 4px 12px rgba(255, 77, 79, 0.2) !important;
+}
+
+/* Tags Texture (like the 'PRO', 'Installed' pills) */
+.ant-tag {
+    border-radius: 999px !important; /* Fully rounded pill shape */
+    padding: 2px 10px !important;    /* Thicker tag */
+    border: none !important;
+    font-weight: 600 !important;
+    box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.05) !important; /* Subtle inner border without sizing layout */
+    background-color: rgba(240, 242, 245, 0.8) !important; /* Soft default background */
+}
+
+/* Specific Tag Colors to be softer if they have color prop */
+.ant-tag[class*="ant-tag-success"],
+.ant-tag[class*="ant-tag-green"] {
+    background-color: rgba(230, 247, 235, 1) !important;
+    color: #2eb45a !important;
+}
+
+.ant-tag[class*="ant-tag-error"],
+.ant-tag[class*="ant-tag-red"] {
+    background-color: rgba(255, 240, 240, 1) !important;
+    color: #f75555 !important;
+}
+
+.ant-tag[class*="ant-tag-processing"],
+.ant-tag[class*="ant-tag-blue"],
+.ant-tag-has-color[style*="background-color: #1677ff"] {
+    background-color: rgba(230, 240, 255, 1) !important;
+    color: #1677ff !important;
+}
+
+
+body.dark .ant-btn {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2) !important;
+}
+body.dark .ant-btn-primary {
+    box-shadow: 0 4px 14px rgba(22, 119, 255, 0.2) !important;
+}
+body.dark .ant-btn-primary:hover {
+    box-shadow: 0 6px 20px rgba(22, 119, 255, 0.3) !important;
+}
+
+body.dark .ant-tag {
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1) !important;
+    background-color: rgba(40, 40, 45, 0.8) !important;
+    color: rgba(255, 255, 255, 0.65) !important;
+}
+
+body.dark .ant-tag[class*="ant-tag-success"],
+body.dark .ant-tag[class*="ant-tag-green"] {
+    background-color: rgba(46, 180, 90, 0.15) !important;
+    color: #4bd875 !important;
+}
+
+body.dark .ant-tag[class*="ant-tag-error"],
+body.dark .ant-tag[class*="ant-tag-red"] {
+    background-color: rgba(247, 85, 85, 0.15) !important;
+    color: #ff7777 !important;
+}
+
+
+/* Menu Item overrides for beautiful active states */
+.ant-menu-light .ant-menu-item-selected {
+    border-radius: 12px !important;
+    margin: 4px 8px !important;
+    width: calc(100% - 16px) !important;
+    /* Beautiful blue light shadow */
+    box-shadow: 0 4px 14px rgba(22, 119, 255, 0.25) !important;
+}
+
+.ant-menu-dark .ant-menu-item-selected {
+    border-radius: 12px !important;
+    margin: 4px 8px !important;
+    width: calc(100% - 16px) !important;
+    box-shadow: 0 4px 14px rgba(22, 119, 255, 0.4) !important;
+}

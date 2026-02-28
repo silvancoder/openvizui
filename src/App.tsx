@@ -29,6 +29,7 @@ function App() {
     const themeTokens: any = {
         colorPrimary: primaryColor,
         fontFamily: fontFamily,
+        borderRadius: 8,
     };
 
     if (textColor) {

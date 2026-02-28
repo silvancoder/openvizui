@@ -74,22 +74,26 @@ const ChatBubble: React.FC<ChatBubbleProps> = ({ content, type }) => {
                     .markdown-body {
                         font-family: inherit;
                         line-height: 1.6;
+                        color: ${token.colorText};
                     }
                     .markdown-body pre {
-                        background-color: #f6f8fa;
+                        background-color: ${token.colorFillTertiary};
+                        border: 1px solid ${token.colorBorderSecondary};
                         border-radius: 6px;
                         padding: 16px;
                         overflow: auto;
                         font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
                     }
                     .markdown-body code {
-                        background-color: rgba(175, 184, 193, 0.2);
+                        background-color: ${token.colorFillTertiary};
+                        color: ${token.colorWarningText};
                         border-radius: 6px;
                         padding: 0.2em 0.4em;
                         font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
                     }
                     .markdown-body pre code {
                         background-color: transparent;
+                        color: inherit;
                         padding: 0;
                     }
                     .markdown-body p {
