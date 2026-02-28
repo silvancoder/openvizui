@@ -49,6 +49,7 @@ Centralizza tutta la configurazione AI in un pannello. Gestisci skill installate
 |--------------|-------------|
 | **Area di Lavoro Multi-strumento** | Dashboard unificato per Claude Code, Gemini, OpenCode, Qoder, Copilot e Codex |
 | **App Store** | Installazione/disinstallazione con un clic di strumenti, linguaggi, database e servizi |
+| **Interfaccia Chat IA** | Interfaccia di conversazione moderna con selezione del modello, contesto dei file e integrazione del terminale |
 | **Impostazioni AI** | Gestione skill, configurazione CLI, setup server MCP e monitoraggio live |
 | **Terminale Integrato** | Terminale con multi-tab, albero file, ricerca globale e comandi predefiniti |
 | **Internazionalizzazione** | Supporto UI completo per 10 lingue: IT, EN, ZH, DE, ES, FR, JA, KO, PT, RU |

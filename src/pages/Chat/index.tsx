@@ -1,14 +1,15 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Layout, theme, Typography, Button, List, Space, Avatar, Modal, Popconfirm, Input, Form, message, Select, Row, Col, Switch, Divider } from 'antd';
+import { Layout, theme, Typography, Button, List, Space, Avatar, Popconfirm, Select, Switch, Divider } from 'antd';
 
 import ChatBubble from '../../components/chat/ChatBubble';
 import ChatInput from '../../components/chat/ChatInput';
+import ChatHelpModal from '../../components/chat/ChatHelpModal';
+import ChatSettingsModal from '../../components/chat/ChatSettingsModal';
 import { MessageOutlined, PlusOutlined, RobotOutlined, QuestionCircleOutlined, DeleteOutlined } from '@ant-design/icons';
 import { useAppStore } from '../../store/appStore';
 import { useChatStore } from '../../store/chatStore';
 import WorkspaceSider from '../../components/WorkspaceSider';
 import { useTranslation } from 'react-i18next';
-import { fetchRemoteModels } from '../../lib/tauri';
 
 const { Sider, Content, Header } = Layout;
 const { Title, Text } = Typography;
@@ -29,11 +30,6 @@ const ChatPage: React.FC = () => {
     const [inputValue, setInputValue] = useState('');
     const [attachedFiles, setAttachedFiles] = useState<string[]>([]);
     const messagesEndRef = useRef<HTMLDivElement>(null);
-
-    const [modelSelectOpen, setModelSelectOpen] = useState(false);
-    const [fetchedModels, setFetchedModels] = useState<string[]>([]);
-    const [fetchingModels, setFetchingModels] = useState(false);
-    const [form] = Form.useForm();
 
     const {
         activeChatToolId,
@@ -428,154 +424,20 @@ const ChatPage: React.FC = () => {
                 onOpenSettings={() => setIsSettingsModalOpen(true)}
             />
 
-            {/* Help Modal */}
-            <Modal
-                title={t('terminal.helpModalTitle', 'CLI Tools Quick Guide')}
+            <ChatHelpModal
                 open={isHelpModalOpen}
                 onCancel={() => setIsHelpModalOpen(false)}
-                footer={[
-                    <Button key="close" type="primary" onClick={() => setIsHelpModalOpen(false)}>
-                        {t('common.close', 'Close')}
-                    </Button>
-                ]}
-            >
-                <div style={{ padding: '8px 0', display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                    <div>
-                        <div dangerouslySetInnerHTML={{ __html: t('terminal.copilotHelp', '<b>GitHub Copilot</b>: Use <code>copilot [command]</code> or <code>?? [question]</code> to ask anything.').replace(/\*\*(.*?)\*\*/g, '<b>$1</b>').replace(/`([^`]+)`/g, '<code style="background-color:rgba(0,0,0,0.06);padding:2px 4px;border-radius:4px;">$1</code>') }} />
-                    </div>
-                    <div>
-                        <div dangerouslySetInnerHTML={{ __html: t('terminal.geminiHelp', '<b>Google Gemini</b>: Use <code>gemini [prompt]</code> to chat with Gemini. Use <code>gemini models</code> to list models.').replace(/\*\*(.*?)\*\*/g, '<b>$1</b>').replace(/`([^`]+)`/g, '<code style="background-color:rgba(0,0,0,0.06);padding:2px 4px;border-radius:4px;">$1</code>') }} />
-                    </div>
-                    <div>
-                        <div dangerouslySetInnerHTML={{ __html: t('terminal.claudeHelp', '<b>Anthropic Claude</b>: Use <code>claude [prompt]</code> to chat.').replace(/\*\*(.*?)\*\*/g, '<b>$1</b>').replace(/`([^`]+)`/g, '<code style="background-color:rgba(0,0,0,0.06);padding:2px 4px;border-radius:4px;">$1</code>') }} />
-                    </div>
-                    <div style={{ marginTop: '8px', paddingTop: '16px', borderTop: '1px solid #f0f0f0', color: token.colorTextSecondary, fontSize: '13px' }}>
-                        <div dangerouslySetInnerHTML={{ __html: t('terminal.generalHelp', 'Press <kbd>Shift + Tab</kbd> to switch focus between the input area and the chat history. Press <kbd>Ctrl + S</kbd> to save.').replace(/`([^`]+)`/g, '<kbd style="background-color:#fafafa;border:1px solid #d9d9d9;border-radius:3px;box-shadow:0 1px 0 rgba(0,0,0,0.2);color:#262626;display:inline-block;font-size:11px;line-height:1.4;margin:0 2px;padding:1px 5px;">$1</kbd>') }} />
-                    </div>
-                </div>
-            </Modal>
+            />
 
-            {/* Settings Modal */}
-            <Modal
-                title={t('chat.settingsModalTitle', 'LLM Configuration')}
+            <ChatSettingsModal
                 open={isSettingsModalOpen}
                 onCancel={() => setIsSettingsModalOpen(false)}
-                footer={null}
-                destroyOnHidden
-                width={500}
-            >
-                <Form
-                    form={form}
-                    layout="vertical"
-                    initialValues={{
-                        provider: activeChatToolId || '',
-                        apiKey: activeChatToolId ? toolConfigs[activeChatToolId]?.llmApiKey || '' : '',
-                        model: activeChatToolId && toolConfigs[activeChatToolId]?.llmModel ? [toolConfigs[activeChatToolId]?.llmModel] : [],
-                        baseUrl: activeChatToolId ? toolConfigs[activeChatToolId]?.llmBaseUrl || '' : ''
-                    }}
-                    onFinish={(values) => {
-                        const newProvider = values.provider.trim();
-                        if (newProvider) {
-                            addChatProvider(newProvider);
-                            const modelValue = Array.isArray(values.model) ? values.model[0] : values.model; // Extract single model from array
-                            setToolConfig(newProvider, {
-                                llmApiKey: values.apiKey,
-                                llmModel: modelValue,
-                                llmBaseUrl: values.baseUrl
-                            });
-                            setActiveChatToolId(newProvider);
-                            message.success(t('chat.saved', 'Settings saved!'));
-                            setIsSettingsModalOpen(false);
-                        }
-                    }}
-                >
-                    <Form.Item
-                        label={t('chat.serviceProvider', 'Service Provider')}
-                        name="provider"
-                        rules={[{ required: true, message: t('chat.enterProviderName', 'Please input a provider name') }]}
-                    >
-                        <Input placeholder="e.g. google, openai, deepseek..." />
-                    </Form.Item>
-                    <Form.Item
-                        label={t('chat.apiKey', 'API Key')}
-                        name="apiKey"
-                        rules={[{ required: true, message: t('chat.enterApiKey', 'Please input an API Key') }]}
-                    >
-                        <Input.Password placeholder="sk-..." />
-                    </Form.Item>
-                    <Form.Item
-                        label={t('chat.baseUrl', 'Base URL')}
-                        name="baseUrl"
-                        rules={[{ required: true, message: t('chat.enterBaseUrl', 'Please input the Base URL') }]}
-                    >
-                        <Input placeholder="https://api.openai.com/v1" />
-                    </Form.Item>
-                    <Form.Item
-                        label={t('chat.model', 'Model Name')}
-                        tooltip={t('chat.modelTooltip', 'Select or type a model ID')}
-                    >
-                        <Row gutter={8}>
-                            <Col flex="auto">
-                                <Form.Item
-                                    name="model"
-                                    noStyle
-                                    rules={[{ required: true, message: t('chat.enterModelId', 'Please input the Model ID') }]}
-                                    getValueFromEvent={(val) => Array.isArray(val) ? val : [val]}
-                                >
-                                    <Select
-                                        mode="tags"
-                                        maxCount={1}
-                                        open={modelSelectOpen}
-                                        onOpenChange={setModelSelectOpen}
-                                        onSelect={() => setModelSelectOpen(false)}
-                                        onChange={(val) => {
-                                            // Always keep only the last selected/typed item
-                                            const newVal = Array.isArray(val) ? val.slice(-1) : [val];
-                                            form.setFieldValue('model', newVal);
-                                        }}
-                                        options={fetchedModels.map((m: string) => ({ value: m, label: m }))}
-                                        placeholder={t('chat.modelPlaceholder', 'gpt-4o-mini, deepseek-chat...')}
-                                        style={{ width: '100%' }}
-                                    />
-                                </Form.Item>
-                            </Col>
-                            <Col>
-                                <Button
-                                    loading={fetchingModels}
-                                    onClick={async () => {
-                                        const values = form.getFieldsValue();
-                                        if (!values.baseUrl || !values.apiKey) {
-                                            message.warning(t('chat.fetchErrorNoConfig', 'Please fill in Base URL and API Key first'));
-                                            return;
-                                        }
-                                        setFetchingModels(true);
-                                        try {
-                                            const models = await fetchRemoteModels(values.baseUrl, values.apiKey);
-                                            setFetchedModels(models);
-                                            setModelSelectOpen(true);
-                                            message.success(t('chat.fetchSuccess', 'Fetched {{count}} models', { count: models.length }));
-                                        } catch (e) {
-                                            message.error(t('chat.fetchError', 'Failed to fetch models'));
-                                        } finally {
-                                            setFetchingModels(false);
-                                        }
-                                    }}
-                                >
-                                    {t('chat.fetchModels', 'Fetch')}
-                                </Button>
-                            </Col>
-                        </Row>
-                    </Form.Item>
-                    <Form.Item style={{ marginBottom: 0, textAlign: 'right' }}>
-                        <Button onClick={() => setIsSettingsModalOpen(false)} style={{ marginRight: 8 }}>
-                            {t('common.cancel', 'Cancel')}
-                        </Button>
-                        <Button type="primary" htmlType="submit">
-                            {t('common.save', 'Save')}
-                        </Button>
-                    </Form.Item>
-                </Form>
-            </Modal>
+                activeChatToolId={activeChatToolId || undefined}
+                toolConfigs={toolConfigs}
+                addChatProvider={addChatProvider}
+                setToolConfig={setToolConfig}
+                setActiveChatToolId={setActiveChatToolId}
+            />
 
             {/* Resize Overlay */}
             {isResizing && (

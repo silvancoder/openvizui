@@ -49,6 +49,7 @@ Zentralisieren Sie alle KI-Konfigurationen in einem Panel. Installierte Skills v
 |----------|--------------|
 | **Multi-Tool-Workbench** | Einheitliches Dashboard für Claude Code, Gemini, OpenCode, Qoder, Copilot & Codex |
 | **App Store** | Ein-Klick-Installation/Deinstallation von Dev-Tools, Sprachen, Datenbanken und Diensten |
+| **KI-Chat-Schnittstelle** | Moderne Konversationsoberfläche mit Modellauswahl, Dateikontext und Terminalintegration |
 | **AI-Einstellungen** | Skill-Verwaltung, CLI-Konfiguration, MCP-Server-Setup und Live-Monitoring |
 | **Integriertes Terminal** | Eingebautes Terminal mit Multi-Tab, Dateibaum, globaler Suche und Befehlsvorlagen |
 | **Internationalisierung** | Vollständige UI-Unterstützung für 10 Sprachen: DE, EN, ZH, ES, FR, IT, JA, KO, PT, RU |

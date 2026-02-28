@@ -49,6 +49,7 @@ Centralice toda la configuración de AI en un panel. Gestione habilidades instal
 |----------------|-------------|
 | **Área de Trabajo Multi-herramienta** | Panel unificado para Claude Code, Gemini, OpenCode, Qoder, Copilot y Codex |
 | **Tienda de Aplicaciones** | Instalación/desinstalación con un clic de herramientas, lenguajes, bases de datos y servicios |
+| **Interfaz de Chat de IA** | Interfaz de conversación moderna con selección de modelo, contexto de archivos e integración de terminal |
 | **Configuración AI** | Gestión de habilidades, configuración CLI, configuración de servidores MCP y monitoreo en vivo |
 | **Terminal Integrado** | Terminal con multi-pestaña, árbol de archivos, búsqueda global y comandos predefinidos |
 | **Internacionalización** | Soporte completo de UI para 10 idiomas: ES, EN, ZH, DE, FR, IT, JA, KO, PT, RU |

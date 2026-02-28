@@ -195,7 +195,7 @@ const MainLayout = () => {
                             <EnvironmentStatusInfo />
                         </div>
                         <div style={{ color: token.colorTextSecondary, fontSize: '10px', whiteSpace: 'nowrap' }}>
-                            OpenVizUI v1.0.4
+                            OpenVizUI v1.0.5
                         </div>
                     </Footer>
                 </Layout>

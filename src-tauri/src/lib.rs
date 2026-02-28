@@ -1348,8 +1348,8 @@ async fn inspect_mcp_server(
         "method": "initialize",
         "params": {
             "capabilities": {},
-            "clientInfo": {"name": "OpenVizUI", "version": "1.0.4"},
-            "protocolVersion": "2026-02-27"
+            "clientInfo": {"name": "OpenVizUI", "version": "1.0.5"},
+            "protocolVersion": "2026-03-12"
         }
     });
     

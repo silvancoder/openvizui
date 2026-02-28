@@ -16,11 +16,7 @@ import { useAppStore } from '../store/appStore';
 
 const { Title } = Typography;
 
-interface ToolItem {
-    id: string;
-    name: string;
-    icon: React.ReactNode;
-}
+import { TOOLS_METADATA } from '../constants/tools';
 
 const Dashboard = () => {
     const { token } = theme.useToken();
@@ -35,7 +31,7 @@ const Dashboard = () => {
     const [selectedToolToAdd, setSelectedToolToAdd] = useState<string | null>(null);
     const [addingTool, setAddingTool] = useState(false);
 
-    const ToolIcon = ({ name, color }: { id: string, name: string, color: string }) => {
+    const ToolIcon = ({ name, color }: { name: string, color: string }) => {
         return (
             <div style={{
                 width: 36,
@@ -58,54 +54,21 @@ const Dashboard = () => {
         );
     };
 
-    const toolDefs: ToolItem[] = [
-        {
-            id: 'claude',
-            name: t('tools.claude'),
-            icon: <ToolIcon id="claude" name="Claude" color="#D97757" />
-        },
-        {
-            id: 'google',
-            name: t('tools.google'),
-            icon: <ToolIcon id="google" name="Google" color="#4285F4" />
-        },
-        {
-            id: 'opencode',
-            name: t('tools.opencode'),
-            icon: <ToolIcon id="opencode" name="OpenCode" color="#0EA5E9" />
-        },
-        {
-            id: 'qoder',
-            name: t('tools.qoder'),
-            icon: <ToolIcon id="qoder" name="Qoder" color="#8B5CF6" />
-        },
-        {
-            id: 'codebuddy',
-            name: t('tools.codebuddy'),
-            icon: <ToolIcon id="codebuddy" name="CodeBuddy" color="#F59E0B" />
-        },
-        {
-            id: 'copilot',
-            name: t('tools.copilot'),
-            icon: <ToolIcon id="copilot" name="Copilot" color="#6366F1" />
-        },
-        {
-            id: 'codex',
-            name: t('tools.codex'),
-            icon: <ToolIcon id="codex" name="Codex" color="#14B8A6" />
-        },
+    // Filter tools to display
+    const toolsToDisplay = TOOLS_METADATA
+        .filter(def => activeTools.includes(def.id))
+        .map(def => {
+            const status = toolStatuses[def.id];
+            return {
+                ...def,
+                icon: <ToolIcon name={def.displayName} color={def.color} />,
+                status: status?.installed ? 'installed' : 'not_installed',
+                version: status?.version || '-'
+            };
+        });
 
-    ];
+    const availableToolsToAdd = TOOLS_METADATA.filter(t => !activeTools.includes(t.id));
 
-    const docLinks: Record<string, string> = {
-        'copilot': 'https://docs.github.com/en/copilot/how-tos/copilot-cli',
-        'claude': 'https://code.claude.com/docs',
-        'google': 'https://geminicli.com/docs',
-        'opencode': 'https://opencode.ai/docs',
-        'qoder': 'https://docs.qoder.com/cli/using-cli',
-        'codebuddy': 'https://www.codebuddy.ai/docs/cli/overview',
-        'codex': 'https://developers.openai.com/codex/cli'
-    };
 
     // When activeTools changes, refresh their status
     // Only auto-refresh if we don't have statuses for them yet (e.g. initial load)
@@ -218,19 +181,7 @@ const Dashboard = () => {
         navigate('/terminal');
     };
 
-    // Filter tools to display
-    const toolsToDisplay = toolDefs
-        .filter(def => activeTools.includes(def.id))
-        .map(def => {
-            const status = toolStatuses[def.id];
-            return {
-                ...def,
-                status: status?.installed ? 'installed' : 'not_installed', // Should mostly be installed
-                version: status?.version || '-'
-            };
-        });
 
-    const availableToolsToAdd = toolDefs.filter(t => !activeTools.includes(t.id));
 
     const DashboardSkeleton = () => (
         <div style={{ padding: '24px', maxWidth: 1200, margin: '0 auto', width: '100%' }}>
@@ -284,7 +235,7 @@ const Dashboard = () => {
                 {toolsToDisplay.map((tool) => (
                     <Col xs={24} sm={12} md={8} lg={6} key={tool.id}>
                         <Card
-                            title={tool.name}
+                            title={tool.displayName}
                             extra={tool.icon}
                         >
                             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
@@ -320,8 +271,8 @@ const Dashboard = () => {
                                         <Button
                                             block
                                             style={{ padding: '4px 0' }}
-                                            onClick={() => docLinks[tool.id] && openUrl(docLinks[tool.id])}
-                                            disabled={!docLinks[tool.id]}
+                                            onClick={() => tool.docsUrl && openUrl(tool.docsUrl)}
+                                            disabled={!tool.docsUrl}
                                         >
                                             {t('app.docs', 'Doc')}
                                         </Button>
@@ -397,7 +348,7 @@ const Dashboard = () => {
                     placeholder={t('app.addToolModal.placeholder', 'Select a tool')}
                     onChange={setSelectedToolToAdd}
                     value={selectedToolToAdd}
-                    options={availableToolsToAdd.map(t => ({ value: t.id, label: t.name }))}
+                    options={availableToolsToAdd.map(t => ({ value: t.id, label: t.displayName }))}
                 />
             </Modal>
         </div>

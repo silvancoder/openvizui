@@ -49,6 +49,7 @@ Centralize toda a configuração AI em um painel. Gerencie skills instaladas, co
 |----------------|------------|
 | **Estação Multi-ferramenta** | Painel unificado para Claude Code, Gemini, OpenCode, Qoder, Copilot e Codex |
 | **Loja de Aplicativos** | Instalação/desinstalação com um clique de ferramentas, linguagens, bancos de dados e serviços |
+| **Interface de Chat de IA** | Interface de conversa moderna com seleção de modelo, contexto de ficheiros e integração de terminal |
 | **Configurações AI** | Gerenciamento de skills, configuração CLI, setup de servidores MCP e monitoramento ao vivo |
 | **Terminal Integrado** | Terminal com multi-aba, árvore de arquivos, pesquisa global e comandos predefinidos |
 | **Internacionalização** | Suporte completo de UI para 10 idiomas: PT, EN, ZH, DE, ES, FR, IT, JA, KO, RU |

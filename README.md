@@ -29,19 +29,19 @@ OpenVizUI is a modern desktop application that provides a unified, beautiful, an
 
 Manage all your AI CLI tools in one place. View installation status, version info, and run, update, or uninstall tools with a single click. Supports Claude Code, Gemini, OpenCode, Qoder, GitHub Copilot, and more.
 
-![Workbench](docs/openvizui-01.png)
+![Workbench](docs/openvizui-01.jpg)
 
 ### 🏪 App Store — Developer Environment
 
 Discover and install programming languages, databases, web servers, cache systems, and container tools directly from the built-in App Store. Categories include Languages, Web Services, Databases, Cache & Queue, Tools & Containers.
 
-![App Store](docs/openvizui-02.png)
+![App Store](docs/openvizui-02.jpg)
 
 ### 🤖 AI Settings — Skills & MCP Configuration
 
 Centralize all AI configuration in one panel. Manage installed skills, configure CLI parameters, set up MCP servers, monitor skill activity, and fine-tune provider settings across tabs: Skills Management, CLI Config, MCP Config, Skill Monitor, MCP Monitor, and More Settings.
 
-![AI Settings](docs/openvizui-03.png)
+![AI Settings](docs/openvizui-03.jpg)
 
 ## Key Features
 
@@ -49,7 +49,8 @@ Centralize all AI configuration in one panel. Manage installed skills, configure
 |---------|-------------|
 | **Multi-tool Workbench** | Unified dashboard for Claude Code, Gemini, OpenCode, Qoder, Copilot & Codex |
 | **App Store** | One-click install/uninstall of dev tools, languages, databases, and services |
-| **AI Settings** | Skills management, CLI config, MCP server setup, Plugins management,and live monitoring |
+| **AI Chat Interface** | Modern conversation UI with Model selection, file context, and terminal integration |
+| **AI Settings** | Skills management, CLI config, MCP server setup, Plugins management, and live monitoring |
 | **Integrated Terminal** | Built-in terminal with multi-tab support, file tree, global search, and command presets |
 | **Internationalization** | Full UI support for 10 languages: EN, ZH, DE, ES, FR, IT, JA, KO, PT, RU |
 | **Theme & Appearance** | Light/Dark mode, custom primary color, font, and window opacity control |

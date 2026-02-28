@@ -1,5 +1,18 @@
 All notable changes to this project will be documented in this file.
 
+## [1.0.5] - 2026-03-12
+
+### Added
+- Centralize tool metadata in `src/constants/tools.ts` for better consistency
+
+### Changed
+- Refactor `AISettings.tsx` into multiple focused sub-components (`SkillsTab`, `CliConfigTab`, etc.)
+- Optimize `Dashboard.tsx` to use unified tool metadata definitions
+- Improve code organization and maintainability by reducing redundancy
+
+### Fixed
+- Resolve lint errors and clean up unused code and imports
+
 ## [1.0.4] - 2026-02-27
 
 ### Added
