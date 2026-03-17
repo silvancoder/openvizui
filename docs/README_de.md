@@ -29,19 +29,19 @@ OpenVizUI ist eine moderne Desktop-Anwendung, die eine einheitliche, schöne und
 
 Verwalten Sie alle AI-CLI-Tools an einem Ort. Zeigen Sie Installationsstatus und Versionsinformationen an und führen Sie Tools mit einem Klick aus, aktualisieren oder deinstallieren Sie sie. Unterstützt Claude Code, Gemini, OpenCode, Qoder, GitHub Copilot und mehr.
 
-![Workbench](ScreenShot_2026-02-21_134214_518.png)
+![Workbench](openvizui-01.jpg)
 
 ### 🏪 App Store — Entwicklerumgebung
 
 Entdecken und installieren Sie Programmiersprachen, Datenbanken, Webserver, Cache-Systeme und Container-Tools direkt aus dem integrierten App Store. Kategorien: Sprachen, Webdienste, Datenbanken, Cache & Queue, Tools & Container.
 
-![App Store](ScreenShot_2026-02-21_134225_527.png)
+![App Store](openvizui-02.jpg)
 
 ### 🤖 AI-Einstellungen — Skills & MCP-Konfiguration
 
 Zentralisieren Sie alle KI-Konfigurationen in einem Panel. Installierte Skills verwalten, CLI-Parameter konfigurieren, MCP-Server einrichten und Skill-Aktivitäten überwachen: Skills, CLI Config, MCP Config, Skill Monitor, MCP Monitor.
 
-![AI Settings](ScreenShot_2026-02-21_134233_038.png)
+![AI Settings](openvizui-03.jpg)
 
 ## Hauptfunktionen
 

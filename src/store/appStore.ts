@@ -104,7 +104,7 @@ interface AppState {
 let saveTimeout: any = null;
 const persistConfig = (state: AppState) => {
     if (!state.isLoaded) return;
-    
+
     if (saveTimeout) {
         clearTimeout(saveTimeout);
     }

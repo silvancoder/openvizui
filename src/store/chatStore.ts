@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { getChatSessions, saveChatSessions, type ChatMessage } from '../lib/tauri';
 
-export interface Message extends ChatMessage {}
+export interface Message extends ChatMessage { }
 
 export interface ChatSession {
     id: string;
@@ -58,18 +58,18 @@ export const useChatStore = create<ChatState>((set, get) => ({
             const data = await getChatSessions();
             const sessions: ChatSession[] = [];
             const messages: Record<string, Message[]> = {};
-            
+
             data.forEach((s: any) => {
                 const { messages: msgs, ...sessionData } = s;
                 sessions.push(sessionData);
                 messages[s.id] = msgs || [];
             });
 
-            set({ 
-                sessions, 
-                messages, 
+            set({
+                sessions,
+                messages,
                 activeSessionId: sessions[0]?.id || null,
-                isLoaded: true 
+                isLoaded: true
             });
         } catch (e) {
             console.error("Failed to load sessions", e);
@@ -217,10 +217,10 @@ export const useChatStore = create<ChatState>((set, get) => ({
     updateSessionConfig: (sessionId: string, config: Partial<ChatSession['config']>) => {
         set((state) => ({
             sessions: state.sessions.map((s) =>
-                s.id === sessionId ? { 
-                    ...s, 
+                s.id === sessionId ? {
+                    ...s,
                     config: { ...s.config, ...config },
-                    updatedAt: Date.now() 
+                    updatedAt: Date.now()
                 } : s
             ),
         }));

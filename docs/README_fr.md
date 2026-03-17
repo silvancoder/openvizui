@@ -29,19 +29,19 @@ OpenVizUI est une application de bureau moderne qui offre une interface de visua
 
 Gérez tous vos outils AI CLI en un seul endroit. Consultez le statut d'installation et les informations de version, et exécutez, mettez à jour ou désinstallez des outils en un seul clic. Compatible avec Claude Code, Gemini, OpenCode, Qoder, GitHub Copilot et plus.
 
-![Etabli](ScreenShot_2026-02-21_134214_518.png)
+![Etabli](openvizui-01.jpg)
 
 ### 🏪 Boutique d'Applications — Environnement de Développement
 
 Découvrez et installez des langages de programmation, des bases de données, des serveurs web, des systèmes de cache et des outils de conteneurs directement depuis la boutique intégrée. Catégories : Langages, Services Web, Bases de Données, Cache & File d'attente, Outils & Conteneurs.
 
-![Boutique d'Applications](ScreenShot_2026-02-21_134225_527.png)
+![Boutique d'Applications](openvizui-02.jpg)
 
 ### 🤖 Paramètres AI — Compétences & Configuration MCP
 
 Centralisez toute la configuration AI dans un panneau. Gérez les compétences installées, configurez les paramètres CLI, configurez les serveurs MCP, surveillez l'activité. Onglets : Gestion des Compétences, Config CLI, Config MCP, Moniteur de Compétences, Moniteur MCP.
 
-![Paramètres AI](ScreenShot_2026-02-21_134233_038.png)
+![Paramètres AI](openvizui-03.jpg)
 
 ## Fonctionnalités Principales
 
