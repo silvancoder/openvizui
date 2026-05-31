@@ -1,6 +1,9 @@
 name: Release
 run-name: Release ${{ github.ref_name }} by @${{ github.actor }}
 on:
+  push:
+    tags:
+      - 'v*'
   workflow_dispatch:
 
 jobs:
