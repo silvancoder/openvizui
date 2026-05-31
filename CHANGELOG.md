@@ -1,5 +1,23 @@
 All notable changes to this project will be documented in this file.
 
+## [1.0.6] - 2026-05-31
+
+### Added
+- Implemented `i18next-resources-to-backend` for dynamic lazy-loading of locale JSON files.
+- Introduced `manualChunks` strategy in Vite to independently cache heavy vendor modules (`antd`, `xterm`, `monaco`).
+
+### Changed
+- Rebuilt frontend state management using Zustand `persist` middleware with native Tauri file system storage for reliability.
+- Comprehensively modularized the backend monolithic `lib.rs` (1700+ lines) into clean, macro-qualified submodules (`pty`, `env`, `fs`, `chat`, `config`, `skills`).
+- Converted background terminal processes like `install_tool` to asynchronous `tokio` tasks, completely preventing application UI freezes.
+- Migrated all primary routing views (`Dashboard`, `Terminal`, `Settings`, etc.) to `React.lazy` and `<Suspense>` for on-demand code splitting.
+- Decoupled `Terminal` component lifecycle, enabling seamless theme color hot-updates without terminating active PTY sessions.
+
+### Fixed
+- Enforced strict Content Security Policy (CSP) headers in `tauri.conf.json`.
+- Hardened default filesystem capabilities by restricting scopes exclusively to `$APPCONFIG`, `$APPDATA`, and `$HOME`.
+- Replaced hardcoded Windows PowerShell uninstallation scripts with robust cross-platform Node/npm command wrappers.
+
 ## [1.0.5] - 2026-03-12
 
 ### Added

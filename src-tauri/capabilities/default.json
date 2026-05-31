@@ -22,9 +22,8 @@
       {
         "identifier": "fs:scope",
         "allow": [
-          "C:/**",
-          "D:/**",
-          "E:/**",
+          "$APPCONFIG/**",
+          "$APPDATA/**",
           "$HOME/**"
         ]
       }

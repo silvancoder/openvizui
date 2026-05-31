@@ -22,6 +22,7 @@ import { useEffect, useState } from 'react';
 import EnvironmentStatusInfo from '../components/EnvironmentStatusInfo';
 import Logo from '../components/Logo';
 import TitleBar from '../components/TitleBar';
+import { languageList } from '../constants/i18n';
 
 const { Header, Content, Sider, Footer } = Layout;
 
@@ -160,18 +161,7 @@ const MainLayout = () => {
                                 style={{ width: 100 }}
                                 size="small"
                                 variant="borderless"
-                                options={[
-                                    { value: 'en', label: 'English' },
-                                    { value: 'zh', label: '中文' },
-                                    { value: 'de', label: 'Deutsch' },
-                                    { value: 'es', label: 'Español' },
-                                    { value: 'fr', label: 'Français' },
-                                    { value: 'it', label: 'Italiano' },
-                                    { value: 'ja', label: '日本語' },
-                                    { value: 'ko', label: '한국어' },
-                                    { value: 'pt', label: 'Português' },
-                                    { value: 'ru', label: 'Русский' },
-                                ]}
+                                options={languageList}
                             />
                             <Switch
                                 checkedChildren="Dark"

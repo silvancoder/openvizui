@@ -13,6 +13,8 @@ import { useAppStore } from '../store/appStore';
 import { useState, useEffect } from 'react';
 import { checkEnvironment, type EnvironmentStatus } from '../lib/tauri';
 import { ReloadOutlined, CheckCircleOutlined, WarningOutlined, CodeOutlined } from '@ant-design/icons';
+import { terminalPresets } from '../constants/terminal';
+import { languageList } from '../constants/i18n';
 
 const { Title } = Typography;
 
@@ -51,18 +53,7 @@ const Settings = () => {
                         <Select
                             value={useAppStore.getState().language}
                             onChange={setLanguage}
-                            options={[
-                                { value: "en", label: "English" },
-                                { value: "zh", label: "中文" },
-                                { value: "de", label: "Deutsch" },
-                                { value: "es", label: "Español" },
-                                { value: "fr", label: "Français" },
-                                { value: "it", label: "Italiano" },
-                                { value: "ja", label: "日本語" },
-                                { value: "ko", label: "한국어" },
-                                { value: "pt", label: "Português" },
-                                { value: "ru", label: "Русский" },
-                            ]}
+                            options={languageList}
                         />
                     </Form.Item>
                     <Form.Item label={t('settings.theme')}>
@@ -205,14 +196,6 @@ const Settings = () => {
             primaryColor
         } = useAppStore();
 
-        const terminalPresets = [
-            { name: 'Default Dark', bg: '#1e1e1e', fg: '#d4d4d4' },
-            { name: 'One Dark', bg: '#282c34', fg: '#abb2bf' },
-            { name: 'Dracula', bg: '#282a36', fg: '#f8f8f2' },
-            { name: 'Monokai', bg: '#272822', fg: '#f8f8f2' },
-            { name: 'Nord', bg: '#2e3440', fg: '#d8dee9' },
-            { name: 'Solarized Dark', bg: '#002b36', fg: '#839496' }
-        ];
 
         const terminalFonts = ['Cascadia Code', 'Fira Code', 'JetBrains Mono', 'Source Code Pro', 'Ubuntu Mono', 'monospace'];
 

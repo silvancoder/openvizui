@@ -6,15 +6,15 @@
  */
 
 import { Card, Button, Input, List, Space, Row, Col, Modal, Form, Radio, Typography, message } from 'antd';
-import {
-    InfoCircleOutlined,
-    SaveOutlined,
-    DeploymentUnitOutlined,
-    ThunderboltOutlined,
-    DashboardOutlined,
-    ExportOutlined,
-    ImportOutlined,
-    BookOutlined,
+import { 
+    InfoCircleOutlined, 
+    SaveOutlined, 
+    DeploymentUnitOutlined, 
+    ThunderboltOutlined, 
+    DashboardOutlined, 
+    ExportOutlined, 
+    ImportOutlined, 
+    BookOutlined, 
     GlobalOutlined,
     CopyOutlined
 } from '@ant-design/icons';
@@ -323,30 +323,30 @@ ${tools.map(tool => `- ${tool.displayName}`).join('\n')}
                             styles={{ body: { padding: '12px 24px' } }}
                             style={{ marginTop: 24 }}
                         >
-                            <List
-                                dataSource={CLI_DOCS}
-                                renderItem={item => (
-                                    <List.Item
-                                        style={{ flexWrap: 'nowrap' }}
-                                        actions={[
-                                            <Button
-                                                type="link"
-                                                size="small"
-                                                style={{ padding: '0 4px' }}
-                                                icon={<GlobalOutlined />}
-                                                onClick={() => invoke('open_url', { url: item.url })}
-                                            >
-                                                {t('aiSettings.moreConfigs.docs.visit')}
-                                            </Button>
-                                        ]}
-                                    >
-                                        <List.Item.Meta
-                                            title={<Text strong ellipsis={{ tooltip: item.name }}>{item.name}</Text>}
-                                            avatar={<InfoCircleOutlined style={{ color: '#1890ff' }} />}
-                                        />
-                                    </List.Item>
-                                )}
-                            />
+                             <List
+                                 dataSource={CLI_DOCS}
+                                 renderItem={item => (
+                                     <List.Item
+                                         style={{ flexWrap: 'nowrap' }}
+                                         actions={[
+                                             <Button
+                                                 type="link"
+                                                 size="small"
+                                                 style={{ padding: '0 4px' }}
+                                                 icon={<GlobalOutlined />}
+                                                 onClick={() => invoke('open_url', { url: item.url })}
+                                             >
+                                                 {t('aiSettings.moreConfigs.docs.visit')}
+                                             </Button>
+                                         ]}
+                                     >
+                                         <List.Item.Meta
+                                             title={<Text strong ellipsis={{ tooltip: item.name }}>{item.name}</Text>}
+                                             avatar={<InfoCircleOutlined style={{ color: '#1890ff' }} />}
+                                         />
+                                     </List.Item>
+                                 )}
+                             />
                         </Card>
                     </Col>
                 </Row>

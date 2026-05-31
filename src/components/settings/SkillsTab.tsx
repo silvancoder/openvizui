@@ -56,9 +56,9 @@ const SkillsTab = ({
                                 onChange={(val) => setActiveDir(val)}
                                 options={[
                                     { label: '.agents (Default)', value: 'agents' },
-                                    ...tools.map(tool => ({
-                                        label: `.${tool.displayName.toLowerCase()}`,
-                                        value: tool.displayName.toLowerCase()
+                                    ...tools.map(tool => ({ 
+                                        label: `.${tool.displayName.toLowerCase()}`, 
+                                        value: tool.displayName.toLowerCase() 
                                     }))
                                 ]}
                                 style={{ width: 160 }}

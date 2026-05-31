@@ -7,31 +7,15 @@
 
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
+// Only the default language is loaded synchronously to minimize initial bundle size (#6).
+// All other languages are loaded on demand via loadLanguage().
 import en from './locales/en.json';
-import zh from './locales/zh.json';
-import de from './locales/de.json';
-import es from './locales/es.json';
-import fr from './locales/fr.json';
-import it from './locales/it.json';
-import ja from './locales/ja.json';
-import ko from './locales/ko.json';
-import pt from './locales/pt.json';
-import ru from './locales/ru.json';
 
 i18n
     .use(initReactI18next)
     .init({
         resources: {
             en: { translation: en },
-            zh: { translation: zh },
-            de: { translation: de },
-            es: { translation: es },
-            fr: { translation: fr },
-            it: { translation: it },
-            ja: { translation: ja },
-            ko: { translation: ko },
-            pt: { translation: pt },
-            ru: { translation: ru },
         },
         lng: 'en',
         fallbackLng: 'en',
@@ -39,5 +23,21 @@ i18n
             escapeValue: false,
         },
     });
+
+/** Dynamically load and apply a locale that isn't bundled at startup. */
+export const loadLanguage = async (lang: string): Promise<void> => {
+    if (lang === 'en') return; // already loaded
+    if (i18n.hasResourceBundle(lang, 'translation')) {
+        await i18n.changeLanguage(lang);
+        return;
+    }
+    try {
+        const module = await import(`./locales/${lang}.json`);
+        i18n.addResourceBundle(lang, 'translation', module.default, true, true);
+        await i18n.changeLanguage(lang);
+    } catch (e) {
+        console.warn(`Failed to load locale "${lang}", falling back to English.`, e);
+    }
+};
 
 export default i18n;

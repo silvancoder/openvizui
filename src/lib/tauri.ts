@@ -396,3 +396,39 @@ export const getLocalModels = async (provider: string): Promise<string[]> => {
         return [];
     }
 }
+
+/**
+ * 运行时动态授权指定目录的读写权限。
+ * 在用户通过系统对话框选择目录后立即调用，使该目录（及子目录）
+ * 进入 Tauri fs scope，后续 readDir / readTextFile / writeTextFile 才能正常工作。
+ */
+export const allowDirectory = async (path: string): Promise<void> => {
+    try {
+        await invoke('allow_directory', { path });
+    } catch (e) {
+        console.warn("Allow directory failed (Browser Mode)", e);
+    }
+}
+
+export interface LLMMessage {
+    role: 'user' | 'assistant' | 'system';
+    content: string;
+}
+
+/**
+ * Chat completion proxy via Rust backend (#11).
+ * The API key is handled server-side and never exposed to the renderer process.
+ */
+export const chatCompletion = async (
+    apiKey: string,
+    baseUrl: string,
+    model: string,
+    messages: LLMMessage[],
+): Promise<string> => {
+    return await invoke<string>('chat_completion', {
+        apiKey,
+        baseUrl,
+        model,
+        messages,
+    });
+}

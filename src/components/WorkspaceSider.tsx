@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Layout, Select, Space, Button, Tree, Typography, theme, message, Dropdown, Modal, Tabs } from 'antd';
+import { Select, Space, Button, Tree, Typography, theme, message, Dropdown, Modal, Tabs } from 'antd';
 import {
     FolderOutlined,
     CodeOutlined,
@@ -14,15 +14,15 @@ import { useTranslation } from 'react-i18next';
 import { readDir, remove, readTextFile, writeTextFile } from '@tauri-apps/plugin-fs';
 import { open as openDialog } from '@tauri-apps/plugin-dialog';
 import type { DataNode } from 'antd/es/tree';
-import { ptyWrite } from '../lib/tauri';
+import { ptyWrite, allowDirectory } from '../lib/tauri';
 import { invoke } from '@tauri-apps/api/core';
 import ModelSwitcher from './ModelSwitcher';
 import ContextBucket from './ContextBucket';
 import CommandPresets from './CommandPresets';
 import GlobalSearch from './GlobalSearch';
 import DiffViewer from './DiffViewer';
+import ResizableSider from './ResizableSider';
 
-const { Sider } = Layout;
 const { Text } = Typography;
 
 export const TOOL_COMMANDS: Record<string, string> = {
@@ -149,7 +149,11 @@ const WorkspaceSider: React.FC<WorkspaceSiderProps> = ({ sessionId, placement = 
                 directory: true,
                 multiple: false,
             });
-            if (selected && typeof selected === 'string') setCurrentDirectory(selected);
+            if (selected && typeof selected === 'string') {
+                // 动态将用户选择的目录加入 fs scope，支持任意盘符的项目切换
+                await allowDirectory(selected);
+                setCurrentDirectory(selected);
+            }
         } catch (e) {
             console.error(e);
         }
@@ -254,72 +258,15 @@ const WorkspaceSider: React.FC<WorkspaceSiderProps> = ({ sessionId, placement = 
         }
     };
 
-    /* Resizable Sidebar Logic */
-    const [isResizing, setIsResizing] = useState(false);
-
-    useEffect(() => {
-        const handleMouseMove = (e: MouseEvent) => {
-            if (!isResizing) return;
-            // Limit width between 200px and 600px
-            if (placement === 'left') {
-                const newWidth = Math.max(200, Math.min(600, e.clientX));
-                setResourceSidebarWidth(newWidth);
-            } else {
-                const newWidth = Math.max(200, Math.min(600, window.innerWidth - e.clientX));
-                setResourceSidebarWidth(newWidth);
-            }
-        };
-
-        const handleMouseUp = () => {
-            setIsResizing(false);
-            document.body.style.cursor = 'default';
-        };
-
-        if (isResizing) {
-            document.addEventListener('mousemove', handleMouseMove);
-            document.addEventListener('mouseup', handleMouseUp);
-            document.body.style.cursor = 'col-resize';
-        }
-
-        return () => {
-            document.removeEventListener('mousemove', handleMouseMove);
-            document.removeEventListener('mouseup', handleMouseUp);
-        };
-    }, [isResizing, placement]);
-
     return (
         <>
-            <Sider
+            <ResizableSider
                 width={resourceSidebarWidth}
-                style={{
-                    background: token.colorBgContainer,
-                    borderRadius: '8px',
-                    border: `1px solid ${token.colorBorderSecondary}`,
-                    [placement === 'left' ? 'marginRight' : 'marginLeft']: 16,
-                    padding: 12,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    position: 'relative', // For absolute positioning of handle
-                    height: '100%'
-                }}
+                setWidth={setResourceSidebarWidth}
+                placement={placement}
+                minWidth={200}
+                maxWidth={600}
             >
-                {/* Resize Handle */}
-                <div
-                    style={{
-                        position: 'absolute',
-                        [placement === 'left' ? 'right' : 'left']: -8,
-                        top: 0,
-                        bottom: 0,
-                        width: 10,
-                        cursor: 'col-resize',
-                        zIndex: 20,
-                    }}
-                    onMouseDown={(e) => {
-                        e.preventDefault();
-                        setIsResizing(true);
-                    }}
-                />
-
                 <div style={{ display: 'flex', flexDirection: 'column', height: '100%', gap: 16 }}>
                     {/* Service Provider / CLI Tool Selection */}
                     {placement === 'right' && chatProviders.length === 0 ? (
@@ -502,7 +449,7 @@ const WorkspaceSider: React.FC<WorkspaceSiderProps> = ({ sessionId, placement = 
                         />
                     </div>
                 </div>
-            </Sider>
+            </ResizableSider>
 
             <DiffViewer
                 open={!!diffFile}
@@ -538,21 +485,6 @@ const WorkspaceSider: React.FC<WorkspaceSiderProps> = ({ sessionId, placement = 
                     />
                 </div>
             </Modal>
-            {/* Resize Overlay - prevents terminal from swallowing events */}
-            {isResizing && (
-                <div
-                    style={{
-                        position: 'fixed',
-                        top: 0,
-                        left: 0,
-                        right: 0,
-                        bottom: 0,
-                        zIndex: 9999,
-                        cursor: 'col-resize',
-                        userSelect: 'none'
-                    }}
-                />
-            )}
         </>
     );
 };

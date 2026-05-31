@@ -9,9 +9,11 @@ import { MessageOutlined, PlusOutlined, RobotOutlined, QuestionCircleOutlined, D
 import { useAppStore } from '../../store/appStore';
 import { useChatStore } from '../../store/chatStore';
 import WorkspaceSider from '../../components/WorkspaceSider';
+import ResizableSider from '../../components/ResizableSider';
 import { useTranslation } from 'react-i18next';
+import { chatCompletion } from '../../lib/tauri'; // #11: API calls proxied via Rust backend
 
-const { Sider, Content, Header } = Layout;
+const { Content, Header } = Layout;
 const { Title, Text } = Typography;
 
 const getDisplayTitle = (title: string | undefined, t: any) => {
@@ -139,60 +141,32 @@ const ChatPage: React.FC = () => {
         const sessionMessages = useChatStore.getState().messages[activeSessionId] || [];
 
         try {
-            const apiBaseUrl = localAiBaseUrl || "https://api.openai.com/v1";
+            const apiBaseUrl = localAiBaseUrl || 'https://api.openai.com/v1';
 
-            // Build messages array
+            // Build OpenAI-compatible messages array
             const openAiMessages = [...sessionMessages, { type: 'user', content: combinedText }].map(msg => ({
                 role: msg.type === 'user' ? 'user' : 'assistant',
                 content: msg.content
             }));
 
-            const response = await fetch(`${apiBaseUrl}/chat/completions`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${llmApiKey}`
-                },
-                body: JSON.stringify({
-                    model: llmModel || 'gpt-4o-mini',
-                    messages: openAiMessages,
-                    stream: true
-                })
-            });
+            // Add placeholder for streaming appearance
+            addMessage(activeSessionId, { type: 'assistant', content: '', id: (Date.now() + 1).toString() });
 
-            if (!response.ok) {
-                const err = await response.text();
-                useChatStore.getState().updateLastMessage(activeSessionId, t('chat.apiError', '\n\n**Error:** API request failed. \n\n```json\n{{error}}\n```', { error: err }));
-                setIsStreaming(false);
-                return;
-            }
+            // #11: Route through Rust backend proxy — API key never touches the renderer's network layer
+            const reply = await chatCompletion(
+                llmApiKey,
+                apiBaseUrl,
+                llmModel || 'gpt-4o-mini',
+                openAiMessages as any,
+            );
 
-            const reader = response.body?.getReader();
-            const decoder = new TextDecoder("utf-8");
-
-            if (reader) {
-                while (true) {
-                    const { done, value } = await reader.read();
-                    if (done) break;
-
-                    const chunk = decoder.decode(value, { stream: true });
-                    const lines = chunk.split('\n');
-                    for (const line of lines) {
-                        if (line.startsWith('data: ') && line !== 'data: [DONE]') {
-                            try {
-                                const parsed = JSON.parse(line.slice(6));
-                                const delta = parsed.choices?.[0]?.delta?.content || "";
-                                useChatStore.getState().updateLastMessage(activeSessionId, delta);
-                            } catch (e) {
-                                // ignore parse errors on fragmented stream
-                            }
-                        }
-                    }
-                }
-            }
+            useChatStore.getState().updateLastMessage(activeSessionId, reply);
         } catch (error: any) {
-            console.error("LLM Stream Error", error);
-            useChatStore.getState().updateLastMessage(activeSessionId, t('chat.networkError', '\n\n**Network Error:** {{error}}', { error: error?.message || String(error) }));
+            console.error('LLM Request Error', error);
+            useChatStore.getState().updateLastMessage(
+                activeSessionId,
+                t('chat.networkError', '\n\n**Network Error:** {{error}}', { error: error?.message || String(error) })
+            );
         } finally {
             setIsStreaming(false);
         }
@@ -207,32 +181,20 @@ const ChatPage: React.FC = () => {
 
     return (
         <Layout style={{ height: '100%', background: 'transparent' }} hasSider>
-            <Sider
+            <ResizableSider
                 width={chatSidebarWidth}
-                theme="light"
+                setWidth={setChatSidebarWidth}
+                placement="left"
+                minWidth={200}
+                maxWidth={400}
                 style={{
-                    background: token.colorBgContainer,
                     borderRight: `1px solid ${token.colorBorderSecondary}`,
-                    position: 'relative'
+                    borderRadius: 0,
+                    marginRight: 0,
+                    padding: 0
                 }}
             >
                 <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-                    {/* Resize Handle */}
-                    <div
-                        style={{
-                            position: 'absolute',
-                            right: -5,
-                            top: 0,
-                            bottom: 0,
-                            width: 10,
-                            cursor: 'col-resize',
-                            zIndex: 100,
-                        }}
-                        onMouseDown={(e) => {
-                            e.preventDefault();
-                            setIsResizing(true);
-                        }}
-                    />
                     <div style={{ padding: '16px 16px 8px 16px' }}>
                         <Button type="dashed" block icon={<PlusOutlined />} onClick={handleNewChat}>
                             {t('chat.newChat', 'New Chat')}
@@ -336,7 +298,7 @@ const ChatPage: React.FC = () => {
                         </div>
                     )}
                 </div>
-            </Sider>
+            </ResizableSider>
             <Layout style={{ background: 'transparent' }}>
                 <Header style={{
                     background: token.colorBgContainer,
@@ -439,21 +401,7 @@ const ChatPage: React.FC = () => {
                 setActiveChatToolId={setActiveChatToolId}
             />
 
-            {/* Resize Overlay */}
-            {isResizing && (
-                <div
-                    style={{
-                        position: 'fixed',
-                        top: 0,
-                        left: 0,
-                        right: 0,
-                        bottom: 0,
-                        zIndex: 9999,
-                        cursor: 'col-resize',
-                        userSelect: 'none'
-                    }}
-                />
-            )}
+
         </Layout>
     );
 };

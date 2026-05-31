@@ -6,7 +6,9 @@
  */
 
 import { create } from 'zustand';
-import { checkEnvironment, checkToolStatus, getAppConfig, saveAppConfig, type EnvironmentStatus, type ToolStatus } from '../lib/tauri';
+import { persist, type PersistStorage } from 'zustand/middleware';
+import { checkEnvironment, checkToolStatus, getAppConfig, saveAppConfig, allowDirectory, type EnvironmentStatus, type ToolStatus } from '../lib/tauri';
+import { loadLanguage } from '../i18n';
 
 export interface ToolConfig {
     working_directory: string | null;
@@ -101,15 +103,76 @@ interface AppState {
     setResourceSidebarWidth: (width: number) => void;
 }
 
-let saveTimeout: any = null;
-const persistConfig = (state: AppState) => {
-    if (!state.isLoaded) return;
 
-    if (saveTimeout) {
-        clearTimeout(saveTimeout);
-    }
+const tauriStorage: PersistStorage<AppState> = {
+    getItem: async (_name) => {
+        try {
+            const config = await getAppConfig();
+            
+            // fs scope
+            if (config.current_directory) {
+                allowDirectory(config.current_directory).catch(() => {});
+            }
 
-    saveTimeout = setTimeout(async () => {
+            // language
+            const savedLang = config.language || 'zh';
+            if (savedLang !== 'en') {
+                loadLanguage(savedLang).catch(() => {});
+            }
+
+            const state: Partial<AppState> = {
+                language: savedLang,
+                theme: (config.theme as 'light' | 'dark') || 'light',
+                primaryColor: config.primary_color || '#1677ff',
+                opacity: config.opacity ?? 1.0,
+                fontFamily: config.font_family || 'Segoe UI',
+                textColor: config.text_color || null,
+                terminalFontFamily: config.terminal_font_family || 'Cascadia Code',
+                terminalFontSize: config.terminal_font_size || 14,
+                terminalBackground: config.terminal_background || '#1e1e1e',
+                terminalForeground: config.terminal_foreground || '#d4d4d4',
+                terminalCursorStyle: (config.terminal_cursor_style as 'block' | 'underline' | 'bar') || 'block',
+                terminalShell: config.terminal_shell || 'bash.exe',
+                proxyType: config.proxy_type || 'none',
+                proxyAddress: config.proxy_address || '',
+                activeTools: config.active_tools || [],
+                currentDirectory: config.current_directory || null,
+                activeToolId: config.active_tool_id || null,
+                activeChatToolId: config.active_chat_tool_id || null,
+                envStatus: config.env_status || null,
+                toolStatuses: config.tool_statuses || {},
+                toolConfigs: (config.tool_configs as any) || {},
+                globalInstructions: config.global_instructions || null,
+                localAiBaseUrl: config.local_ai_base_url || 'http://localhost:11434',
+                localAiProvider: config.local_ai_provider || 'ollama',
+                contextFiles: [],
+                commandPresets: config.command_presets || [
+                    { id: 'default-1', name: 'Explain Code', command: '/explain' },
+                    { id: 'default-2', name: 'Review Code', command: '/review' },
+                    { id: 'default-3', name: 'Generate Test', command: '/test' }
+                ],
+                chatProviders: config.chat_providers && config.chat_providers.length > 0 ? config.chat_providers : (config.active_tools || []),
+                chatSidebarWidth: config.chat_sidebar_width || 260,
+                resourceSidebarWidth: config.resource_sidebar_width || 280,
+                isLoaded: true
+            };
+
+            if (!state.activeChatToolId && state.chatProviders && state.chatProviders.length > 0) {
+                state.activeChatToolId = state.chatProviders[0];
+            }
+            if (!state.activeToolId && state.activeTools && state.activeTools.length > 0) {
+                state.activeToolId = state.activeTools[0];
+            }
+
+            return { state: state as AppState, version: 0 };
+        } catch (e) {
+            console.error('Failed to load config from Tauri', e);
+            return null;
+        }
+    },
+    setItem: async (_name, value) => {
+        const state = value.state;
+        if (!state.isLoaded) return;
         try {
             await saveAppConfig({
                 proxy_type: state.proxyType,
@@ -143,12 +206,13 @@ const persistConfig = (state: AppState) => {
                 resource_sidebar_width: state.resourceSidebarWidth,
             });
         } catch (e) {
-            console.error("Failed to persist config", e);
+            console.error('Failed to save config to Tauri', e);
         }
-    }, 500); // 500ms debounce
+    },
+    removeItem: async (_name) => {}
 };
 
-export const useAppStore = create<AppState>((set, get) => ({
+export const useAppStore = create<AppState>()(persist((set, get) => ({
     theme: 'light',
     language: 'zh',
     isLoaded: false,
@@ -184,125 +248,66 @@ export const useAppStore = create<AppState>((set, get) => ({
 
     setTheme: (theme) => {
         set({ theme });
-        persistConfig(get());
     },
     setLanguage: (language) => {
         set({ language });
-        persistConfig(get());
+        // Lazily load the locale bundle if it hasn't been fetched yet
+        loadLanguage(language).catch(() => {});
     },
     setProxyType: (proxyType) => {
         set({ proxyType });
-        persistConfig(get());
     },
     setProxyAddress: (proxyAddress) => {
         set({ proxyAddress });
-        persistConfig(get());
     },
     setPrimaryColor: (primaryColor) => {
         set({ primaryColor });
-        persistConfig(get());
     },
     setOpacity: (opacity) => {
         set({ opacity });
-        persistConfig(get());
     },
     setFontFamily: (fontFamily) => {
         set({ fontFamily });
-        persistConfig(get());
     },
     setTextColor: (textColor) => {
         set({ textColor });
-        persistConfig(get());
     },
     setPendingCommand: (pendingCommand) => {
         set({ pendingCommand });
     },
     setCurrentDirectory: (currentDirectory) => {
         set({ currentDirectory });
-        persistConfig(get());
     },
     setActiveToolId: (activeToolId) => {
         set({ activeToolId });
-        persistConfig(get());
     },
     setActiveChatToolId: (activeChatToolId) => {
         set({ activeChatToolId });
-        persistConfig(get());
     },
     setTerminalSettings: (settings) => {
         set((state) => ({ ...state, ...settings }));
-        persistConfig(get());
+
     },
     checkEnv: async () => {
         try {
             const status = await checkEnvironment();
             set({ envStatus: status });
-            persistConfig(get());
         } catch (e) {
             console.error("Failed to check environment", e);
         }
     },
-    loadConfig: async () => {
-        try {
-            const config = await getAppConfig();
-            set({
-                language: config.language || 'zh',
-                theme: (config.theme as 'light' | 'dark') || 'light',
-                primaryColor: config.primary_color || '#1677ff',
-                fontFamily: config.font_family || 'Segoe UI',
-                textColor: config.text_color || null,
-                terminalFontFamily: config.terminal_font_family || 'Cascadia Code',
-                terminalFontSize: config.terminal_font_size || 14,
-                terminalBackground: config.terminal_background || '#1e1e1e',
-                terminalForeground: config.terminal_foreground || '#d4d4d4',
-                terminalCursorStyle: (config.terminal_cursor_style as 'block' | 'underline' | 'bar') || 'block',
-                terminalShell: config.terminal_shell || 'bash.exe',
-                proxyType: config.proxy_type || 'none',
-                proxyAddress: config.proxy_address || '',
-                activeTools: config.active_tools || [],
-                currentDirectory: config.current_directory || null,
-                activeToolId: config.active_tool_id || null,
-                activeChatToolId: config.active_chat_tool_id || null,
-                envStatus: config.env_status || null,
-                toolStatuses: config.tool_statuses || {},
-                toolConfigs: (config.tool_configs as any) || {},
-                globalInstructions: config.global_instructions || null,
-                localAiBaseUrl: config.local_ai_base_url || 'http://localhost:11434',
-                localAiProvider: config.local_ai_provider || 'ollama',
-                contextFiles: [],
-                commandPresets: config.command_presets || [
-                    { id: 'default-1', name: 'Explain Code', command: '/explain' },
-                    { id: 'default-2', name: 'Review Code', command: '/review' },
-                    { id: 'default-3', name: 'Generate Test', command: '/test' }
-                ],
-                chatProviders: config.chat_providers && config.chat_providers.length > 0 ? config.chat_providers : (config.active_tools || []),
-                chatSidebarWidth: config.chat_sidebar_width || 260,
-                resourceSidebarWidth: config.resource_sidebar_width || 280,
-                isLoaded: true
-            });
-
-            // Ensure activeChatToolId is set if missing but providers exist
-            const state = get();
-            if (!state.activeChatToolId && state.chatProviders.length > 0) {
-                set({ activeChatToolId: state.chatProviders[0] });
-            }
-        } catch (e) {
-            console.error("Load config failed", e);
-        }
-    },
+    loadConfig: async () => { set({ isLoaded: true }); },
     addActiveTool: async (id) => {
         const { activeTools } = get();
         if (!activeTools.includes(id)) {
             const newTools = [...activeTools, id];
             set({ activeTools: newTools });
-            persistConfig(get());
         }
     },
     removeActiveTool: async (id) => {
         const { activeTools } = get();
         const newTools = activeTools.filter(t => t !== id);
         set({ activeTools: newTools });
-        persistConfig(get());
     },
     refreshTools: async (ids) => {
         try {
@@ -319,7 +324,6 @@ export const useAppStore = create<AppState>((set, get) => ({
             });
             // Wait for all to finish so the caller knows when the batch is done
             await Promise.all(checks);
-            persistConfig(get());
         } catch (e) {
             console.error("Failed to refresh tools batch", e);
         }
@@ -328,7 +332,6 @@ export const useAppStore = create<AppState>((set, get) => ({
         set((state) => ({
             toolStatuses: { ...state.toolStatuses, [status.id]: status }
         }));
-        persistConfig(get());
     },
     setToolConfig: (toolId, config) => {
         set((state) => {
@@ -338,23 +341,18 @@ export const useAppStore = create<AppState>((set, get) => ({
                 toolConfigs: { ...state.toolConfigs, [toolId]: updated }
             };
         });
-        persistConfig(get());
     },
     setGlobalInstructions: (globalInstructions) => {
         set({ globalInstructions });
-        persistConfig(get());
     },
     setLocalAiBaseUrl: (localAiBaseUrl) => {
         set({ localAiBaseUrl });
-        persistConfig(get());
     },
     setLocalAiProvider: (localAiProvider) => {
         set({ localAiProvider });
-        persistConfig(get());
     },
     setIdePath: (idePath) => {
         set({ idePath });
-        persistConfig(get());
     },
     toggleContextFile: (path) => {
         const { contextFiles } = get();
@@ -374,42 +372,34 @@ export const useAppStore = create<AppState>((set, get) => ({
     addCommandPreset: (preset) => {
         const { commandPresets } = get();
         set({ commandPresets: [...commandPresets, preset] });
-        persistConfig(get());
     },
     removeCommandPreset: (id) => {
         const { commandPresets } = get();
         set({ commandPresets: commandPresets.filter(p => p.id !== id) });
-        persistConfig(get());
     },
     updateCommandPreset: (id, preset) => {
         const { commandPresets } = get();
         set({
             commandPresets: commandPresets.map(p => p.id === id ? { ...p, ...preset } : p)
         });
-        persistConfig(get());
     },
     setChatProviders: (chatProviders) => {
         set({ chatProviders });
-        persistConfig(get());
     },
     addChatProvider: (provider) => {
         const { chatProviders } = get();
         if (!chatProviders.includes(provider)) {
             set({ chatProviders: [...chatProviders, provider] });
-            persistConfig(get());
         }
     },
     removeChatProvider: (provider) => {
         const { chatProviders } = get();
         set({ chatProviders: chatProviders.filter(p => p !== provider) });
-        persistConfig(get());
     },
     setChatSidebarWidth: (chatSidebarWidth) => {
         set({ chatSidebarWidth });
-        persistConfig(get());
     },
     setResourceSidebarWidth: (resourceSidebarWidth) => {
         set({ resourceSidebarWidth });
-        persistConfig(get());
     },
-}));
+}), { name: "openvizui-store", storage: tauriStorage }));

@@ -1,7 +1,6 @@
 import React from 'react';
 import { Avatar, theme } from 'antd';
 import { UserOutlined, RobotOutlined } from '@ant-design/icons';
-// @ts-ignore
 import Ansi from 'ansi-to-react';
 import ReactMarkdown from 'react-markdown';
 import stripAnsi from 'strip-ansi';

@@ -22,6 +22,7 @@ import { ptyOpen, ptyWrite, ptyResize, ptyClose, ptyExists } from '../lib/tauri'
 import { invoke } from '@tauri-apps/api/core';
 import { useAppStore } from '../store/appStore';
 import { useTranslation } from 'react-i18next';
+import { terminalPresets } from '../constants/terminal';
 
 // Module-level lock to prevent double initialization in Strict Mode - PER SESSION ID
 const initializingSessions = new Set<string>();
@@ -48,14 +49,7 @@ const TerminalUI = ({ sessionId, initialCommand }: TerminalProps) => {
         terminalBackground
     } = useAppStore();
 
-    const terminalPresets = [
-        { name: 'Default Dark', bg: '#1e1e1e', fg: '#d4d4d4' },
-        { name: 'One Dark', bg: '#282c34', fg: '#abb2bf' },
-        { name: 'Dracula', bg: '#282a36', fg: '#f8f8f2' },
-        { name: 'Monokai', bg: '#272822', fg: '#f8f8f2' },
-        { name: 'Nord', bg: '#2e3440', fg: '#d8dee9' },
-        { name: 'Solarized Dark', bg: '#002b36', fg: '#839496' }
-    ];
+
 
     const [isReady, setIsReady] = useState(false);
 
@@ -197,7 +191,28 @@ const TerminalUI = ({ sessionId, initialCommand }: TerminalProps) => {
             xtermRef.current = null;
             setIsReady(false);
         };
-    }, [terminalFontFamily, terminalFontSize, terminalBackground, terminalForeground, terminalCursorStyle, token, sessionId, initialCommand]);
+    // PTY lifecycle: only rebuild when session or initial command changes (#9)
+    }, [sessionId, initialCommand]);
+
+    // Theme / font hot-update: update xterm options WITHOUT destroying the PTY (#9)
+    useEffect(() => {
+        const term = xtermRef.current;
+        if (!term) return;
+
+        term.options.fontFamily = terminalFontFamily;
+        term.options.fontSize = terminalFontSize;
+        term.options.cursorStyle = terminalCursorStyle as any;
+        term.options.theme = {
+            background: terminalBackground,
+            foreground: terminalForeground,
+            selectionBackground: token.colorPrimaryBg,
+            cursor: token.colorPrimary,
+        };
+        // Refit after font size changes to sync PTY rows/cols
+        const fitAddon = new FitAddon();
+        term.loadAddon(fitAddon);
+        try { fitAddon.fit(); } catch (_) {}
+    }, [terminalFontFamily, terminalFontSize, terminalBackground, terminalForeground, terminalCursorStyle, token]);
 
     const [availableFonts, setAvailableFonts] = useState<string[]>([
         'Cascadia Code',
@@ -266,8 +281,24 @@ const TerminalUI = ({ sessionId, initialCommand }: TerminalProps) => {
     };
 
 
-    const handleRestart = () => {
-        window.location.reload();
+    // #16 Graceful restart: close & reopen the PTY without reloading the page
+    const handleRestart = async () => {
+        const term = xtermRef.current;
+        if (!term) return;
+        try {
+            setIsReady(false);
+            await ptyClose(sessionId);
+            term.clear();
+            term.write('\x1b[2J\x1b[H');
+            term.write(`\x1b[1;34mRestarting session…\x1b[0m\r\n`);
+            await ptyOpen(sessionId, term.cols, term.rows);
+            setIsReady(true);
+            term.focus();
+        } catch (e) {
+            console.error('Failed to restart terminal session', e);
+            term.write(`\r\n\x1b[1;31mRestart failed: ${e}\x1b[0m\r\n`);
+            setIsReady(true);
+        }
     };
 
     const focusTerminal = () => {
